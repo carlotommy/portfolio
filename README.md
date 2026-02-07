@@ -1,43 +1,67 @@
-# Astro Starter Kit: Minimal
+# Portfolio Gerardo Romani
 
-```sh
-npm create astro@latest -- --template minimal
+Portfolio creativo realizzato con Astro.
+
+## 🚀 Struttura del Progetto
+
 ```
-
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
-
-## 🚀 Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
 /
 ├── public/
+│   ├── photos/          # Inserisci qui le tue foto (photo1.jpg - photo5.jpg)
+│   ├── images/          # Inserisci qui le thumbnail dei video
+│   └── profilo.jpg      # Tua foto profilo
 ├── src/
-│   └── pages/
-│       └── index.astro
+│   ├── components/      # Componenti Astro riutilizzabili
+│   ├── layouts/         # Layout base
+│   ├── pages/           # Pagine del sito
+│   └── styles/          # File CSS globali
 └── package.json
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+## 🧞 Comandi
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+Tutti i comandi vanno eseguiti dalla root del progetto, dal terminale:
 
-Any static assets, like images, can be placed in the `public/` directory.
-
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
+| Comando                   | Azione                                           |
 | :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+| `npm install`             | Installa le dipendenze                           |
+| `npm run dev`             | Avvia il server locale su `localhost:4321`      |
+| `npm run build`           | Costruisce il sito per la produzione in `./dist/`|
+| `npm run preview`         | Anteprima della build locale prima del deploy    |
 
-## 👀 Want to learn more?
+## 📝 Istruzioni
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+1. **Installa le dipendenze:**
+   ```bash
+   npm install
+   ```
+
+2. **Aggiungi le tue immagini:**
+   - Metti la tua foto profilo in `public/profilo.jpg`
+   - Aggiungi le tue foto in `public/photos/` (photo1.jpg, photo2.jpg, etc.)
+   - Aggiungi le thumbnail dei video in `public/images/` (video1-thumb.jpg, etc.)
+
+3. **Avvia il server di sviluppo:**
+   ```bash
+   npm run dev
+   ```
+
+4. **Personalizza i contenuti:**
+   - Modifica i testi nei componenti in `src/components/`
+   - Aggiorna i link Instagram nel componente `Footer.astro`
+
+5. **Build per la produzione:**
+   ```bash
+   npm run build
+   ```
+
+## 🎨 Palette Colori
+
+- Background: Beige (#F5F1E8)
+- Accento: Terracotta (#C75B39)
+- Testo: Marrone scuro (#3D2817)
+
+## 📦 Tecnologie
+
+- [Astro](https://astro.build)
+- Google Fonts (DM Sans, Space Mono, Archivo Black)

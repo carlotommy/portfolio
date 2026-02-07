@@ -1,0 +1,49 @@
+---
+// Contact Section Component
+---
+
+<section id="contact" class="contact-section">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">CONTATTAMI</h2>
+    </div>
+
+    <div class="contact-content">
+      <!-- Contact Form - CENTERED -->
+      <div class="contact-form-wrapper">
+        <h3 class="form-title">Invia un Messaggio</h3>
+        <form id="contactForm" class="contact-form">
+          <div class="form-group">
+            <label for="name">Nome</label>
+            <input type="text" id="name" name="name" required placeholder="Il tuo nome">
+          </div>
+          
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required placeholder="tua@email.com">
+          </div>
+          
+          <div class="form-group">
+            <label for="subject">Oggetto</label>
+            <input type="text" id="subject" name="subject" required placeholder="Di cosa vuoi parlare?">
+          </div>
+          
+          <div class="form-group">
+            <label for="message">Messaggio</label>
+            <textarea id="message" name="message" rows="5" required placeholder="Scrivi qui il tuo messaggio..."></textarea>
+          </div>
+          
+          <button type="submit" class="submit-btn">
+            <span class="btn-text">Invia Messaggio</span>
+            <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <line x1="22" y1="2" x2="11" y2="13"></line>
+              <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+            </svg>
+          </button>
+          
+          <div id="formMessage" class="form-message"></div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
