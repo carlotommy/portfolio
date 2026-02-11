@@ -1,67 +1,154 @@
-# Portfolio Gerardo Romani
+# 🚀 Portfolio Gerardo Romani - Versione Astro Modulare
 
-Portfolio creativo realizzato con Astro.
+## ✨ Caratteristiche
 
-## 🚀 Struttura del Progetto
+- **Componenti modulari**: Ogni componente ha i suoi stili CSS inclusi
+- **Zero errori TypeScript**: Codice completamente tipizzato
+- **Ottimizzato per VS Code**: Nessun warning o errore
+- **Struttura pulita**: Layout e componenti ben separati
+- **Responsive**: Funziona su tutti i dispositivi
+
+## 📦 Installazione Rapida
+
+```bash
+# Estrai il progetto
+tar -xzf astro-portfolio-modulare.tar.gz
+cd astro-project-v2
+
+# Installa dipendenze
+npm install
+
+# Avvia il server di sviluppo
+npm run dev
+```
+
+Il sito sarà disponibile su: **http://localhost:4321**
+
+## 📁 Struttura del Progetto
 
 ```
-/
-├── public/
-│   ├── photos/          # Inserisci qui le tue foto (photo1.jpg - photo5.jpg)
-│   ├── images/          # Inserisci qui le thumbnail dei video
-│   └── profilo.jpg      # Tua foto profilo
+astro-project-v2/
 ├── src/
-│   ├── components/      # Componenti Astro riutilizzabili
-│   ├── layouts/         # Layout base
-│   ├── pages/           # Pagine del sito
-│   └── styles/          # File CSS globali
-└── package.json
+│   ├── components/         # Componenti con stili inclusi
+│   │   ├── About.astro     # Sezione biografia
+│   │   ├── Contact.astro   # Form contatti
+│   │   ├── Footer.astro    # Footer
+│   │   ├── Hero.astro      # Sezione hero
+│   │   ├── Navigation.astro # Navbar
+│   │   ├── Photos.astro    # Galleria foto + lightbox
+│   │   ├── Services.astro  # Servizi offerti
+│   │   └── Videos.astro    # Slider video
+│   │
+│   ├── layouts/
+│   │   └── Layout.astro    # Layout principale (corretto!)
+│   │
+│   └── pages/
+│       └── index.astro     # Pagina home
+│
+├── public/                 # File statici
+│   ├── photos/            # Le tue foto (photo1.jpg, etc.)
+│   └── images/            # Thumbnail video (video1-thumb.jpg, etc.)
+│
+├── package.json
+├── astro.config.mjs
+└── tsconfig.json
 ```
 
-## 🧞 Comandi
+## 🎨 Componenti
 
-Tutti i comandi vanno eseguiti dalla root del progetto, dal terminale:
+Ogni componente è **autosufficiente** e contiene:
+- HTML strutturale
+- CSS con stili scoped
+- Logica TypeScript (dove necessario)
 
-| Comando                   | Azione                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installa le dipendenze                           |
-| `npm run dev`             | Avvia il server locale su `localhost:4321`      |
-| `npm run build`           | Costruisce il sito per la produzione in `./dist/`|
-| `npm run preview`         | Anteprima della build locale prima del deploy    |
+### Esempio: Photos.astro
+```astro
+---
+// Script TypeScript
+const photos = [...];
+---
 
-## 📝 Istruzioni
+<!-- HTML -->
+<section>...</section>
 
-1. **Installa le dipendenze:**
-   ```bash
-   npm install
-   ```
+<!-- CSS scoped -->
+<style>...</style>
+```
 
-2. **Aggiungi le tue immagini:**
-   - Metti la tua foto profilo in `public/profilo.jpg`
-   - Aggiungi le tue foto in `public/photos/` (photo1.jpg, photo2.jpg, etc.)
-   - Aggiungi le thumbnail dei video in `public/images/` (video1-thumb.jpg, etc.)
+## 🖼️ Aggiungere le Immagini
 
-3. **Avvia il server di sviluppo:**
-   ```bash
-   npm run dev
-   ```
+1. **Foto profilo**: `public/profilo.jpg`
+2. **Galleria**: `public/photos/photo1.jpg`, `photo2.jpg`, ...
+3. **Video thumbnail**: `public/images/video1-thumb.jpg`, ...
 
-4. **Personalizza i contenuti:**
-   - Modifica i testi nei componenti in `src/components/`
-   - Aggiorna i link Instagram nel componente `Footer.astro`
+## 🛠️ Comandi
 
-5. **Build per la produzione:**
-   ```bash
-   npm run build
-   ```
+| Comando | Descrizione |
+|---------|-------------|
+| `npm install` | Installa le dipendenze |
+| `npm run dev` | Avvia il server di sviluppo |
+| `npm run build` | Build per la produzione |
+| `npm run preview` | Anteprima della build |
+
+## 🎯 Personalizzazione
+
+### Modificare i testi
+I testi sono nei file componenti in `src/components/`
+
+### Modificare i colori
+I colori sono definiti in `src/layouts/Layout.astro` (variabili CSS globali):
+
+```css
+:root {
+  --primary-blue: #C75B39;   /* Terracotta */
+  --light-blue: #F4C3A8;     /* Terracotta chiaro */
+  /* ... */
+}
+```
+
+### Modificare link Instagram
+In `src/components/Footer.astro` - riga 9
+
+### Modificare link video
+In `src/components/Videos.astro` - array `videos`
+
+## 🚀 Deploy
+
+### Build
+```bash
+npm run build
+```
+
+Questo crea la cartella `dist/` con il sito ottimizzato.
+
+### Hosting consigliati
+- **Netlify**: Drag & drop della cartella `dist/`
+- **Vercel**: Connetti il repository GitHub
+- **GitHub Pages**: Usa GitHub Actions
+
+## ✅ Vantaggi di questa versione
+
+- ✨ **Zero errori** in Visual Studio Code
+- 🎨 **Stili separati** per componente
+- 📦 **Componenti riutilizzabili**
+- 🔧 **Facile manutenzione**
+- ⚡ **Performance ottimale**
+- 📱 **Completamente responsive**
 
 ## 🎨 Palette Colori
 
-- Background: Beige (#F5F1E8)
-- Accento: Terracotta (#C75B39)
-- Testo: Marrone scuro (#3D2817)
+- Background scuro: `#1A0F08`
+- Terracotta: `#C75B39`
+- Beige chiaro: `#F5F1E8`
+- Testo grigio: `#C9B8A3`
 
-## 📦 Tecnologie
+## 📝 Note
 
-- [Astro](https://astro.build)
-- Google Fonts (DM Sans, Space Mono, Archivo Black)
+- Tutti gli stili CSS sono **inclusi nei componenti**
+- Il Layout è **corretto** e senza errori TypeScript
+- Ogni componente è **indipendente**
+- Codice **pulito e ben documentato**
+
+---
+
+**Fatto con ♥ da Claude**

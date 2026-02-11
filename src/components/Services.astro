@@ -1,5 +1,25 @@
 ---
 // Services Section Component
+const services = [
+  {
+    id: 1,
+    title: 'Video Production',
+    description: 'Creazione di video professionali per social media, pubblicità e storytelling. Dall\'ideazione al montaggio finale, realizzo contenuti che emozionano e comunicano il tuo messaggio.',
+    features: ['Riprese Cinematografiche', 'Color Grading Avanzato', 'Motion Graphics']
+  },
+  {
+    id: 2,
+    title: 'Photography',
+    description: 'Servizi fotografici professionali per brand, eventi e ritratti. Ogni scatto cattura l\'essenza del momento con creatività e attenzione maniacale ai dettagli.',
+    features: ['Ritratti & Lifestyle', 'Eventi & Corporate', 'Post-Produzione']
+  },
+  {
+    id: 3,
+    title: 'Content Strategy',
+    description: 'Strategie di contenuto per social media e piattaforme digitali. Creo piani editoriali che aumentano engagement, reach e conversioni del tuo brand.',
+    features: ['Piano Editoriale', 'Content Creation', 'Analytics & Reporting']
+  }
+];
 ---
 
 <section id="services" class="services-section">
@@ -9,135 +29,220 @@
       <p class="services-subtitle">Trasformo idee creative in contenuti di impatto</p>
     </div>
 
-    <!-- Services Interactive Cards -->
     <div class="services-interactive-grid">
-      
-      <!-- Service 1: Video Production -->
-      <div class="service-interactive-card" data-index="0">
-        <div class="service-card-glow"></div>
-        <div class="service-card-content">
-          <div class="service-icon-container">
-            <svg class="service-icon" viewBox="0 0 24 24" fill="none">
-              <rect x="2" y="3" width="20" height="14" rx="2" stroke="currentColor" stroke-width="2"/>
-              <path d="M8 21h8M12 17v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-            </svg>
-          </div>
-          <h3 class="service-card-title">Video Production</h3>
-          <div class="service-number">01</div>
-          
-          <div class="service-details">
-            <p class="service-card-description">
-              Creazione di video professionali per social media, pubblicità e storytelling. 
-              Dall'ideazione al montaggio finale, realizzo contenuti che emozionano e comunicano il tuo messaggio.
-            </p>
-            <ul class="service-features-list">
-              <li>
-                <svg viewBox="0 0 24 24" fill="none">
-                  <polyline points="20 6 9 17 4 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      {services.map((service, index) => (
+        <div class="service-interactive-card" data-index={index}>
+          <div class="service-card-glow"></div>
+          <div class="service-card-content">
+            <div class="service-icon-container">
+              {service.id === 1 && (
+                <svg class="service-icon" viewBox="0 0 24 24" fill="none">
+                  <rect x="2" y="3" width="20" height="14" rx="2" stroke="currentColor" stroke-width="2"/>
+                  <path d="M8 21h8M12 17v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
                 </svg>
-                <span>Riprese Cinematografiche</span>
-              </li>
-              <li>
-                <svg viewBox="0 0 24 24" fill="none">
-                  <polyline points="20 6 9 17 4 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              )}
+              {service.id === 2 && (
+                <svg class="service-icon" viewBox="0 0 24 24" fill="none">
+                  <path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2v11z" stroke="currentColor" stroke-width="2"/>
+                  <circle cx="12" cy="13" r="4" stroke="currentColor" stroke-width="2"/>
                 </svg>
-                <span>Color Grading Avanzato</span>
-              </li>
-              <li>
-                <svg viewBox="0 0 24 24" fill="none">
-                  <polyline points="20 6 9 17 4 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              )}
+              {service.id === 3 && (
+                <svg class="service-icon" viewBox="0 0 24 24" fill="none">
+                  <path d="M12 2L2 7l10 5 10-5-10-5z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
-                <span>Motion Graphics</span>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-
-      <!-- Service 2: Photography -->
-      <div class="service-interactive-card" data-index="1">
-        <div class="service-card-glow"></div>
-        <div class="service-card-content">
-          <div class="service-icon-container">
-            <svg class="service-icon" viewBox="0 0 24 24" fill="none">
-              <path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2v11z" stroke="currentColor" stroke-width="2"/>
-              <circle cx="12" cy="13" r="4" stroke="currentColor" stroke-width="2"/>
-            </svg>
-          </div>
-          <h3 class="service-card-title">Photography</h3>
-          <div class="service-number">02</div>
-          
-          <div class="service-details">
-            <p class="service-card-description">
-              Servizi fotografici professionali per brand, eventi e ritratti. 
-              Ogni scatto cattura l'essenza del momento con creatività e attenzione maniacale ai dettagli.
-            </p>
-            <ul class="service-features-list">
-              <li>
-                <svg viewBox="0 0 24 24" fill="none">
-                  <polyline points="20 6 9 17 4 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-                <span>Ritratti & Lifestyle</span>
-              </li>
-              <li>
-                <svg viewBox="0 0 24 24" fill="none">
-                  <polyline points="20 6 9 17 4 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-                <span>Eventi & Corporate</span>
-              </li>
-              <li>
-                <svg viewBox="0 0 24 24" fill="none">
-                  <polyline points="20 6 9 17 4 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-                <span>Post-Produzione</span>
-              </li>
-            </ul>
+              )}
+            </div>
+            <h3 class="service-card-title">{service.title}</h3>
+            <div class="service-number">0{service.id}</div>
+            
+            <div class="service-details">
+              <p class="service-card-description">{service.description}</p>
+              <ul class="service-features-list">
+                {service.features.map(feature => (
+                  <li>
+                    <svg viewBox="0 0 24 24" fill="none">
+                      <polyline points="20 6 9 17 4 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span>{feature}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         </div>
-      </div>
-
-      <!-- Service 3: Content Strategy -->
-      <div class="service-interactive-card" data-index="2">
-        <div class="service-card-glow"></div>
-        <div class="service-card-content">
-          <div class="service-icon-container">
-            <svg class="service-icon" viewBox="0 0 24 24" fill="none">
-              <path d="M12 2L2 7l10 5 10-5-10-5z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </div>
-          <h3 class="service-card-title">Content Strategy</h3>
-          <div class="service-number">03</div>
-          
-          <div class="service-details">
-            <p class="service-card-description">
-              Strategie di contenuto per social media e piattaforme digitali. 
-              Creo piani editoriali che aumentano engagement, reach e conversioni del tuo brand.
-            </p>
-            <ul class="service-features-list">
-              <li>
-                <svg viewBox="0 0 24 24" fill="none">
-                  <polyline points="20 6 9 17 4 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-                <span>Piano Editoriale</span>
-              </li>
-              <li>
-                <svg viewBox="0 0 24 24" fill="none">
-                  <polyline points="20 6 9 17 4 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-                <span>Content Creation</span>
-              </li>
-              <li>
-                <svg viewBox="0 0 24 24" fill="none">
-                  <polyline points="20 6 9 17 4 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-                <span>Analytics & Reporting</span>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-
+      ))}
     </div>
   </div>
 </section>
+
+
+
+<style>
+  .services-section {
+    padding: 8rem 0;
+    position: relative;
+  }
+
+  .services-subtitle {
+    font-size: 1.2rem;
+    color: var(--text-gray);
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto 4rem;
+    font-weight: 300;
+    letter-spacing: 0.5px;
+  }
+
+  .services-interactive-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 3rem;
+  }
+
+  .service-interactive-card {
+    background: rgba(10, 22, 40, 0.6);
+    border-radius: 20px;
+    padding: 3rem 2rem;
+    position: relative;
+    overflow: hidden;
+    border: 4px solid var(--primary-blue);
+    box-shadow: 
+      0 0 20px var(--primary-blue),
+      0 0 40px rgba(199, 91, 57, 0.5),
+      inset 0 0 20px rgba(199, 91, 57, 0.2);
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+
+  .service-interactive-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 
+      0 0 30px var(--primary-blue),
+      0 0 60px rgba(199, 91, 57, 0.7),
+      inset 0 0 30px rgba(199, 91, 57, 0.3);
+  }
+
+  .service-card-glow {
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(44, 95, 158, 0.1), transparent 70%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+  }
+
+  .service-interactive-card:hover .service-card-glow {
+    opacity: 1;
+  }
+
+  .service-card-content {
+    position: relative;
+    z-index: 1;
+  }
+
+  .service-icon-container {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 10px 30px rgba(44, 95, 158, 0.3);
+  }
+
+  /* Spin 360° dell'icona SVG al hover, non del container */
+  .service-interactive-card:hover .service-icon {
+    animation: spin360 0.6s ease-in-out;
+  }
+
+  @keyframes spin360 {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .service-icon {
+    width: 40px;
+    height: 40px;
+    stroke: white;
+  }
+
+  .service-card-title {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 1.8rem;
+    color: var(--text-white);
+    margin-bottom: 1rem;
+  }
+
+  .service-number {
+    position: absolute;
+    top: 2rem;
+    right: 2rem;
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 4rem;
+    color: rgba(44, 95, 158, 0.1);
+    line-height: 1;
+  }
+
+  .service-details {
+    margin-top: 1.5rem;
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: all 0.5s ease;
+  }
+
+  /* Mostra i dettagli al hover invece che al click */
+  .service-interactive-card:hover .service-details {
+    max-height: 500px;
+    opacity: 1;
+  }
+
+  .service-card-description {
+    color: var(--text-gray);
+    line-height: 1.8;
+    margin-bottom: 1.5rem;
+  }
+
+  .service-features-list {
+    list-style: none;
+    padding: 0;
+  }
+
+  .service-features-list li {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 0;
+    color: var(--text-gray);
+    border-bottom: 1px solid rgba(44, 95, 158, 0.1);
+  }
+
+  .service-features-list li:last-child {
+    border-bottom: none;
+  }
+
+  .service-features-list svg {
+    width: 20px;
+    height: 20px;
+    stroke: var(--primary-blue);
+    flex-shrink: 0;
+  }
+
+  @media (max-width: 768px) {
+    .services-interactive-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

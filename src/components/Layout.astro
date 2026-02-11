@@ -100,7 +100,7 @@ const {
         if (!isPhotosDragging) return;
         e.preventDefault();
         const x = e.pageX - photosContainer.offsetLeft;
-        const walk = (x - photosStartX) * 1.5;
+        const walk = (x - photosStartX) * 0.8;
         photosContainer.scrollLeft = photosScrollLeft - walk;
       });
 
@@ -116,7 +116,7 @@ const {
 
       photosContainer.addEventListener('touchmove', (e: TouchEvent) => {
         const x = e.touches[0].pageX;
-        const walk = (photosTouchStartX - x) * 1.5;
+        const walk = (photosTouchStartX - x) * 0.8;
         photosContainer.scrollLeft = photosTouchScrollLeft + walk;
       }, { passive: true });
 
