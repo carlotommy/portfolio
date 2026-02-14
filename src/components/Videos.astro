@@ -24,7 +24,14 @@ const videos = [
           <a href={video.url} target="_blank" rel="noopener noreferrer" class="video-card">
             <div class="video-wrapper">
               <div class="video-border"></div>
-              <img src={`/images/video${video.id}-thumb.jpg`} alt={`Video ${video.id}`} />
+              <img
+                src={`/images/video${video.id}-thumb.jpg`}
+                alt={`Video ${video.id}`}
+                loading="eager"
+                decoding="async"
+                width="405"
+                height="720"
+              />
               <div class="video-overlay">
                 <div class="play-button">
                   <svg viewBox="0 0 24 24" fill="none">
@@ -64,10 +71,11 @@ const videos = [
       inset 0 0 20px rgba(199, 91, 57, 0.2);
     max-width: 500px;
     margin: 0 auto;
-    position: relative;
     cursor: grab;
+    /* Layer GPU dedicato — uguale al container foto */
+    will-change: scroll-position;
+    transform: translateZ(0);
     scrollbar-width: none;
-    scrollbar-color: none;
   }
 
   .videos-scroll-container:active {
@@ -75,21 +83,7 @@ const videos = [
   }
 
   .videos-scroll-container::-webkit-scrollbar {
-    width: 8px;
-  }
-
-  .videos-scroll-container::-webkit-scrollbar-track {
-    background: rgba(10, 22, 40, 0.3);
-    border-radius: 10px;
-  }
-
-  .videos-scroll-container::-webkit-scrollbar-thumb {
-    background: var(--primary-blue);
-    border-radius: 10px;
-  }
-
-  .videos-scroll-container::-webkit-scrollbar-thumb:hover {
-    background: var(--secondary-blue);
+    display: none;
   }
 
   .videos-grid {
@@ -97,6 +91,7 @@ const videos = [
     flex-direction: column;
     gap: 1.5rem;
     padding: 1rem;
+    will-change: transform;
   }
 
   .video-card {
@@ -115,6 +110,9 @@ const videos = [
     border-radius: 20px;
     overflow: hidden;
     aspect-ratio: 9/16;
+    /* Layer GPU per ogni card — identico alle foto */
+    transform: translateZ(0);
+    backface-visibility: hidden;
   }
 
   .video-border {
@@ -135,6 +133,8 @@ const videos = [
     height: 100%;
     object-fit: cover;
     display: block;
+    transform: translateZ(0);
+    will-change: transform;
   }
 
   .video-overlay {
