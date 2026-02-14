@@ -1,14 +1,13 @@
 ---
 // Photos Slider Section Component
 const photos = [
-  { id: 1, description: 'Scatto creativo 1', date: 'Gennaio 2026', path:'/f1.jpg' },
-  { id: 2, description: 'Scatto creativo 2', date: 'Gennaio 2026', path:'/f2.jpg' },
-  { id: 3, description: 'Scatto creativo 3', date: 'Dicembre 2025', path:'/f3.jpg' },
-  { id: 4, description: 'Scatto creativo 4', date: 'Dicembre 2025', path:'/f4.jpg' },
-  { id: 5, description: 'Scatto creativo 5', date: 'Novembre 2025', path:'/f5.jpg' },
-  { id: 6, description: 'Scatto creativo 6', date: 'Novembre 2025', path:'/f6.jpg' },
-  { id: 7, description: 'Scatto creativo 7', date: 'Ottobre 2025', path:'/f7.jpg' },
-
+  { id: 1, description: 'Scatto creativo 1', date: 'Gennaio 2026', path:'/photos/f1.jpg' },
+  { id: 2, description: 'Scatto creativo 2', date: 'Gennaio 2026', path:'/photos/f2.jpg' },
+  { id: 3, description: 'Scatto creativo 3', date: 'Dicembre 2025', path:'/photos/f3.jpg' },
+  { id: 4, description: 'Scatto creativo 4', date: 'Dicembre 2025', path:'/photos/f4.jpg' },
+  { id: 5, description: 'Scatto creativo 5', date: 'Novembre 2025', path:'/photos/f5.jpg' },
+  { id: 6, description: 'Scatto creativo 6', date: 'Novembre 2025', path:'/photos/f6.jpg' },
+  { id: 7, description: 'Scatto creativo 7', date: 'Ottobre 2025', path:'/photos/f7.jpg' },
 ];
 ---
 
@@ -24,9 +23,14 @@ const photos = [
           <div class="photo-item">
             <div class="photo-wrapper">
               <div class="photo-border"></div>
-              <img src={photo.path
-                
-              } alt={`Foto ${photo.id}`} />
+              <img
+                src={photo.path}
+                alt={`Foto ${photo.id}`}
+                loading="eager"
+                decoding="async"
+                width="600"
+                height="338"
+              />
               <div class="photo-overlay">
                 <div class="photo-info">
                   <p class="photo-description">{photo.description}</p>
@@ -66,7 +70,9 @@ const photos = [
       inset 0 0 20px rgba(199, 91, 57, 0.2);
     cursor: grab;
     scrollbar-width: none;
-    scrollbar-color: none;
+    /* Promuovi il container su un layer GPU dedicato */
+    will-change: scroll-position;
+    transform: translateZ(0);
   }
 
   .photos-scroll-container:active {
@@ -74,27 +80,15 @@ const photos = [
   }
 
   .photos-scroll-container::-webkit-scrollbar {
-    height: 8px;
-  }
-
-  .photos-scroll-container::-webkit-scrollbar-track {
-    background: rgba(10, 22, 40, 0.3);
-    border-radius: 10px;
-  }
-
-  .photos-scroll-container::-webkit-scrollbar-thumb {
-    background: var(--primary-blue);
-    border-radius: 10px;
-  }
-
-  .photos-scroll-container::-webkit-scrollbar-thumb:hover {
-    background: var(--secondary-blue);
+    display: none;
   }
 
   .photos-scroll-track {
     display: flex;
     gap: 2rem;
     padding: 2rem 1rem;
+    /* Evita reflow durante lo scroll animato */
+    will-change: transform;
   }
 
   .photo-item {
@@ -110,6 +104,9 @@ const photos = [
     aspect-ratio: 16/9;
     max-width: 900px;
     margin: 0 auto;
+    /* Layer GPU per ogni card, evita repaint durante hover */
+    transform: translateZ(0);
+    backface-visibility: hidden;
   }
 
   .photo-border {
@@ -130,6 +127,10 @@ const photos = [
     height: 100%;
     object-fit: cover;
     display: block;
+    /* Decodifica asincrona già impostata nell'attributo;
+       translateZ forza un layer separato evitando decode-on-paint */
+    transform: translateZ(0);
+    will-change: transform;
   }
 
   .photo-overlay {
