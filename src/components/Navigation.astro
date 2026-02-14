@@ -1,0 +1,197 @@
+---
+// Navigation Component
+---
+
+<nav class="main-nav">
+  <div class="nav-container">
+    <a href="#hero" class="nav-logo">GR</a>
+    <div class="nav-links">
+      <a href="#about" class="nav-link">
+        <span class="nav-text">Biografia</span>
+        <span class="nav-line"></span>
+      </a>
+      <a href="#photos" class="nav-link">
+        <span class="nav-text">Foto</span>
+        <span class="nav-line"></span>
+      </a>
+      <a href="#videos" class="nav-link">
+        <span class="nav-text">Video</span>
+        <span class="nav-line"></span>
+      </a>
+      <a href="#services" class="nav-link">
+        <span class="nav-text">Servizi</span>
+        <span class="nav-line"></span>
+      </a>
+      <a href="#contact" class="nav-link">
+        <span class="nav-text">Contatti</span>
+        <span class="nav-line"></span>
+      </a>
+    </div>
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </div>
+</nav>
+
+<style>
+  .main-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background: rgba(5, 10, 20, 0.8);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--primary-blue);
+    box-shadow: 
+      0 0 20px var(--primary-blue),
+      0 0 40px rgba(199, 91, 57, 0.5),
+      inset 0 0 20px rgba(199, 91, 57, 0.2);
+    padding: 0;
+  }
+
+  .nav-container {
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 80px;
+  }
+
+  .nav-logo {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 1.8rem;
+    color: var(--text-white);
+    text-decoration: none;
+    background: linear-gradient(135deg, var(--light-blue), var(--primary-blue));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    transition: all 0.3s ease;
+    letter-spacing: 2px;
+  }
+
+  .nav-logo:hover {
+    transform: scale(1.1);
+    filter: drop-shadow(0 0 10px var(--primary-blue));
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 3rem;
+    align-items: center;
+  }
+
+  .nav-link {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    color: var(--text-white);
+    transition: all 0.3s ease;
+    padding: 0.5rem 0;
+  }
+
+  .nav-text {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.9rem;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+    color: var(--light-blue);
+    text-shadow: 
+      0 0 10px var(--primary-blue),
+      0 0 20px rgba(199, 91, 57, 0.5);
+  }
+
+  .nav-line {
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--light-blue), var(--primary-blue));
+    margin-top: 0.3rem;
+    transition: width 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    box-shadow: 0 0 10px var(--primary-blue);
+  }
+
+  .nav-link:hover .nav-text {
+    color: var(--secondary-blue);
+    text-shadow: 
+      0 0 15px var(--primary-blue),
+      0 0 30px rgba(199, 91, 57, 0.7);
+  }
+
+  .nav-link:hover .nav-line {
+    width: 100%;
+  }
+
+  .nav-toggle {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+  }
+
+  .nav-toggle span {
+    width: 25px;
+    height: 2px;
+    background: var(--primary-blue);
+    transition: all 0.3s ease;
+    box-shadow: 0 0 5px var(--primary-blue);
+  }
+
+  .nav-toggle:hover span {
+    box-shadow: 0 0 10px var(--primary-blue);
+  }
+
+  .nav-toggle.active span:nth-child(1) {
+    transform: rotate(45deg) translate(5px, 5px);
+  }
+
+  .nav-toggle.active span:nth-child(2) {
+    opacity: 0;
+  }
+
+  .nav-toggle.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(7px, -6px);
+  }
+
+  @media (max-width: 768px) {
+    .nav-links {
+      position: fixed;
+      top: 80px;
+      right: -100%;
+      flex-direction: column;
+      background: rgba(5, 10, 20, 0.95);
+      padding: 2rem;
+      border-radius: 0 0 0 20px;
+      gap: 1.5rem;
+      transition: right 0.3s ease;
+      border-left: 4px solid var(--primary-blue);
+      border-bottom: 4px solid var(--primary-blue);
+      box-shadow: 
+        0 0 20px var(--primary-blue),
+        0 0 40px rgba(199, 91, 57, 0.5);
+    }
+
+    .nav-links.active {
+      right: 0;
+    }
+
+    .nav-toggle {
+      display: flex;
+    }
+
+    .nav-text {
+      font-size: 1.1rem;
+    }
+  }
+</style>

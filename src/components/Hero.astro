@@ -1,0 +1,100 @@
+---
+// Hero Section Component
+---
+
+<section id="hero" class="hero-section">
+  <div class="hero-content">
+    <div class="quote-wrapper">
+      <h1 class="hero-title">
+        La creatività è l'intelligenza che si diverte
+      </h1>
+      <p class="hero-author">— Albert Einstein</p>
+    </div>
+    
+    <div class="scroll-indicator">
+      <div class="scroll-line"></div>
+      <span class="scroll-text">SCROLL</span>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero-section {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 1;
+    padding: 6rem 2rem 2rem;
+  }
+
+  .hero-content {
+    text-align: center;
+    max-width: 1000px;
+  }
+
+  .quote-wrapper {
+    margin-bottom: 4rem;
+  }
+
+  .hero-title {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    line-height: 1.2;
+    background: linear-gradient(135deg, var(--primary-white), var(--light-blue), var(--primary-blue));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 2rem;
+    animation: titleGlow 3s ease-in-out infinite;
+  }
+
+  @keyframes titleGlow {
+    0%, 100% { filter: drop-shadow(0 0 20px rgba(74, 144, 226, 0.5)); }
+    50% { filter: drop-shadow(0 0 40px rgba(44, 95, 158, 0.8)); }
+  }
+
+  .hero-author {
+    font-family: 'Space Mono', monospace;
+    font-size: 1.2rem;
+    color: var(--text-gray);
+    letter-spacing: 2px;
+  }
+
+  .scroll-indicator {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    animation: bounce 2s ease-in-out infinite;
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(10px); }
+  }
+
+  .scroll-line {
+    width: 2px;
+    height: 60px;
+    background: linear-gradient(to bottom, var(--primary-blue), transparent);
+  }
+
+  .scroll-text {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.8rem;
+    letter-spacing: 3px;
+    color: var(--primary-blue);
+  }
+
+  @media (max-width: 768px) {
+    .hero-section {
+      padding-top: 8rem;
+    }
+
+    .hero-title {
+      font-size: 2.5rem;
+    }
+  }
+</style>

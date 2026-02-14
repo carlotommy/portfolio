@@ -1,43 +1,154 @@
-# Astro Starter Kit: Minimal
+# 🚀 Portfolio Gerardo Romani - Versione Astro Modulare
 
-```sh
-npm create astro@latest -- --template minimal
+## ✨ Caratteristiche
+
+- **Componenti modulari**: Ogni componente ha i suoi stili CSS inclusi
+- **Zero errori TypeScript**: Codice completamente tipizzato
+- **Ottimizzato per VS Code**: Nessun warning o errore
+- **Struttura pulita**: Layout e componenti ben separati
+- **Responsive**: Funziona su tutti i dispositivi
+
+## 📦 Installazione Rapida
+
+```bash
+# Estrai il progetto
+tar -xzf astro-portfolio-modulare.tar.gz
+cd astro-project-v2
+
+# Installa dipendenze
+npm install
+
+# Avvia il server di sviluppo
+npm run dev
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+Il sito sarà disponibile su: **http://localhost:4321**
 
-## 🚀 Project Structure
+## 📁 Struttura del Progetto
 
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-/
-├── public/
+```
+astro-project-v2/
 ├── src/
+│   ├── components/         # Componenti con stili inclusi
+│   │   ├── About.astro     # Sezione biografia
+│   │   ├── Contact.astro   # Form contatti
+│   │   ├── Footer.astro    # Footer
+│   │   ├── Hero.astro      # Sezione hero
+│   │   ├── Navigation.astro # Navbar
+│   │   ├── Photos.astro    # Galleria foto + lightbox
+│   │   ├── Services.astro  # Servizi offerti
+│   │   └── Videos.astro    # Slider video
+│   │
+│   ├── layouts/
+│   │   └── Layout.astro    # Layout principale (corretto!)
+│   │
 │   └── pages/
-│       └── index.astro
-└── package.json
+│       └── index.astro     # Pagina home
+│
+├── public/                 # File statici
+│   ├── photos/            # Le tue foto (photo1.jpg, etc.)
+│   └── images/            # Thumbnail video (video1-thumb.jpg, etc.)
+│
+├── package.json
+├── astro.config.mjs
+└── tsconfig.json
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+## 🎨 Componenti
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+Ogni componente è **autosufficiente** e contiene:
+- HTML strutturale
+- CSS con stili scoped
+- Logica TypeScript (dove necessario)
 
-Any static assets, like images, can be placed in the `public/` directory.
+### Esempio: Photos.astro
+```astro
+---
+// Script TypeScript
+const photos = [...];
+---
 
-## 🧞 Commands
+<!-- HTML -->
+<section>...</section>
 
-All commands are run from the root of the project, from a terminal:
+<!-- CSS scoped -->
+<style>...</style>
+```
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+## 🖼️ Aggiungere le Immagini
 
-## 👀 Want to learn more?
+1. **Foto profilo**: `public/profilo.jpg`
+2. **Galleria**: `public/photos/photo1.jpg`, `photo2.jpg`, ...
+3. **Video thumbnail**: `public/images/video1-thumb.jpg`, ...
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+## 🛠️ Comandi
+
+| Comando | Descrizione |
+|---------|-------------|
+| `npm install` | Installa le dipendenze |
+| `npm run dev` | Avvia il server di sviluppo |
+| `npm run build` | Build per la produzione |
+| `npm run preview` | Anteprima della build |
+
+## 🎯 Personalizzazione
+
+### Modificare i testi
+I testi sono nei file componenti in `src/components/`
+
+### Modificare i colori
+I colori sono definiti in `src/layouts/Layout.astro` (variabili CSS globali):
+
+```css
+:root {
+  --primary-blue: #C75B39;   /* Terracotta */
+  --light-blue: #F4C3A8;     /* Terracotta chiaro */
+  /* ... */
+}
+```
+
+### Modificare link Instagram
+In `src/components/Footer.astro` - riga 9
+
+### Modificare link video
+In `src/components/Videos.astro` - array `videos`
+
+## 🚀 Deploy
+
+### Build
+```bash
+npm run build
+```
+
+Questo crea la cartella `dist/` con il sito ottimizzato.
+
+### Hosting consigliati
+- **Netlify**: Drag & drop della cartella `dist/`
+- **Vercel**: Connetti il repository GitHub
+- **GitHub Pages**: Usa GitHub Actions
+
+## ✅ Vantaggi di questa versione
+
+- ✨ **Zero errori** in Visual Studio Code
+- 🎨 **Stili separati** per componente
+- 📦 **Componenti riutilizzabili**
+- 🔧 **Facile manutenzione**
+- ⚡ **Performance ottimale**
+- 📱 **Completamente responsive**
+
+## 🎨 Palette Colori
+
+- Background scuro: `#1A0F08`
+- Terracotta: `#C75B39`
+- Beige chiaro: `#F5F1E8`
+- Testo grigio: `#C9B8A3`
+
+## 📝 Note
+
+- Tutti gli stili CSS sono **inclusi nei componenti**
+- Il Layout è **corretto** e senza errori TypeScript
+- Ogni componente è **indipendente**
+- Codice **pulito e ben documentato**
+
+---
+
+**Fatto con ♥ da Claude**
