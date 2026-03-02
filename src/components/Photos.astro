@@ -47,7 +47,7 @@ const photos = [
 
 <!-- Lightbox Modal for Photos -->
 <div id="photoLightbox" class="lightbox">
-  <button class="lightbox-close" aria-label="Chiudi">×</button>
+  <button class="lightbox-close" aria-label="Chiudi">Ã—</button>
   <img id="lightboxImage" src="" alt="Foto ingrandita" />
 </div>
 
@@ -61,7 +61,7 @@ const photos = [
     overflow-x: auto;
     overflow-y: hidden;
     border-radius: 20px;
-    background: rgba(10, 22, 40, 0.3);
+    background: rgba(28, 14, 8, 0.3);
     padding: 0;
     border: 4px solid var(--primary-blue);
     box-shadow: 
@@ -127,7 +127,7 @@ const photos = [
     height: 100%;
     object-fit: cover;
     display: block;
-    /* Decodifica asincrona già impostata nell'attributo;
+    /* Decodifica asincrona giÃ  impostata nell'attributo;
        translateZ forza un layer separato evitando decode-on-paint */
     transform: translateZ(0);
     will-change: transform;
@@ -136,7 +136,7 @@ const photos = [
   .photo-overlay {
     position: absolute;
     inset: 0;
-    background: linear-gradient(to top, rgba(10, 22, 40, 0.95), transparent);
+    background: linear-gradient(to top, rgba(28, 14, 8, 0.95), transparent);
     display: flex;
     align-items: flex-end;
     justify-content: center;
@@ -227,7 +227,7 @@ const photos = [
     max-height: 90%;
     object-fit: contain;
     border-radius: 10px;
-    box-shadow: 0 0 50px rgba(44, 95, 158, 0.5);
+    box-shadow: 0 0 50px rgba(199, 91, 57, 0.5);
   }
 
   @media (max-width: 768px) {
