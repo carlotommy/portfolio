@@ -21,17 +21,8 @@
   font-family: 'Archivo Black', sans-serif;
   font-size: clamp(2.5rem, 6vw, 5rem);
   line-height: 1.2;
-  background: linear-gradient(135deg, var(--primary-white), var(--light-blue), var(--primary-blue));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
   margin-bottom: 2rem;
-  animation: titleGlow 3s ease-in-out infinite;
-}
-
-@keyframes titleGlow {
-  0%, 100% { filter: drop-shadow(0 0 20px rgba(199, 91, 57, 0.5)); }
-  50%       { filter: drop-shadow(0 0 40px rgba(199, 91, 57, 0.8)); }
+  /* gradient rimosso dal <p>, viene applicato su ogni <span> in Hero.jsx */
 }
 
 .heroAuthor {

@@ -5,7 +5,7 @@ export default function About() {
     <section id="about" className={styles.aboutSection}>
       <div className="container">
         <div className="section-header">
-          <h2 className="section-title">CHI SONO</h2>
+          <h2 className="section-title">CHI SIAMO</h2>
         </div>
 
         <div className={styles.aboutGrid}>
@@ -21,11 +21,11 @@ export default function About() {
           </div>
 
           <div className={styles.aboutContent}>
-            <h3 className={styles.nameTitle}>Gerardo Romani</h3>
+            <h3 className={styles.nameTitle}>Zero Asse</h3>
             <div className={styles.nameUnderline} />
             <p className={styles.bioText}>
-              Sono un creatore di contenuti appassionato di storytelling visivo.
-              Attraverso i miei video racconto storie che emozionano e ispirano,
+              Siamo un team di creativi appassionati di storytelling visivo.
+              Attraverso i nostri video raccontiamo storie che emozionano e ispirano,
               combinando creatività e tecnica per creare esperienze uniche.
             </p>
 
