@@ -21,13 +21,9 @@
   font-family: 'Archivo Black', sans-serif;
   font-size: clamp(2.5rem, 6vw, 5rem);
   line-height: 1.2;
-  background: linear-gradient(135deg, var(--primary-white), var(--light-blue), var(--primary-blue));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
   margin-bottom: 2rem;
+  /* gradient rimosso dal <p>, viene applicato su ogni <span> in Hero.jsx */
 }
-
 
 .heroAuthor {
   font-family: 'Space Mono', monospace;
