@@ -1,147 +1,157 @@
 import { useEffect, useRef } from 'react';
 import styles from './About.module.css';
 
-const disciplines = [
-  { label: 'REGIA', sub: 'Direction' },
-  { label: 'PUBBLICITÀ', sub: 'Advertising' },
-  { label: 'CORTI', sub: 'Short Films' },
-  { label: 'VIDEOCLIP', sub: 'Music Videos' },
-  { label: 'SOUND DESIGN', sub: 'Audio' },
-  { label: 'COLOR GRADING', sub: 'Post-Production' },
-];
-
-const stats = [
-  { value: '50+', label: 'Progetti' },
-  { value: '8+', label: 'Anni' },
-  { value: '30+', label: 'Clienti' },
-  { value: '12+', label: 'Awards' },
+const PROCESS = [
+  { n: '01', phase: 'Sviluppo',    desc: 'Ascoltiamo, ricerchiamo, costruiamo il concept. La storia prima di tutto.' },
+  { n: '02', phase: 'Pre-produzione', desc: 'Storyboard, scouting, cast. Ogni dettaglio è pianificato prima che la camera giri.' },
+  { n: '03', phase: 'Produzione',  desc: 'Sul set con crew selezionata. Direzione artistica totale, dal primo all\'ultimo frame.' },
+  { n: '04', phase: 'Post',        desc: 'Color grading, sound design, mix. Dove i fotogrammi diventano cinema.' },
 ];
 
 export default function About() {
-  const counterRefs = useRef([]);
+  const sectionRef  = useRef(null);
+  const imgARef     = useRef(null);
+  const imgBRef     = useRef(null);
+  const revealRefs  = useRef([]);
 
+  /* ── Parallax on two inset images ───────────────────────────────── */
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add(styles.inView);
-          }
-        });
-      },
-      { threshold: 0.15 }
-    );
-
-    counterRefs.current.forEach((el) => el && observer.observe(el));
-    return () => observer.disconnect();
+    const onScroll = () => {
+      const sec = sectionRef.current;
+      if (!sec) return;
+      const prog = -sec.getBoundingClientRect().top;
+      if (imgARef.current) imgARef.current.style.transform = `translateY(${prog * 0.07}px)`;
+      if (imgBRef.current) imgBRef.current.style.transform = `translateY(${prog * -0.05}px)`;
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
+  /* ── Reveal on scroll ────────────────────────────────────────────── */
+  useEffect(() => {
+    const io = new IntersectionObserver(
+      (entries) => entries.forEach(e => e.isIntersecting && e.target.classList.add(styles.visible)),
+      { threshold: 0.12 }
+    );
+    revealRefs.current.forEach(el => el && io.observe(el));
+    return () => io.disconnect();
+  }, []);
+
+  const reveal = (i) => (el) => { revealRefs.current[i] = el; };
+
   return (
-    <section id="about" className={styles.aboutSection}>
-      {/* Film-strip top decoration */}
-      <div className={styles.filmStrip}>
-        {Array.from({ length: 20 }).map((_, i) => (
-          <span key={i} className={styles.filmHole} />
-        ))}
-      </div>
+    <section id="about" className={styles.about} ref={sectionRef}>
+      <div className="container">
 
-      <div className={`container ${styles.innerContainer}`}>
-
-        {/* ── Header ─────────────────────────────────────────────────── */}
-        <div className={styles.header}>
-          <span className={styles.labelTag}>// 001 — CHI SIAMO</span>
-          <h2 className={styles.mainTitle}>
-            VISIONE.<br />
-            <em>Tecnica.</em><br />
-            IMPATTO.
-          </h2>
+        {/* ── A: Opening tag ──────────────────────────────────────── */}
+        <div className={styles.tagLine} ref={reveal(0)}>
+          <span className={styles.tagDash} />
+          <span className={styles.tagText}>Studio di Produzione</span>
+          <span className={styles.tagDash} />
         </div>
 
-        {/* ── Manifesto + Image ──────────────────────────────────────── */}
-        <div className={styles.manifestoRow}>
-          <div className={styles.manifestoLeft}>
-            <div className={styles.directorCard}>
-              <div className={styles.imageWrapper}>
-                <img
-                  src="/photos/profilo.jpeg"
-                  alt="Gerardo Romani"
-                  className={styles.directorImage}
-                />
-                <div className={styles.imageOverlay} />
-                <div className={styles.frameBracketTL} />
-                <div className={styles.frameBracketBR} />
-              </div>
-              <div className={styles.directorMeta}>
-                <span className={styles.directorName}>Gerardo Romani</span>
-                <span className={styles.directorRole}>Director · Sound Designer</span>
-              </div>
+        {/* ── B: Hero statement ───────────────────────────────────── */}
+        <h2 className={styles.heroStatement} ref={reveal(1)}>
+          Raccontiamo storie<br />
+          <span className={styles.heroOutline}>attraverso immagini.</span>
+        </h2>
+
+        {/* ── C: Two-column intro ─────────────────────────────────── */}
+        <div className={styles.introRow} ref={reveal(2)}>
+          {/* left: inset image A */}
+          <div className={styles.imageBlockA}>
+            <div className={styles.imageAInner} ref={imgARef}>
+              <img src="/photos/f1.jpg" alt="Set cinematografico" />
+              <div className={styles.imageCaption}>Behind the frame</div>
             </div>
           </div>
 
-          <div className={styles.manifestoRight}>
-            <p className={styles.manifesto}>
-              Ogni fotogramma è una decisione. Ogni suono, un'intenzione.
-              Creo contenuti visivi che non si limitano a comunicare —
-              <strong> costruiscono un'esperienza</strong>.
-            </p>
-            <p className={styles.manifestoSub}>
-              Dalla pre-produzione al master finale, lavoro con brand, artisti e
-              registi per trasformare idee in immagini che restano impresse.
-              Pubblicità, corti, videoclip musicali, sound design: ogni progetto
-              è trattato con la stessa cura di un film.
+          {/* right: intro text + director quote */}
+          <div className={styles.introText}>
+            <p className={styles.leadText}>
+              Siamo un collettivo creativo specializzato in video production, 
+              cortometraggi, videoclip musicali, pubblicità e sound design. 
+              Ogni progetto che tocchiamo viene trattato con la cura e l'intenzione 
+              di un'opera cinematografica.
             </p>
 
-            <div className={styles.ctaRow}>
-              <a href="#services" className={styles.ctaPrimary}>
-                Scopri i servizi
-              </a>
-              <a href="#contact" className={styles.ctaSecondary}>
-                Inizia un progetto →
-              </a>
+            <blockquote className={styles.directorQuote}>
+              <p>
+                "Non mi interessa fare bei video.<br />
+                Mi interessa fare cose che rimangono."
+              </p>
+              <cite>Gerardo Romani — Director &amp; Sound Designer</cite>
+            </blockquote>
+          </div>
+        </div>
+
+        {/* ── D: Full-width pull quote ─────────────────────────────── */}
+        <div className={styles.pullQuote} ref={reveal(3)}>
+          <span className={styles.pullMark}>"</span>
+          <p className={styles.pullText}>
+            Ogni fotogramma è una decisione.<br />Ogni suono, un'intenzione.
+          </p>
+        </div>
+
+        {/* ── E: Second image + strengths text ────────────────────── */}
+        <div className={styles.strengthsRow} ref={reveal(4)}>
+          {/* left: text block */}
+          <div className={styles.strengthsLeft}>
+            <span className={styles.sectionMicro}>// Il nostro approccio</span>
+            <p className={styles.strengthsBody}>
+              Lavoriamo con brand emergenti, artisti indipendenti e registi 
+              alla loro prima opera. La dimensione del progetto non cambia 
+              il nostro standard: portiamo la stessa ossessione per il dettaglio 
+              a un videoclip da camera come a una campagna per un brand internazionale.
+            </p>
+            <p className={styles.strengthsBody}>
+              Il sound design non è un'aggiunta — è metà della storia. 
+              Coloriamo, mixiamo e masteriziamo in-house, mantenendo 
+              una visione coerente dall'inizio alla fine.
+            </p>
+          </div>
+
+          {/* right: inset image B */}
+          <div className={styles.imageBlockB}>
+            <div className={styles.imageBInner} ref={imgBRef}>
+              <img src="/photos/f3.jpg" alt="Direzione artistica" />
+            </div>
+            {/* floating label */}
+            <div className={styles.imageBLabel}>
+              <span>Post-production</span>
+              <span>Color · Sound · Mix</span>
             </div>
           </div>
         </div>
 
-        {/* ── Stats ─────────────────────────────────────────────────── */}
-        <div className={styles.statsRow}>
-          {stats.map((s, i) => (
-            <div
-              key={i}
-              className={styles.statBlock}
-              ref={(el) => (counterRefs.current[i] = el)}
-            >
-              <span className={styles.statValue}>{s.value}</span>
-              <span className={styles.statLabel}>{s.label}</span>
-            </div>
-          ))}
-        </div>
-
-        {/* ── Discipline Grid ────────────────────────────────────────── */}
-        <div className={styles.disciplineSection}>
-          <span className={styles.disciplineTag}>// DISCIPLINE</span>
-          <div className={styles.disciplineGrid}>
-            {disciplines.map((d, i) => (
-              <div key={i} className={styles.disciplineItem}>
-                <span className={styles.disciplineIndex}>
-                  {String(i + 1).padStart(2, '0')}
-                </span>
-                <div className={styles.disciplineText}>
-                  <span className={styles.disciplineLabel}>{d.label}</span>
-                  <span className={styles.disciplineSub}>{d.sub}</span>
+        {/* ── F: Process phases ───────────────────────────────────── */}
+        <div className={styles.processSection} ref={reveal(5)}>
+          <div className={styles.processHeader}>
+            <span className={styles.sectionMicro}>// Il processo</span>
+            <h3 className={styles.processTitle}>Dal concept al master</h3>
+          </div>
+          <div className={styles.processGrid}>
+            {PROCESS.map((p) => (
+              <div key={p.n} className={styles.phaseItem}>
+                <span className={styles.phaseNum}>{p.n}</span>
+                <div className={styles.phaseBody}>
+                  <h4 className={styles.phaseTitle}>{p.phase}</h4>
+                  <p  className={styles.phaseDesc}>{p.desc}</p>
                 </div>
-                <div className={styles.disciplineLine} />
               </div>
             ))}
           </div>
         </div>
 
-      </div>
+        {/* ── G: Final CTA ────────────────────────────────────────── */}
+        <div className={styles.ctaBar} ref={reveal(6)}>
+          <p className={styles.ctaTagline}>Hai un'idea. Noi la rendiamo reale.</p>
+          <div className={styles.ctaButtons}>
+            <a href="#services" className={styles.btnPrimary}>Vedi i servizi</a>
+            <a href="#contact"  className={styles.btnSecondary}>Inizia un progetto →</a>
+          </div>
+        </div>
 
-      {/* Film-strip bottom decoration */}
-      <div className={`${styles.filmStrip} ${styles.filmStripBottom}`}>
-        {Array.from({ length: 20 }).map((_, i) => (
-          <span key={i} className={styles.filmHole} />
-        ))}
       </div>
     </section>
   );
