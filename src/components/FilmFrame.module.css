@@ -1,14 +1,21 @@
 /* ── Design tokens ────────────────────────────────────────────────────── */
 .frame {
-  --sh:          52px;          /* strip height (horizontal) / width (vertical) */
-  --hole-w:      18px;
-  --hole-h:      24px;
-  --cell:        32px;          /* pitch between hole centers                   */
-  --film-dark:   #050d0f;       /* acetate base colour                          */
-  --film-mid:    #091519;       /* slightly lighter stripe                      */
-  --rim:  rgba(146,200,211,.20);/* sprocket rim colour                          */
-  --glint:rgba(146,200,211,.22);/* top-left glint                               */
-  --edge: rgba(146,200,211,.18);/* edge lines                                   */
+  --sh:          72px;            /* strip height (h) / width (v)           */
+  --hole-w:      22px;
+  --hole-h:      32px;
+  --cell:        40px;            /* pitch between hole centres             */
+
+  /* film base colours — deep teal-dark */
+  --film-dark:   #030d12;
+  --film-mid:    #071928;
+  --film-light:  #0d2538;
+
+  /* accent colours from the site palette */
+  --rim-col:    rgba(146, 200, 211, 0.65);
+  --rim-glow:   rgba(146, 200, 211, 0.30);
+  --glint-col:  rgba(210, 245, 252, 0.75);
+  --edge-col:   rgba(146, 200, 211, 0.45);
+  --sheen-col:  rgba(146, 200, 211, 0.07);
 
   position: relative;
   display: flex;
@@ -23,72 +30,108 @@
   flex: 1;
   min-width: 0;
   min-height: 0;
-  overflow: hidden;         /* clips scroll content to this area exactly */
+  overflow: hidden;
 }
 
 /* ── Strip shell ──────────────────────────────────────────────────────── */
+/*   isolation: isolate is the KEY — it creates a compositing group so    */
+/*   destination-out holes punch through to transparency, not the page.   */
 .strip {
   flex-shrink: 0;
   display: flex;
-  background: var(--film-dark);
   overflow: hidden;
   position: relative;
   z-index: 3;
+  isolation: isolate;   /* ← enables real punch-through holes */
 }
 
-/* horizontal strips stacked top/bottom */
+/* horizontal strips */
 .top, .bot {
   flex-direction: column;
   width: 100%;
   height: var(--sh);
 }
+.top {
+  background: linear-gradient(
+    to bottom,
+    var(--film-dark)  0%,
+    var(--film-mid)   28%,
+    var(--film-light) 50%,
+    var(--film-mid)   72%,
+    var(--film-dark)  100%
+  );
+}
+.bot {
+  background: linear-gradient(
+    to top,
+    var(--film-dark)  0%,
+    var(--film-mid)   28%,
+    var(--film-light) 50%,
+    var(--film-mid)   72%,
+    var(--film-dark)  100%
+  );
+}
 
-/* vertical strips left/right */
+/* vertical strips */
 .left, .right {
   flex-direction: row;
   height: 100%;
   width: var(--sh);
 }
+.left {
+  background: linear-gradient(
+    to right,
+    var(--film-dark)  0%,
+    var(--film-mid)   28%,
+    var(--film-light) 50%,
+    var(--film-mid)   72%,
+    var(--film-dark)  100%
+  );
+}
+.right {
+  background: linear-gradient(
+    to left,
+    var(--film-dark)  0%,
+    var(--film-mid)   28%,
+    var(--film-light) 50%,
+    var(--film-mid)   72%,
+    var(--film-dark)  100%
+  );
+}
 
 /* ── Edge lines ───────────────────────────────────────────────────────── */
 .edgeA, .edgeB {
   flex-shrink: 0;
-  background: var(--edge);
+  background: var(--edge-col);
 }
 
-/* horizontal strip: edges are full-width horizontal lines */
 .top .edgeA, .top .edgeB,
 .bot .edgeA, .bot .edgeB {
   width: 100%;
-  height: 1px;
+  height: 2px;
 }
 
-/* vertical strip: edges are full-height vertical lines */
 .left  .edgeA, .left  .edgeB,
 .right .edgeA, .right .edgeB {
   height: 100%;
-  width: 1px;
+  width: 2px;
 }
 
-/* outer edge — slightly dimmer */
-.edgeA { opacity: .6; }
-/* inner edge — brighter, sits right against the content */
-.edgeB {
-  opacity: 1;
-  /* adds a thin glow spilling toward the content */
-}
-.top  .edgeB { box-shadow:  0  3px 10px rgba(146,200,211,.06); }
-.bot  .edgeB { box-shadow:  0 -3px 10px rgba(146,200,211,.06); }
-.left .edgeB { box-shadow:  3px 0  10px rgba(146,200,211,.06); }
-.right .edgeB{ box-shadow: -3px 0  10px rgba(146,200,211,.06); }
+.edgeA { opacity: .55; }
+.edgeB { opacity: 1; }
 
-/* ── Sprocket channel ─────────────────────────────────────────────────── */
+/* edgeB glows inward toward the content */
+.top  .edgeB { box-shadow:  0  4px 16px rgba(146,200,211,.18),  0 1px 0 rgba(146,200,211,.12); }
+.bot  .edgeB { box-shadow:  0 -4px 16px rgba(146,200,211,.18),  0 -1px 0 rgba(146,200,211,.12); }
+.left .edgeB { box-shadow:  4px 0  16px rgba(146,200,211,.18),  1px 0 0 rgba(146,200,211,.12); }
+.right .edgeB{ box-shadow: -4px 0  16px rgba(146,200,211,.18), -1px 0 0 rgba(146,200,211,.12); }
+
+/* ── Sprocket channel (fills remaining space between edges) ───────────── */
 .channel {
   flex: 1;
   overflow: hidden;
   position: relative;
-  /* subtle midtone so sprocket holes have something to punch through */
-  background: var(--film-mid);
+  background: transparent; /* gradient is on .strip, channel is transparent */
 }
 
 /* ── Scrolling track ──────────────────────────────────────────────────── */
@@ -113,7 +156,7 @@
   animation: scrollV var(--spd, 14s) linear infinite;
 }
 
-/* ── Inner duplicate (makes loop seamless) ────────────────────────────── */
+/* ── Inner duplicate (seamless loop) ─────────────────────────────────── */
 .inner      { display: flex; flex-shrink: 0; }
 .innerX     { flex-direction: row;    align-items: center; }
 .innerY     { flex-direction: column; align-items: center; }
@@ -129,62 +172,105 @@
 .innerX .cell { width: var(--cell); height: 100%; }
 .innerY .cell { height: var(--cell); width: 100%; }
 
-/* ── Sprocket hole ────────────────────────────────────────────────────── */
-.hole {
-  display: block;
+/* ── Hole group (positions both layers) ───────────────────────────────── */
+.holeGroup {
+  position: relative;
   flex-shrink: 0;
   width:  var(--hole-w);
   height: var(--hole-h);
-  border-radius: 4px;
-  background: #020507;
-  border: 1px solid var(--rim);
-  position: relative;
-  /* punched-through depth effect */
-  box-shadow:
-    inset 0  2px  6px rgba(0,0,0,.95),
-    inset 0 -2px  4px rgba(0,0,0,.70),
-    inset 2px 0   4px rgba(0,0,0,.50),
-    0 0 0 1px rgba(0,0,0,.5);
 }
 
-/* horizontal strip: hole is portrait (taller than wide) — already default */
-/* vertical strip: hole rotates to landscape */
-.left  .hole,
-.right .hole {
+/* vertical strips: hole rotates to landscape */
+.left  .holeGroup,
+.right .holeGroup {
   width:  var(--hole-h);
   height: var(--hole-w);
 }
 
-/* ── Hole detail: top-left glint ──────────────────────────────────────── */
-.holeInner {
+/* ── Layer 1: punch ────────────────────────────────────────────────────── */
+/*   White fill + destination-out erases the strip bg within the           */
+/*   isolation context, leaving true transparency (shows real background). */
+.holePunch {
   position: absolute;
-  top:  3px;
-  left: 3px;
-  width:  6px;
-  height: 3px;
-  border-radius: 2px;
-  background: var(--glint);
+  inset: 0;
+  border-radius: 5px;
+  background: #ffffff;
+  mix-blend-mode: destination-out;
+}
+
+/* ── Layer 2: rim (rendered after punch — sits over the void) ─────────── */
+.holeRim {
+  position: absolute;
+  inset: 0;
+  border-radius: 5px;
+  background: transparent;      /* don't fill — let background show through */
+  border: 1.5px solid var(--rim-col);
+  box-shadow:
+    0 0  5px var(--rim-glow),
+    0 0 10px var(--rim-glow),
+    inset 0 1px 3px rgba(0, 0, 0, 0.6);
+  overflow: hidden;
+}
+
+/* ── Hole glint (top-left highlight) ─────────────────────────────────── */
+.holeGlint {
+  position: absolute;
+  top:  4px;
+  left: 4px;
+  width:  8px;
+  height: 4px;
+  border-radius: 3px;
+  background: var(--glint-col);
   opacity: .8;
 }
 
-/* vertical hole glint rotates */
-.left  .holeInner,
-.right .holeInner { width: 3px; height: 6px; }
+.left  .holeGlint,
+.right .holeGlint { width: 4px; height: 8px; }
 
-/* ── Acetate texture ──────────────────────────────────────────────────── */
+/* ── Acetate scratch texture ──────────────────────────────────────────── */
 .acetate {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  opacity: .05;
+  opacity: .07;
   background-image: repeating-linear-gradient(
-    -48deg,
+    -52deg,
     transparent,
-    transparent 4px,
-    rgba(146,200,211,.6) 4px,
-    rgba(146,200,211,.6) 5px
+    transparent 3px,
+    rgba(146, 200, 211, 0.7) 3px,
+    rgba(146, 200, 211, 0.7) 4px
   );
   mix-blend-mode: overlay;
+}
+
+/* ── Central highlight sheen ──────────────────────────────────────────── */
+/*   A soft bright line across the middle of the strip, like film catching */
+/*   light at an angle.                                                     */
+.sheen {
+  position: absolute;
+  pointer-events: none;
+}
+
+.top  .sheen,
+.bot  .sheen {
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    transparent 30%,
+    var(--sheen-col) 50%,
+    transparent 70%
+  );
+}
+
+.left .sheen,
+.right .sheen {
+  inset: 0;
+  background: linear-gradient(
+    to right,
+    transparent 30%,
+    var(--sheen-col) 50%,
+    transparent 70%
+  );
 }
 
 /* ── Keyframes ────────────────────────────────────────────────────────── */

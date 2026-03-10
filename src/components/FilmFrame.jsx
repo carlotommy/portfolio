@@ -1,11 +1,15 @@
 import styles from './FilmFrame.module.css';
 
 /**
- * FilmFrame v3 — 35mm sprocket border as absolute overlay strips.
+ * FilmFrame v4 — real punch-through sprocket holes via CSS isolation.
+ *
+ * The strip uses `isolation: isolate`. Each hole is split into two layers:
+ *  1. holePunch  — white fill + mix-blend-mode: destination-out  → cuts the hole
+ *  2. holeRim    — transparent bg + visible border rendered ON TOP → frames it
  *
  * variant  'h'  → top + bottom strips   (Photos)
  *          'v'  → left + right strips   (Videos)
- * speed    animation duration — default '14s' (slow, realistic)
+ * speed    animation duration — default '14s'
  */
 const CELLS = 60;
 
@@ -25,8 +29,13 @@ function SprocketTrack({ axis, speed }) {
         >
           {cells.map((_, i) => (
             <span key={i} className={styles.cell}>
-              <span className={styles.hole}>
-                <span className={styles.holeInner} />
+              <span className={styles.holeGroup}>
+                {/* layer 1 — punch the hole (destination-out erases strip bg) */}
+                <span className={styles.holePunch} />
+                {/* layer 2 — rim + glint rendered on top of the void */}
+                <span className={styles.holeRim}>
+                  <span className={styles.holeGlint} />
+                </span>
               </span>
             </span>
           ))}
@@ -46,10 +55,12 @@ function Strip({ pos, speed }) {
       <div className={styles.channel}>
         <SprocketTrack axis={isH ? 'x' : 'y'} speed={speed} />
       </div>
-      {/* inner edge toward content */}
+      {/* inner edge — glows toward content */}
       <div className={styles.edgeB} />
-      {/* acetate grain */}
+      {/* acetate scratch grain */}
       <div className={styles.acetate} />
+      {/* central highlight sheen */}
+      <div className={styles.sheen} />
     </div>
   );
 }
