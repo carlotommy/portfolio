@@ -6,9 +6,9 @@ export default function Hero() {
       <div className={styles.heroContent}>
         <div className={styles.quoteWrapper}>
           <h1 className={styles.heroTitle}>
-            La creatività è l'intelligenza che si diverte
-          </h1>
-          <p className={styles.heroAuthor}>— Albert Einstein —</p>
+            ASSE ZERO
+            </h1>
+          <p className={styles.heroAuthor}> Production </p>
         </div>
 
         <div className={styles.scrollIndicator}>
