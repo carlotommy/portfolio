@@ -145,7 +145,18 @@ export default function Navigation() {
                     tabIndex={isOpen ? 0 : -1}
                   >
                     <span className={styles.linkNum}>{item.num}</span>
-                    <span className={styles.linkLabel}>{item.label}</span>
+                    <span className={styles.linkLabel} aria-label={item.label}>
+                      {item.label.split('').map((char, ci) => (
+                        <span
+                          key={ci}
+                          className={styles.charWrap}
+                          style={{ '--ci': ci }}
+                        >
+                          <span className={styles.charInner}>{char}</span>
+                          <span className={styles.charClone} aria-hidden="true">{char}</span>
+                        </span>
+                      ))}
+                    </span>
                     <span className={styles.linkArrow}>↗</span>
                   </a>
                 </li>
