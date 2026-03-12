@@ -20,6 +20,7 @@ const photos = [
   { title: 'Luce di Mezzogiorno',       category: 'Cortometraggio',  date: 'Novembre 2025',  src: '/photos/3.jpeg' },
   { title: 'Il Confine',                category: 'Cortometraggio',  date: 'Ottobre 2025',   src: '/photos/4.jpeg' },
   { title: 'Neon Nights',               category: 'Video Musicale',  date: 'Settembre 2025', src: '/photos/5.jpeg' },
+
 ];
 
 /* ─── Card singola ───────────────────────────────────────────────────────── */
@@ -69,7 +70,6 @@ export default function Photos() {
           </p>
         </div>
 
-        {/* ── FocusCards grid ── */}
         <div className={styles.grid}>
           {photos.map((card, index) => (
             <Card
@@ -84,7 +84,6 @@ export default function Photos() {
         </div>
       </div>
 
-      {/* ── Lightbox ── */}
       {lightbox && (
         <div
           className={styles.lightbox}
