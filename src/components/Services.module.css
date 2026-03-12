@@ -3,7 +3,7 @@
 /* ─── Section wrapper ──────────────────────────────────────── */
 .servicesSection {
   width: 100%;
-  background: #050505;
+  
   overflow: hidden;
 }
 
@@ -258,4 +258,21 @@
     flex-direction: column;
     gap: 0.5rem;
   }
+}
+
+/* ─── Glare overlay ─────────────────────────────────────────── */
+.glareOverlay {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  pointer-events: none;
+  border-radius: inherit;
+  transition: background 0.08s ease-out, opacity 0.3s ease;
+}
+
+/* Card needs relative + overflow for glare to work */
+.card {
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.08s ease-out, box-shadow 0.3s ease;
 }
