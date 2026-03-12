@@ -37,8 +37,8 @@ export default function Contact() {
               Parliamone.
             </p>
             <p className={styles.infoBody}>
-              Che si tratti di un videoclip, una campagna pubblicitaria, 
-              un cortometraggio o un progetto di sound design — 
+              Che si tratti di un videoclip, una campagna pubblicitaria,
+              un cortometraggio o un progetto di sound design —
               siamo qui per ascoltare.
             </p>
             <div className={styles.contact_details}>

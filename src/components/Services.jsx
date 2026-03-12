@@ -3,37 +3,49 @@ import styles from './Services.module.css';
 const services = [
   {
     id: 1,
-    title: 'Video Production',
-    description: "Creazione di video professionali per social media, pubblicità e storytelling. Dall'ideazione al montaggio finale, contenuti che emozionano e comunicano.",
-    features: ['Riprese Cinematografiche', 'Color Grading Avanzato', 'Motion Graphics'],
+    title: 'Pubblicità',
+    description: "Spot pubblicitari e campagne visive per brand di ogni dimensione. Dall'ideazione alla distribuzione, creiamo contenuti che parlano al pubblico giusto.",
+    features: ['Spot TV & Web', 'Campagne Social', 'Brand Storytelling'],
     icon: (
       <svg className={styles.icon} viewBox="0 0 24 24" fill="none">
-        <rect x="2" y="3" width="20" height="14" rx="2" stroke="currentColor" strokeWidth="1.5" />
-        <path d="M8 21h8M12 17v4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+        <path d="M22 12h-4l-3 9L9 3l-3 9H2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
       </svg>
     ),
   },
   {
     id: 2,
-    title: 'Photography',
-    description: "Servizi fotografici professionali per brand, eventi e ritratti. Ogni scatto cattura l'essenza del momento con creatività e attenzione ai dettagli.",
-    features: ['Ritratti & Lifestyle', 'Eventi & Corporate', 'Post-Produzione'],
+    title: 'Cortometraggi',
+    description: "Regia e produzione di cortometraggi con approccio cinematografico. Narrativa visiva potente, dall'idea al master da festival.",
+    features: ['Sviluppo Script', 'Direzione Artistica', 'Post-Produzione Completa'],
     icon: (
       <svg className={styles.icon} viewBox="0 0 24 24" fill="none">
-        <path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2v11z" stroke="currentColor" strokeWidth="1.5" />
-        <circle cx="12" cy="13" r="4" stroke="currentColor" strokeWidth="1.5" />
+        <rect x="2" y="3" width="20" height="14" rx="2" stroke="currentColor" strokeWidth="1.5"/>
+        <path d="M8 21h8M12 17v4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
       </svg>
     ),
   },
   {
     id: 3,
-    title: 'Content Strategy',
-    description: 'Strategie di contenuto per social media e piattaforme digitali. Piani editoriali che aumentano engagement, reach e conversioni del tuo brand.',
-    features: ['Piano Editoriale', 'Content Creation', 'Analytics & Reporting'],
+    title: 'Video Musicali',
+    description: "Videoclip che amplificano la musica con immagini. Ogni video è progettato attorno al suono, costruendo un'identità visiva per l'artista.",
+    features: ['Concept & Regia', 'Coreografia Visiva', 'Color Grading Avanzato'],
     icon: (
       <svg className={styles.icon} viewBox="0 0 24 24" fill="none">
-        <path d="M12 2L2 7l10 5 10-5-10-5z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-        <path d="M2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M9 18V5l12-2v13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+        <circle cx="6" cy="18" r="3" stroke="currentColor" strokeWidth="1.5"/>
+        <circle cx="18" cy="16" r="3" stroke="currentColor" strokeWidth="1.5"/>
+      </svg>
+    ),
+  },
+  {
+    id: 4,
+    title: 'Sound Design',
+    description: "Composizione musicale, sound design e mixing professionale. Il suono non è un'aggiunta — è metà della storia. Produciamo e masteriziamo in-house.",
+    features: ['Composizione Originale', 'Mixing & Mastering', 'Foley & Ambienti'],
+    icon: (
+      <svg className={styles.icon} viewBox="0 0 24 24" fill="none">
+        <path d="M3 18v-6a9 9 0 0 1 18 0v6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+        <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z" stroke="currentColor" strokeWidth="1.5"/>
       </svg>
     ),
   },
@@ -62,14 +74,13 @@ export default function Services() {
                   {s.features.map((f) => (
                     <li key={f}>
                       <svg viewBox="0 0 24 24" fill="none">
-                        <polyline points="20 6 9 17 4 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                        <polyline points="20 6 9 17 4 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                       </svg>
                       <span>{f}</span>
                     </li>
                   ))}
                 </ul>
               </div>
-              {/* hover-fill bottom line */}
               <div className={styles.hoverLine} />
             </div>
           ))}
