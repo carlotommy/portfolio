@@ -10,6 +10,44 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import styles from './Contact.module.css';
 
+/* ─── BlurText (inline) ────────────────────────────────────── */
+function BlurText({ text, className }) {
+  const ref = useRef(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) { setVisible(true); obs.disconnect(); } },
+      { threshold: 0.3 }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+
+  return (
+    <span ref={ref} className={className} aria-label={text} style={{ display: 'inline-block' }}>
+      {text.split(' ').map((word, i) => (
+        <span
+          key={i}
+          style={{
+            display: 'inline-block',
+            marginRight: '0.22em',
+            opacity: visible ? 1 : 0,
+            filter: visible ? 'blur(0px)' : 'blur(12px)',
+            transform: visible ? 'translateY(0)' : 'translateY(18px)',
+            transition: `opacity 0.6s ease ${i * 0.1}s, filter 0.6s ease ${i * 0.1}s, transform 0.6s ease ${i * 0.1}s`,
+          }}
+        >
+          {word}
+        </span>
+      ))}
+    </span>
+  );
+}
+
+
 const INITIAL = { name: '', email: '', subject: '', message: '' };
 
 /* ─── ContainerScroll hook ──────────────────────────────────── */
@@ -120,7 +158,7 @@ export default function Contact() {
       {/* Section header — stesso stile di Services */}
       <div className={styles.sectionHeader}>
         <p className={styles.sectionLabel}>— Parliamoci</p>
-        <h1 className={styles.sectionTitle}>Contattami</h1>
+        <h1 className={styles.sectionTitle}><BlurText text="Contattami" /></h1>
         <p className={styles.sectionIntro}>
           Hai un progetto in mente? Che si tratti di un videoclip, una campagna,
           un cortometraggio o sound design — siamo qui per ascoltare.

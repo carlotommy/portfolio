@@ -6,6 +6,44 @@
 import { useRef, useEffect, useState, useCallback } from 'react';
 import styles from './Services.module.css';
 
+
+/* ─── BlurText (inline) ────────────────────────────────────── */
+function BlurText({ text, className }) {
+  const ref = useRef(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) { setVisible(true); obs.disconnect(); } },
+      { threshold: 0.3 }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+
+  return (
+    <span ref={ref} className={className} aria-label={text} style={{ display: 'inline-block' }}>
+      {text.split(' ').map((word, i) => (
+        <span
+          key={i}
+          style={{
+            display: 'inline-block',
+            marginRight: '0.22em',
+            opacity: visible ? 1 : 0,
+            filter: visible ? 'blur(0px)' : 'blur(12px)',
+            transform: visible ? 'translateY(0)' : 'translateY(18px)',
+            transition: `opacity 0.6s ease ${i * 0.1}s, filter 0.6s ease ${i * 0.1}s, transform 0.6s ease ${i * 0.1}s`,
+          }}
+        >
+          {word}
+        </span>
+      ))}
+    </span>
+  );
+}
+
 /* ─── ContainerScroll hook ──────────────────────────────────── */
 function useContainerScroll(wrapperRef) {
   const [t, setT] = useState({ rotateX: 18, scale: 0.88, translateY: 0 });
@@ -274,7 +312,7 @@ export default function Services() {
     <section className={styles.servicesSection}>
       <div className={styles.sectionHeader}>
         <p className={styles.sectionLabel}>— Cosa facciamo</p>
-        <h1 className={styles.sectionTitle}>I Nostri Servizi</h1>
+        <h1 className={styles.sectionTitle}><BlurText text="I Nostri Servizi" /></h1>
         <p className={styles.sectionIntro}>
           Dalla strategia creativa alla post-produzione, ogni progetto è un viaggio
           verso qualcosa che nessuno ha mai visto prima.
