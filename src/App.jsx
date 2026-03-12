@@ -6,6 +6,7 @@ import LoadingScreen from './components/LoadingScreen';
 import Navigation    from './components/Navigation';
 import Footer        from './components/Footer';
 import LightRays     from './components/LightRays';
+import ClickSpark    from './components/ClickSpark';
 
 import Home    from './pages/Home';
 import Work    from './pages/Work';
@@ -23,6 +24,8 @@ export default function App() {
 
   return (
     <>
+      <ClickSpark />
+
       <Helmet>
         <title>ASSE ZERO | Production</title>
         <meta name="description" content="ASSE ZERO – Advertising, Short Films, Music Videos, Sound Design" />
