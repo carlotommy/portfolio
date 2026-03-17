@@ -1,28 +1,9 @@
-/**
- * HomeStory.jsx
- * ─────────────────────────────────────────────────────────────
- * The scroll-driven home experience.
- *
- * Architecture:
- *  • Every block that should reveal gets  data-reveal  on it.
- *  • A single IntersectionObserver watches all  [data-reveal]
- *    elements inside the root div.
- *  • When one enters the viewport the observer adds
- *    data-visible="true" which triggers CSS transitions.
- *  • Different CSS rules handle different entry styles:
- *      – .manifestoInner  → word-by-word heading mask reveal
- *      – .card            → clip-path wipe from bottom
- *      – .diptychPhoto    → clip-path horizontal wipe
- *      – .stripWrap       → fade + marquee kick-off
- *      – .quoteSection    → scale + fade
- *      – .ctaSection      → slide-up fade
- */
-
 import { useEffect, useRef } from 'react';
 import { useNavigate }       from 'react-router-dom';
+import { usePageTransition } from './TransitionContext';
 import styles                from './HomeStory.module.css';
 
-/* ── Data ──────────────────────────────────────────────────── */
+/* ── Service preview cards ─────────────────────────────────────────── */
 const SERVICES = [
   { num: '01', title: 'Advertising',  sub: 'Brand · Spot TV · Campaigns',  img: '/photos/f1.jpg' },
   { num: '02', title: 'Short Films',  sub: 'Cinema · Festival · Narrative', img: '/photos/f2.jpg' },
@@ -30,54 +11,49 @@ const SERVICES = [
   { num: '04', title: 'Sound Design', sub: 'Score · Mix · Mastering',       img: '/photos/f4.jpg' },
 ];
 
-/* ── Component ─────────────────────────────────────────────── */
+/* ── Component ─────────────────────────────────────────────────────── */
 export default function HomeStory() {
   const navigate = useNavigate();
+  const transit  = usePageTransition();
   const rootRef  = useRef(null);
 
-  /* Single IntersectionObserver for every [data-reveal] element */
+  /* Single IntersectionObserver for all [data-reveal] elements */
   useEffect(() => {
     const root = rootRef.current;
     if (!root) return;
-
-    const targets = root.querySelectorAll('[data-reveal]');
 
     const io = new IntersectionObserver(
       (entries) =>
         entries.forEach((e) => {
           if (e.isIntersecting) {
             e.target.setAttribute('data-visible', 'true');
-            io.unobserve(e.target);           // reveal once, never hide again
+            io.unobserve(e.target);
           }
         }),
-      { threshold: 0.06, rootMargin: '0px 0px -60px 0px' }
+      { threshold: 0.06, rootMargin: '0px 0px -60px 0px' },
     );
 
-    targets.forEach((el) => io.observe(el));
+    root.querySelectorAll('[data-reveal]').forEach((el) => io.observe(el));
     return () => io.disconnect();
   }, []);
+
+  const goTo = (path) => transit(() => navigate(path));
 
   return (
     <div id="story" ref={rootRef} className={styles.story}>
 
-      {/* ══════════════════════════════════════════════════════
+      {/* ══════════════════════════════════════════════════════════
           01 — MANIFESTO
           Words enter one by one with a masked vertical reveal.
-          ══════════════════════════════════════════════════════ */}
+          ══════════════════════════════════════════════════════════ */}
       <div className={styles.manifestoWrap} role="region" aria-label="Manifesto">
         <div className={styles.manifestoInner} data-reveal>
 
           <span className={styles.chip}>Studio di Produzione · Roma</span>
 
-          {/* Each word wrapped in an overflow:hidden mask so the inner
-              span can slide up from below without showing outside */}
           <h2 className={styles.manifestoHeading} aria-label="Ogni frame racconta qualcosa.">
             {['Ogni', 'frame', 'racconta', 'qualcosa.'].map((word, i) => (
-              <span
-                key={i}
-                className={styles.wordMask}
-                style={{ '--wi': i }}        /* index drives CSS animation-delay */
-              >
+              <span key={i} className={styles.wordMask} style={{ '--wi': i }}>
                 <span className={styles.wordInner}>{word}</span>
               </span>
             ))}
@@ -90,19 +66,17 @@ export default function HomeStory() {
           </p>
         </div>
 
-        {/* Decorative vertical text on the far right */}
         <div className={styles.manifestoSide} aria-hidden="true">
           <span>ASSE ZERO</span>
           <span>PRODUCTION</span>
-          <span>ROMA · MMXXIV</span>
+          <span>ROMA · MMXXVI</span>
         </div>
       </div>
 
-      {/* ══════════════════════════════════════════════════════
+      {/* ══════════════════════════════════════════════════════════
           02 — SERVICES
-          Cards wipe in from the bottom with a clip-path animation,
-          each staggered by 110 ms via --delay.
-          ══════════════════════════════════════════════════════ */}
+          Cards wipe in from the bottom; click navigates with transition.
+          ══════════════════════════════════════════════════════════ */}
       <div className={styles.servicesWrap} role="region" aria-label="Servizi">
 
         <div className={styles.servicesHeader} data-reveal>
@@ -116,40 +90,33 @@ export default function HomeStory() {
               key={s.num}
               className={styles.card}
               data-reveal
+              data-cursor="view"
               style={{ '--delay': `${i * 110}ms` }}
-              onClick={() => navigate('/servizi')}
+              onClick={() => goTo('/servizi')}
               role="button"
               tabIndex={0}
-              onKeyDown={(e) => e.key === 'Enter' && navigate('/servizi')}
+              onKeyDown={(e) => e.key === 'Enter' && goTo('/servizi')}
+              aria-label={`${s.title} — ${s.sub}`}
             >
-              {/* Photo background */}
-              <div
-                className={styles.cardBg}
-                style={{ backgroundImage: `url(${s.img})` }}
-              />
-              {/* Gradient veil */}
+              <div className={styles.cardBg} style={{ backgroundImage: `url(${s.img})` }} />
               <div className={styles.cardVeil} />
-              {/* Text content */}
               <div className={styles.cardBody}>
                 <span className={styles.cardNum}>{s.num}</span>
                 <h3 className={styles.cardTitle}>{s.title}</h3>
-                <p  className={styles.cardSub}>{s.sub}</p>
+                <p className={styles.cardSub}>{s.sub}</p>
               </div>
-              {/* Hover arrow */}
               <span className={styles.cardArrow} aria-hidden="true">↗</span>
             </div>
           ))}
         </div>
       </div>
 
-      {/* ══════════════════════════════════════════════════════
-          03 — DIPTYCH  (photo wipe  |  manifesto text)
-          Photo wipes in horizontally from the right edge;
-          text and button fade+slide separately.
-          ══════════════════════════════════════════════════════ */}
+      {/* ══════════════════════════════════════════════════════════
+          03 — DIPTYCH  (photo wipe | statement text)
+          ══════════════════════════════════════════════════════════ */}
       <div className={styles.diptych} role="region" aria-label="Dichiarazione">
 
-        <div className={styles.diptychPhoto} data-reveal>
+        <div className={styles.diptychPhoto} data-reveal data-cursor="view">
           <img src="/photos/f2.jpg" alt="Produzione cinematografica" />
           <span className={styles.photoCaption} aria-hidden="true">Behind the Frame</span>
         </div>
@@ -171,15 +138,15 @@ export default function HomeStory() {
             non cambia mai mano.
           </p>
 
+          {/* Fixed: was scrolling to #about which was never in the DOM */}
           <button
             className={styles.ghostBtn}
-            onClick={() => document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' })}
+            onClick={() => goTo('/about')}
           >
-            Chi siamo <span aria-hidden="true">↓</span>
+            Chi siamo <span aria-hidden="true">↗</span>
           </button>
         </div>
       </div>
-
 
     </div>
   );

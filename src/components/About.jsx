@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { usePageTransition } from './TransitionContext';
 import styles from './About.module.css';
 
 const PROCESS = [
@@ -11,6 +12,7 @@ const PROCESS = [
 
 export default function About() {
   const navigate    = useNavigate();
+  const transit     = usePageTransition();
   const sectionRef  = useRef(null);
   const imgARef     = useRef(null);
   const imgBRef     = useRef(null);
@@ -146,13 +148,13 @@ export default function About() {
           <div className={styles.ctaButtons}>
             <button
               className={styles.btnPrimary}
-              onClick={() => navigate('/servizi')}
+              onClick={() => transit(() => navigate('/servizi'))}
             >
               Vedi i servizi
             </button>
             <button
               className={styles.btnSecondary}
-              onClick={() => navigate('/servizi#contact')}
+              onClick={() => transit(() => navigate('/servizi'))}
             >
               Inizia un progetto →
             </button>

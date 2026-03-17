@@ -16,10 +16,9 @@
 
 /* ── Wrapper ─────────────────────────────────────────────────── */
 .story {
-  background: var(--bg-base);
   position:   relative;
   z-index:    1;
-  overflow-x: hidden;  /* prevent horizontal flash during clip-path reveal */
+  overflow-x: hidden;
 }
 
 /* ── Shared: small monospace label chip ──────────────────────── */
@@ -52,7 +51,7 @@
   display:    flex;
   align-items: center;
   justify-content: space-between;
-  padding:    10rem 4rem 8rem;
+  padding:    5rem 4rem 6rem;
   max-width:  1400px;
   margin:     0 auto;
   gap:        4rem;

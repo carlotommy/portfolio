@@ -1,47 +1,50 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
-import { Helmet } from 'react-helmet-async';
 
-import LoadingScreen from './components/LoadingScreen';
-import Navigation    from './components/Navigation';
-import Footer        from './components/Footer';
-import LightRays     from './components/LightRays';
-import ClickSpark    from './components/ClickSpark';
+import { TransitionProvider } from './components/TransitionContext';
+import LoadingScreen           from './components/LoadingScreen';
+import Navigation              from './components/Navigation';
+import Footer                  from './components/Footer';
+import LightRays               from './components/LightRays';
+import ClickSpark              from './components/ClickSpark';
+import Cursor                  from './components/Cursor';
 
 import Home    from './pages/Home';
 import Work    from './pages/Work';
 import Servizi from './pages/Servizi';
+import About   from './pages/About';
 
 export default function App() {
-  const [loading, setLoading] = useState(true);
-  const done = useCallback(() => setLoading(false), []);
   const { pathname } = useLocation();
+  // Once the LoadingScreen animation finishes it calls onComplete,
+  // which unmounts it — removing the fixed full-screen div that was
+  // intercepting all pointer events.
+  const [showLoading, setShowLoading] = useState(true);
 
-  /* Scroll to top on page change */
+  /* Scroll to top on route change */
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'instant' });
   }, [pathname]);
 
   return (
-    <>
-      {/* LoadingScreen must receive onComplete so it can call back when
-          the exit animation finishes; without this prop the panels stay
-          fixed on top of everything (z-index 9999) and swallow all events */}
-      {loading && <LoadingScreen onComplete={done} />}
+    <TransitionProvider>
+      {showLoading && (
+        <LoadingScreen onComplete={() => setShowLoading(false)} />
+      )}
+      <Cursor />
       <ClickSpark />
-      <LightRays/>
+      <LightRays />
       <main>
         <Navigation />
         <Routes>
           <Route path="/"        element={<Home />} />
           <Route path="/work"    element={<Work />} />
           <Route path="/servizi" element={<Servizi />} />
-          {/* Fallback */}
+          <Route path="/about"   element={<About />} />
           <Route path="*"        element={<Home />} />
         </Routes>
       </main>
-
       <Footer />
-    </>
+    </TransitionProvider>
   );
 }
