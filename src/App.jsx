@@ -24,34 +24,14 @@ export default function App() {
 
   return (
     <>
-      <ClickSpark />
-
-      <Helmet>
-        <title>ASSE ZERO | Production</title>
-        <meta name="description" content="ASSE ZERO – Advertising, Short Films, Music Videos, Sound Design" />
-      </Helmet>
-
+      {/* LoadingScreen must receive onComplete so it can call back when
+          the exit animation finishes; without this prop the panels stay
+          fixed on top of everything (z-index 9999) and swallow all events */}
       {loading && <LoadingScreen onComplete={done} />}
-
-      <LightRays
-        raysOrigin="top-center"
-        raysColor="#92c8d3"
-        raysSpeed={0.4}
-        lightSpread={0.7}
-        rayLength={1.2}
-        followMouse={true}
-        mouseInfluence={0.1}
-        noiseAmount={0}
-        distortion={0}
-        className="custom-rays"
-        pulsating={false}
-        fadeDistance={1}
-        saturation={1.7}
-      />
-
-      <Navigation />
-
+      <ClickSpark />
+      <LightRays/>
       <main>
+        <Navigation />
         <Routes>
           <Route path="/"        element={<Home />} />
           <Route path="/work"    element={<Work />} />

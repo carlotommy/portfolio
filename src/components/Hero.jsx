@@ -25,7 +25,11 @@ export default function Hero() {
           <p className={styles.heroAuthor}>Production</p>
         </div>
 
-        <div className={styles.scrollIndicator}>
+        <div
+          className={styles.scrollIndicator}
+          style={{ cursor: 'pointer' }}
+          onClick={() => document.getElementById('story')?.scrollIntoView({ behavior: 'smooth' })}
+        >
           <div className={styles.scrollLine} />
           <span className={styles.scrollText}>SCROLL</span>
         </div>

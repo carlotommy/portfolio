@@ -30,12 +30,6 @@ const SERVICES = [
   { num: '04', title: 'Sound Design', sub: 'Score · Mix · Mastering',       img: '/photos/f4.jpg' },
 ];
 
-/* Six photos repeated twice for the marquee loop */
-const STRIP_SRCS = [
-  '/photos/f1.jpg', '/photos/f3.jpg', '/photos/f5.jpg',
-  '/photos/f2.jpg', '/photos/f4.jpg', '/photos/f6.jpg',
-];
-
 /* ── Component ─────────────────────────────────────────────── */
 export default function HomeStory() {
   const navigate = useNavigate();
@@ -64,7 +58,7 @@ export default function HomeStory() {
   }, []);
 
   return (
-    <div ref={rootRef} className={styles.story}>
+    <div id="story" ref={rootRef} className={styles.story}>
 
       {/* ══════════════════════════════════════════════════════
           01 — MANIFESTO
@@ -90,10 +84,9 @@ export default function HomeStory() {
           </h2>
 
           <p className={styles.manifestoBody}>
-            Siamo un collettivo creativo specializzato in video production,
-            cortometraggi, videoclip musicali, pubblicità e sound design.
-            Ogni progetto che tocchiamo viene trattato con la cura e l'intenzione
-            di un'opera cinematografica.
+            Advertising. Cortometraggi. Video musicali. Sound design.
+            Quattro modi di dire la stessa cosa: ogni storia merita
+            di essere raccontata con intenzione.
           </p>
         </div>
 
@@ -162,114 +155,31 @@ export default function HomeStory() {
         </div>
 
         <div className={styles.diptychText} data-reveal>
-          <span className={styles.chip}>// Il nostro standard</span>
+          <span className={styles.chip}>// Il linguaggio visivo</span>
 
           <h2 className={styles.diptychHeading}>
-            Non facciamo
-            <em> bei video.</em>
+            L'immagine ha
+            <em> una grammatica.</em>
             <br />
-            Facciamo cose
-            <em> che rimangono.</em>
+            Noi la
+            <em> scriviamo.</em>
           </h2>
 
           <p className={styles.diptychBody}>
-            La dimensione del progetto non cambia il nostro standard.
-            Portiamo la stessa ossessione per il dettaglio a un videoclip
-            da camera come a una campagna internazionale.
+            Ogni inquadratura è una scelta. Ogni taglio, un ritmo.
+            Dal set alle suite di post, il controllo creativo
+            non cambia mai mano.
           </p>
 
           <button
             className={styles.ghostBtn}
-            onClick={() => navigate('/work')}
+            onClick={() => document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' })}
           >
-            Vedi il portfolio <span aria-hidden="true">→</span>
+            Chi siamo <span aria-hidden="true">↓</span>
           </button>
         </div>
       </div>
 
-      {/* ══════════════════════════════════════════════════════
-          04 — FILM STRIP (infinite CSS marquee)
-          The whole strip wrapper fades in; inside, the photos
-          loop continuously via a CSS animation, evoking a film
-          reel being projected.
-          ══════════════════════════════════════════════════════ */}
-      <div
-        className={styles.stripWrap}
-        role="region"
-        aria-label="Film strip"
-        data-reveal
-      >
-        <div className={styles.stripViewport}>
-          {/* Two identical copies = seamless loop:
-              when the first set scrolls fully off-screen the
-              second set has taken its place, and we reset. */}
-          <div className={styles.strip}>
-            {[...STRIP_SRCS, ...STRIP_SRCS].map((src, i) => (
-              <div key={i} className={styles.frame}>
-                <img src={src} alt="" aria-hidden="true" />
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className={styles.stripMeta}>
-          <span className={styles.stripLabel}>Frames from the archive —</span>
-          <button
-            className={styles.stripCta}
-            onClick={() => navigate('/work')}
-          >
-            Portfolio ↗
-          </button>
-        </div>
-      </div>
-
-      {/* ══════════════════════════════════════════════════════
-          05 — DIRECTOR QUOTE
-          Scales up from 96 % → 100 % while fading in, giving a
-          cinematic "focus pull" feeling.
-          ══════════════════════════════════════════════════════ */}
-      <div
-        className={styles.quoteSection}
-        role="region"
-        aria-label="Citazione"
-        data-reveal
-      >
-        <blockquote className={styles.blockQuote}>
-          <span className={styles.quoteMark} aria-hidden="true">"</span>
-          <p>
-            Non mi interessa fare bei video.<br />
-            Mi interessa fare cose che rimangono.
-          </p>
-          <cite>Gerardo Romani — Director &amp; Sound Designer</cite>
-        </blockquote>
-      </div>
-
-      {/* ══════════════════════════════════════════════════════
-          06 — CTA
-          ══════════════════════════════════════════════════════ */}
-      <div
-        className={styles.ctaSection}
-        role="region"
-        aria-label="Call to action"
-        data-reveal
-      >
-        <span className={styles.ctaEyebrow}>Hai un'idea?</span>
-        <h2  className={styles.ctaHeading}>Parliamone.</h2>
-        <div className={styles.ctaRow}>
-          <button
-            className={styles.primaryBtn}
-            onClick={() => navigate('/servizi#contact')}
-          >
-            Inizia un progetto →
-          </button>
-          <button
-            className={styles.outlineBtn}
-            onClick={() => navigate('/servizi')}
-          >
-            Scopri i servizi
-          </button>
-        </div>
-      </div>
 
     </div>
   );

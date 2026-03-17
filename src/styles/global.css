@@ -52,8 +52,6 @@ html {
 
 body {
   font-family: 'DM Sans', sans-serif;
-  /* Quasi-nero freddo #03090a: non puro nero, ha una traccia teal
-     così i raggi WebGL si fondono nell'ambiente invece di sembrare incollati */
   background: var(--bg-base);
   color: var(--text-white);
   overflow-x: hidden;
