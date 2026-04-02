@@ -89,14 +89,6 @@ section {
   padding:    8rem 0;
   position:   relative;
   z-index:    1;
-  opacity:    0;
-  transform:  translateY(50px);
-  transition: opacity 0.8s ease, transform 0.8s ease;
-}
-
-section.visible {
-  opacity:   1;
-  transform: translateY(0);
 }
 
 /* ── Section header ────────────────────────────────────────────────────── */

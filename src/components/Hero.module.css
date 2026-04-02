@@ -6,10 +6,13 @@
   position:       relative;
   z-index:        1;
   overflow:       hidden;
-  padding-top:    0 !important;
-  padding-bottom: 0 !important;
-  opacity:        1 !important;
-  transform:      none !important;
+}
+
+.gradientText {
+  background:           linear-gradient(135deg, var(--teal-100), var(--teal-300));
+  WebkitBackgroundClip: text;
+  WebkitTextFillColor:  'transparent';
+  background-clip:       text;
 }
 
 @media (max-width: 768px) {

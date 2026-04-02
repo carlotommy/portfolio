@@ -1,101 +1,119 @@
-import { useEffect, useRef } from 'react';
-import { useNavigate }       from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import { usePageTransition } from './TransitionContext';
-import styles                from './HomeStory.module.css';
+import styles from './HomeStory.module.css';
 
-/* ── Service preview cards ─────────────────────────────────────────── */
 const SERVICES = [
-  { num: '01', title: 'Advertising',  sub: 'Brand · Spot TV · Campaigns',  img: '/photos/f1.jpg' },
-  { num: '02', title: 'Short Films',  sub: 'Cinema · Festival · Narrative', img: '/photos/f2.jpg' },
-  { num: '03', title: 'Music Videos', sub: 'Artists · Labels · Concerts',   img: '/photos/f3.jpg' },
-  { num: '04', title: 'Sound Design', sub: 'Score · Mix · Mastering',       img: '/photos/f4.jpg' },
+  { num: '01', title: 'Advertising',  sub: 'Brand · Spot TV · Campaigns',  img: '/photos/f1.jpeg' },
+  { num: '02', title: 'Short Films',  sub: 'Cinema · Festival · Narrative', img: '/photos/f2.jpeg' },
+  { num: '03', title: 'Music Videos', sub: 'Artists · Labels · Concerts',   img: '/photos/f3.jpeg' },
+  { num: '04', title: 'Sound Design', sub: 'Score · Mix · Mastering',       img: '/photos/f4.jpeg' },
 ];
 
-/* ── Component ─────────────────────────────────────────────────────── */
+const revealVariants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: (i = 0) => ({
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.8,
+      ease: [0.16, 1, 0.3, 1],
+      delay: i * 0.1,
+    },
+  }),
+};
+
+const wordVariants = {
+  hidden: { y: '110%', opacity: 0 },
+  visible: (i) => ({
+    y: 0,
+    opacity: 1,
+    transition: {
+      duration: 0.9,
+      ease: [0.16, 1, 0.3, 1],
+      delay: 0.25 + i * 0.13,
+    },
+  }),
+};
+
 export default function HomeStory() {
   const navigate = useNavigate();
-  const transit  = usePageTransition();
-  const rootRef  = useRef(null);
-
-  /* Single IntersectionObserver for all [data-reveal] elements */
-  useEffect(() => {
-    const root = rootRef.current;
-    if (!root) return;
-
-    const io = new IntersectionObserver(
-      (entries) =>
-        entries.forEach((e) => {
-          if (e.isIntersecting) {
-            e.target.setAttribute('data-visible', 'true');
-            io.unobserve(e.target);
-          }
-        }),
-      { threshold: 0.06, rootMargin: '0px 0px -60px 0px' },
-    );
-
-    root.querySelectorAll('[data-reveal]').forEach((el) => io.observe(el));
-    return () => io.disconnect();
-  }, []);
+  const transit = usePageTransition();
 
   const goTo = (path) => transit(() => navigate(path));
 
   return (
-    <div id="story" ref={rootRef} className={styles.story}>
-
-      {/* ══════════════════════════════════════════════════════════
-          01 — MANIFESTO
-          Words enter one by one with a masked vertical reveal.
-          ══════════════════════════════════════════════════════════ */}
-      <div className={styles.manifestoWrap} role="region" aria-label="Manifesto">
-        <div className={styles.manifestoInner} data-reveal>
-
-          <span className={styles.chip}>Studio di Produzione · Roma</span>
+    <div id="story" className={styles.story}>
+      {/* 01 — MANIFESTO */}
+      <section className={styles.manifestoWrap} aria-label="Manifesto">
+        <motion.div
+          className={styles.manifestoInner}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: '-10% 0px' }}
+        >
+          <motion.span variants={revealVariants} className={styles.chip}>
+            Studio di Produzione · Roma
+          </motion.span>
 
           <h2 className={styles.manifestoHeading} aria-label="Ogni frame racconta qualcosa.">
             {['Ogni', 'frame', 'racconta', 'qualcosa.'].map((word, i) => (
-              <span key={i} className={styles.wordMask} style={{ '--wi': i }}>
-                <span className={styles.wordInner}>{word}</span>
+              <span key={i} className={styles.wordMask}>
+                <motion.span
+                  custom={i}
+                  variants={wordVariants}
+                  className={styles.wordInner}
+                >
+                  {word}
+                </motion.span>
               </span>
             ))}
           </h2>
 
-          <p className={styles.manifestoBody}>
+          <motion.p
+            variants={revealVariants}
+            custom={10} /* Delay it after heading */
+            className={styles.manifestoBody}
+          >
             Advertising. Cortometraggi. Video musicali. Sound design.
             Quattro modi di dire la stessa cosa: ogni storia merita
             di essere raccontata con intenzione.
-          </p>
-        </div>
+          </motion.p>
+        </motion.div>
 
         <div className={styles.manifestoSide} aria-hidden="true">
           <span>ASSE ZERO</span>
           <span>PRODUCTION</span>
           <span>ROMA · MMXXVI</span>
         </div>
-      </div>
+      </section>
 
-      {/* ══════════════════════════════════════════════════════════
-          02 — SERVICES
-          Cards wipe in from the bottom; click navigates with transition.
-          ══════════════════════════════════════════════════════════ */}
-      <div className={styles.servicesWrap} role="region" aria-label="Servizi">
-
-        <div className={styles.servicesHeader} data-reveal>
+      {/* 02 — SERVICES */}
+      <section className={styles.servicesWrap} aria-label="Servizi">
+        <motion.div
+          className={styles.servicesHeader}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          variants={revealVariants}
+        >
           <span className={styles.chip}>// Cosa facciamo</span>
           <p className={styles.servicesTagline}>Quattro discipline. Un'unica visione.</p>
-        </div>
+        </motion.div>
 
         <div className={styles.servicesGrid}>
           {SERVICES.map((s, i) => (
-            <div
+            <motion.div
               key={s.num}
               className={styles.card}
-              data-reveal
+              initial={{ clipPath: 'inset(0 0 100% 0)' }}
+              whileInView={{ clipPath: 'inset(0 0 0% 0)' }}
+              viewport={{ once: true }}
+              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: i * 0.15 }}
               data-cursor="view"
-              style={{ '--delay': `${i * 110}ms` }}
               onClick={() => goTo('/servizi')}
               role="button"
               tabIndex={0}
-              onKeyDown={(e) => e.key === 'Enter' && goTo('/servizi')}
               aria-label={`${s.title} — ${s.sub}`}
             >
               <div className={styles.cardBg} style={{ backgroundImage: `url(${s.img})` }} />
@@ -106,48 +124,46 @@ export default function HomeStory() {
                 <p className={styles.cardSub}>{s.sub}</p>
               </div>
               <span className={styles.cardArrow} aria-hidden="true">↗</span>
-            </div>
+            </motion.div>
           ))}
         </div>
-      </div>
+      </section>
 
-      {/* ══════════════════════════════════════════════════════════
-          03 — DIPTYCH  (photo wipe | statement text)
-          ══════════════════════════════════════════════════════════ */}
-      <div className={styles.diptych} role="region" aria-label="Dichiarazione">
-
-        <div className={styles.diptychPhoto} data-reveal data-cursor="view">
+      {/* 03 — DIPTYCH */}
+      <section className={styles.diptych} aria-label="Dichiarazione">
+        <motion.div
+          className={styles.diptychPhoto}
+          initial={{ clipPath: 'inset(0 100% 0 0)' }}
+          whileInView={{ clipPath: 'inset(0 0% 0 0)' }}
+          viewport={{ once: true }}
+          transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+          data-cursor="view"
+        >
           <img src="/photos/f2.jpg" alt="Produzione cinematografica" />
           <span className={styles.photoCaption} aria-hidden="true">Behind the Frame</span>
-        </div>
+        </motion.div>
 
-        <div className={styles.diptychText} data-reveal>
+        <motion.div
+          className={styles.diptychText}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          variants={revealVariants}
+        >
           <span className={styles.chip}>// Il linguaggio visivo</span>
-
           <h2 className={styles.diptychHeading}>
-            L'immagine ha
-            <em> una grammatica.</em>
-            <br />
-            Noi la
-            <em> scriviamo.</em>
+            L'immagine ha <em>una grammatica.</em><br />
+            Noi la <em>scriviamo.</em>
           </h2>
-
           <p className={styles.diptychBody}>
             Ogni inquadratura è una scelta. Ogni taglio, un ritmo.
-            Dal set alle suite di post, il controllo creativo
-            non cambia mai mano.
+            Dal set alle suite di post, il controllo creativo non cambia mai mano.
           </p>
-
-          {/* Fixed: was scrolling to #about which was never in the DOM */}
-          <button
-            className={styles.ghostBtn}
-            onClick={() => goTo('/about')}
-          >
+          <button className={styles.ghostBtn} onClick={() => goTo('/about')}>
             Chi siamo <span aria-hidden="true">↗</span>
           </button>
-        </div>
-      </div>
-
+        </motion.div>
+      </section>
     </div>
   );
 }
