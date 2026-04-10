@@ -34,7 +34,7 @@
 
 /* 01 — MANIFESTO */
 .manifestoWrap {
-  min-height: 95vh;
+  min-height: 95svh;
   display:    flex;
   align-items: center;
   justify-content: space-between;
@@ -224,12 +224,18 @@
 .diptych {
   display:               grid;
   grid-template-columns: 58% 42%;
-  min-height:            80vh;
+  min-height:            80svh;
   overflow:              hidden;
 }
 
 @media (max-width: 900px) {
-  .diptych { grid-template-columns: 1fr; }
+  .diptych {
+    grid-template-columns: 1fr;
+    min-height: unset;
+  }
+  .diptychPhoto {
+    max-height: 60vw;
+  }
 }
 
 .diptychPhoto {

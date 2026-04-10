@@ -9,10 +9,11 @@
 }
 
 .gradientText {
-  background:           linear-gradient(135deg, var(--teal-100), var(--teal-300));
-  WebkitBackgroundClip: text;
-  WebkitTextFillColor:  'transparent';
-  background-clip:       text;
+  background:              linear-gradient(135deg, var(--teal-100), var(--teal-300));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip:         text;
+  color:                   transparent;
 }
 
 @media (max-width: 768px) {

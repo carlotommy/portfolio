@@ -57,7 +57,7 @@ export default function LoadingScreen({ onComplete }) {
       {/* Panel A — slides UP on exit */}
       <div className={`${styles.panel} ${styles.panelA} ${isExit ? styles.panelAExit : ''}`}>
         <span className={styles.sideL}>PRODUCTION</span>
-        <span className={styles.sideR}>2024 – 2025</span>
+        <span className={styles.sideR}>2025 – 2026</span>
 
         <div className={styles.core}>
           <div className={styles.lineTop}>

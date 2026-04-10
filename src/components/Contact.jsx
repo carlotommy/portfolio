@@ -34,9 +34,9 @@ export default function Contact() {
 
       <div className={styles.sectionHeader}>
         <p className={styles.sectionLabel}>— Parliamoci</p>
-        <h1 className={styles.sectionTitle}>
+        <h2 className={styles.sectionTitle}>
           <BlurText as="span" text="Contattami" />
-        </h1>
+        </h2>
         <p className={styles.sectionIntro}>
           Hai un progetto in mente? Che si tratti di un videoclip, una campagna,
           un cortometraggio o sound design — siamo qui per ascoltare.
