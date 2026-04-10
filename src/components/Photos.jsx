@@ -37,8 +37,50 @@ export default function Photos() {
   const [scrollPos, setScrollPos] = useState(0);
   const [lightbox, setLightbox] = useState(null);
   const sectionRef = useRef(null);
+  const stageRef = useRef(null);
   const targetScroll = useRef(0);
   const animFrame = useRef(null);
+
+  const stickyRef = useRef(null);
+
+  // Native scroll tracking: map scroll progress through the section to targetScroll
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!sectionRef.current || !stickyRef.current) return;
+      const parentRect = sectionRef.current.getBoundingClientRect();
+      const stickyRect = stickyRef.current.getBoundingClientRect();
+
+      const maxTravel = parentRect.height - window.innerHeight;
+      if (maxTravel <= 0) return;
+
+      // Distance traveled relative to when the sticky element hit the top.
+      // Since it's sticky at roughly top: 0 (or 1rem), we can just check parent's top
+      // Wait, more simply: parentRect.top starts at 0 or positive. As we scroll down, it goes negative.
+      const traveled = -parentRect.top;
+      
+      let progress = traveled / maxTravel;
+      progress = Math.max(0, Math.min(1, progress));
+      targetScroll.current = progress * (N - 1);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('resize', handleScroll);
+    handleScroll();
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleScroll);
+    };
+  }, []);
+
+  const scrollToTargetIndex = (idx) => {
+    if (!sectionRef.current) return;
+    const clampedIdx = Math.max(0, Math.min(N - 1, idx));
+    const progress = clampedIdx / (N - 1);
+    const parentRect = sectionRef.current.getBoundingClientRect();
+    const maxTravel = parentRect.height - window.innerHeight;
+    const targetY = window.scrollY + parentRect.top + (progress * maxTravel);
+    window.scrollTo({ top: targetY, behavior: 'smooth' });
+  };
 
   // Smooth lerp animation loop
   useEffect(() => {
@@ -54,21 +96,6 @@ export default function Photos() {
     };
     animFrame.current = requestAnimationFrame(animate);
     return () => { if (animFrame.current) cancelAnimationFrame(animFrame.current); };
-  }, []);
-
-  // Wheel handler: accumulates deltaY into a smooth target
-  useEffect(() => {
-    const el = sectionRef.current;
-    if (!el) return;
-
-    const onWheel = (e) => {
-      e.preventDefault();
-      // Smooth continuous advance
-      targetScroll.current += e.deltaY * 0.003;
-    };
-
-    el.addEventListener('wheel', onWheel, { passive: false });
-    return () => el.removeEventListener('wheel', onWheel);
   }, []);
 
   // Keyboard
@@ -95,7 +122,7 @@ export default function Photos() {
   })();
 
   return (
-    <section id="photos" className={styles.section} ref={sectionRef}>
+    <section id="photos" className={styles.section} ref={sectionRef} style={{ height: `calc(100vh + ${N * 50}vh)` }}>
       <div className="container">
         <motion.div
           className="section-header"
@@ -111,111 +138,107 @@ export default function Photos() {
         </motion.div>
       </div>
 
-      <div className={styles.stage}>
+      <div className={styles.stickyWrapper} ref={stickyRef}>
+        <div className={styles.stage} ref={stageRef}>
 
-        {/* SVG decorative curve */}
-        <svg className={styles.curveSvg} viewBox="0 0 100 100" preserveAspectRatio="none">
-          <path
-            d={svgPath}
-            stroke="rgba(146,200,211,0.12)"
-            strokeWidth="0.3"
-            fill="none"
-            strokeDasharray="1.2 1.8"
-          />
-        </svg>
+          {/* SVG decorative curve */}
+          <svg className={styles.curveSvg} viewBox="0 0 100 100" preserveAspectRatio="none">
+            <path
+              d={svgPath}
+              stroke="rgba(146,200,211,0.12)"
+              strokeWidth="0.3"
+              fill="none"
+              strokeDasharray="1.2 1.8"
+            />
+          </svg>
 
-        {/* Cards along the curve */}
-        {photosData.map((photo, i) => {
-          // Continuous offset from the "center" position along the curve
-          // Each card's fractional position relative to scrollPos
-          const rawOffset = i - scrollPos;
-          // Wrap for circular behavior
-          const wrappedOffset = rawOffset - Math.round(rawOffset / N) * N;
+          {/* Cards along the curve */}
+          {photosData.map((photo, i) => {
+            // Continuous offset from the "center" position along the curve
+            const rawOffset = i - scrollPos;
+            const wrappedOffset = rawOffset - Math.round(rawOffset / N) * N;
 
-          // Map offset to t along the curve: center card at t≈0.42
-          const CENTER_T = 0.42;
-          const SPREAD = 0.11; // how far apart cards are on the curve
-          const t = CENTER_T + wrappedOffset * SPREAD;
+            const CENTER_T = 0.42;
+            const SPREAD = 0.11; 
+            const t = CENTER_T + wrappedOffset * SPREAD;
 
-          // Skip cards that are way off the curve
-          if (t < -0.15 || t > 1.15) return null;
+            if (t < -0.15 || t > 1.15) return null;
 
-          const clampedT = Math.max(0, Math.min(1, t));
-          const pos = bezierPoint(clampedT);
+            const clampedT = Math.max(0, Math.min(1, t));
+            const pos = bezierPoint(clampedT);
 
-          // Bell curve for scale: max at center (wrappedOffset=0), fades at edges
-          const proximity = bellCurve(wrappedOffset);
+            const proximity = bellCurve(wrappedOffset);
 
-          const scale  = 0.35 + proximity * 0.65;   // 0.35 → 1.0
-          const opacity = 0.2 + proximity * 0.8;     // 0.2 → 1.0
-          const blur   = (1 - proximity) * 2.5;      // 0 → 2.5px
-          const zIndex = Math.round(proximity * 10);
-          const rotation = wrappedOffset * -4;        // subtle tilt
+            const scale  = 0.35 + proximity * 0.65;   
+            const opacity = 0.2 + proximity * 0.8;     
+            const blur   = (1 - proximity) * 2.5;      
+            const zIndex = Math.round(proximity * 10);
+            const rotation = wrappedOffset * -4;        
 
-          const isCenter = Math.abs(wrappedOffset) < 0.4;
+            const isCenter = Math.abs(wrappedOffset) < 0.4;
 
-          return (
-            <div
-              key={i}
-              className={`${styles.curveCard} ${isCenter ? styles.curveCardActive : ''}`}
-              style={{
-                left: `${pos.x}%`,
-                top: `${pos.y}%`,
-                transform: `translate(-50%, -50%) scale(${scale}) rotate(${rotation}deg)`,
-                opacity,
-                filter: `blur(${blur}px)`,
-                zIndex,
-              }}
-              onClick={() => {
-                if (isCenter) {
-                  setLightbox(photo);
-                } else {
-                  // Snap to this card
-                  targetScroll.current = i;
-                }
-              }}
-              data-cursor="view"
-            >
-              <img
-                src={photo.src}
-                alt={photo.title}
-                className={styles.curveCardImg}
-                loading="lazy"
-                decoding="async"
-              />
-              {isCenter && (
-                <div className={styles.activeGlow} />
-              )}
-            </div>
-          );
-        })}
-
-        {/* Info panel */}
-        <div className={styles.infoPanel}>
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={activeIndex}
-              className={styles.infoPanelInner}
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              transition={{ duration: 0.35 }}
-            >
-              <span className={styles.infoCategory}>{activePhoto.category}</span>
-              <h3 className={styles.infoTitle}>{activePhoto.title}</h3>
-              <p className={styles.infoDesc}>{activePhoto.desc}</p>
-              <span className={styles.infoDate}>{activePhoto.date}</span>
-              <div className={styles.infoControls}>
-                <button className={styles.navBtn} onClick={() => targetScroll.current -= 1} aria-label="Precedente" data-cursor="view">←</button>
-                <span className={styles.counter}>
-                  {String(activeIndex + 1).padStart(2, '0')} / {String(N).padStart(2, '0')}
-                </span>
-                <button className={styles.navBtn} onClick={() => targetScroll.current += 1} aria-label="Successivo" data-cursor="view">→</button>
+            return (
+              <div
+                key={i}
+                className={`${styles.curveCard} ${isCenter ? styles.curveCardActive : ''}`}
+                style={{
+                  left: `${pos.x}%`,
+                  top: `${pos.y}%`,
+                  transform: `translate(-50%, -50%) scale(${scale}) rotate(${rotation}deg)`,
+                  opacity,
+                  filter: `blur(${blur}px)`,
+                  zIndex,
+                }}
+                onClick={() => {
+                  if (isCenter) {
+                    setLightbox(photo);
+                  } else {
+                    scrollToTargetIndex(i);
+                  }
+                }}
+                data-cursor="view"
+              >
+                <img
+                  src={photo.src}
+                  alt={photo.title}
+                  className={styles.curveCardImg}
+                  loading="lazy"
+                  decoding="async"
+                />
+                {isCenter && (
+                  <div className={styles.activeGlow} />
+                )}
               </div>
-            </motion.div>
-          </AnimatePresence>
-        </div>
+            );
+          })}
 
+          {/* Info panel */}
+          <div className={styles.infoPanel}>
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={activeIndex}
+                className={styles.infoPanelInner}
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.35 }}
+              >
+                <span className={styles.infoCategory}>{activePhoto.category}</span>
+                <h3 className={styles.infoTitle}>{activePhoto.title}</h3>
+                <p className={styles.infoDesc}>{activePhoto.desc}</p>
+                <span className={styles.infoDate}>{activePhoto.date}</span>
+                <div className={styles.infoControls}>
+                  <button className={styles.navBtn} onClick={() => scrollToTargetIndex(activeIndex - 1)} aria-label="Precedente" data-cursor="view">←</button>
+                  <span className={styles.counter}>
+                    {String(activeIndex + 1).padStart(2, '0')} / {String(N).padStart(2, '0')}
+                  </span>
+                  <button className={styles.navBtn} onClick={() => scrollToTargetIndex(activeIndex + 1)} aria-label="Successivo" data-cursor="view">→</button>
+                </div>
+              </motion.div>
+            </AnimatePresence>
+          </div>
+
+        </div>
       </div>
 
       {/* Lightbox */}

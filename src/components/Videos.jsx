@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import styles from './Videos.module.css';
 
@@ -15,7 +15,8 @@ const videos = [
 
 export default function Videos() {
   const [activeIndex, setActiveIndex] = useState(0);
-
+  const sectionRef = useRef(null);
+  const contentRef = useRef(null);
   const activeVideo = videos[activeIndex];
 
   const handleNext = () => {
@@ -27,7 +28,7 @@ export default function Videos() {
   };
 
   return (
-    <section id="videos" className={styles.videosSection}>
+    <section id="videos" className={styles.videosSection} ref={sectionRef}>
       <div className="container">
         <motion.div
           className="section-header"
@@ -40,7 +41,7 @@ export default function Videos() {
         </motion.div>
       </div>
 
-      <div className={styles.containerStyle}>
+      <div className={styles.containerStyle} ref={contentRef}>
         
         {/* Sinistra: Miniature */}
         <div className={styles.thumbListWrapper}>

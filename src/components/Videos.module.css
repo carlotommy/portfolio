@@ -1,5 +1,6 @@
 .videosSection { 
    padding: 8rem 0; 
+   scroll-margin-top: 0;
  }
  
  .containerStyle {
@@ -8,6 +9,9 @@
    max-width: 1200px;
    margin: 0 auto;
    padding: 0 2rem;
+   scroll-margin-top: 1rem;
+   scroll-snap-align: start;
+   scroll-snap-stop: always;
  }
  
  @media(max-width: 900px) {
