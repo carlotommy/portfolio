@@ -7,8 +7,8 @@
  */
 
 import { Helmet }        from 'react-helmet-async';
-import Hero              from '../components/Hero';
-import HomeStory         from '../components/HomeStory';
+import Hero              from '@sections/Hero';
+import HomeStory         from '@sections/HomeStory';
 
 export default function Home() {
 

@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet-async';
-import Photos from '../components/Photos';
-import Videos from '../components/Videos';
+import Photos from '@sections/Photos';
+import Videos from '@sections/Videos';
 
 export default function Work() {
 

@@ -1,7 +1,24 @@
-/* Photos.module.css — include tutta la logica FocusCards */
+/* Photos.module.css — Bezier Curve Layout */
 
 /* ─── Section ──────────────────────────────────────────────────────────────── */
-.section { /* ereditato dal global: padding 8rem, scroll-reveal */ }
+.section {
+  padding: 4rem 0 0;
+  position: relative;
+  scroll-margin-top: 0;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+.stickyWrapper {
+  position: sticky;
+  top: 1rem;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+}
 
 .subtitle {
   font-family: 'DM Sans', sans-serif;
@@ -9,101 +26,171 @@
   color: var(--text-muted);
   letter-spacing: 1px;
   margin-top: -1.5rem;
+  margin-bottom: 2rem;
 }
 
-/* ─── Grid ─────────────────────────────────────────────────────────────────── */
-.grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
-}
-
-@media (max-width: 1024px) { .grid { grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 600px)  { .grid { grid-template-columns: 1fr; } }
-
-/* ─── Card ─────────────────────────────────────────────────────────────────── */
-.card {
+/* ─── Stage: the full-width canvas for the curve ──────────────────────────── */
+.stage {
   position: relative;
+  width: 100%;
+  height: 88vh;
+  min-height: 600px;
+  max-height: 900px;
   overflow: hidden;
-  border-radius: 6px;
-  aspect-ratio: 4 / 3;
+  scroll-margin-top: 1rem;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+/* ─── SVG Curve (decorative guideline) ────────────────────────────────────── */
+.curveSvg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ─── Individual Card along the curve ─────────────────────────────────────── */
+.curveCard {
+  position: absolute;
+  width: 280px;
+  height: 350px;
+  border-radius: 10px;
+  overflow: hidden;
   cursor: pointer;
-  border: 1px solid rgba(146, 200, 211, 0.08);
+  border: 1px solid rgba(146, 200, 211, 0.12);
   background: var(--bg-surface);
-  transition:
-    filter       0.35s cubic-bezier(.25,.46,.45,.94),
-    transform    0.35s cubic-bezier(.25,.46,.45,.94),
-    border-color 0.35s ease;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.55);
+  /* x/y -50% centering is applied via motion animate */
+  will-change: transform, opacity;
 }
 
-.dimmed {
-  filter: blur(1.5px) brightness(0.35);
-  transform: scale(0.97);
+.curveCardActive {
+  border-color: rgba(146, 200, 211, 0.5);
+  box-shadow:
+    0 0 0 1px rgba(146, 200, 211, 0.3),
+    0 20px 60px rgba(0, 0, 0, 0.7),
+    0 0 40px rgba(146, 200, 211, 0.08);
+  cursor: zoom-in;
+  width: 340px;
+  height: 425px;
 }
 
-.active {
-  border-color: rgba(146, 200, 211, 0.35);
-  z-index: 1;
-}
-
-/* ─── Image ─────────────────────────────────────────────────────────────────── */
-.cardImage {
+.curveCardImg {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
-  filter: grayscale(8%) contrast(1.04);
-  transition: transform 0.55s cubic-bezier(.25,.46,.45,.94), filter 0.4s ease;
+  filter: grayscale(10%) contrast(1.05);
+  transition: filter 0.5s ease;
 }
 
-.card:hover .cardImage {
-  transform: scale(1.06);
+.curveCard:hover .curveCardImg {
+  filter: grayscale(0%) contrast(1.1);
+}
+
+.curveCardActive .curveCardImg {
   filter: grayscale(0%) contrast(1.08);
 }
 
-/* ─── Overlay ───────────────────────────────────────────────────────────────── */
-.overlay {
+/* Active glow overlay */
+.activeGlow {
   position: absolute;
   inset: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  padding: 1.4rem 1.5rem;
   background: linear-gradient(
-    to top,
-    rgba(3, 9, 10, 0.92) 0%,
-    rgba(3, 9, 10, 0.3)  45%,
-    transparent          75%
+    135deg,
+    rgba(146, 200, 211, 0.06) 0%,
+    transparent 50%
   );
-  opacity: 0;
-  transition: opacity 0.3s ease;
   pointer-events: none;
 }
 
-.overlayVisible { opacity: 1; }
+/* ─── Info Panel — floats right ────────────────────────────────────────────── */
+.infoPanel {
+  position: absolute;
+  right: 4%;
+  top: 50%;
+  transform: translateY(-50%);
+  width: clamp(200px, 22%, 300px);
+  z-index: 20;
+  pointer-events: auto;
+}
 
-.category {
+.infoPanelInner {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.infoCategory {
   font-family: 'Space Mono', monospace;
-  font-size: 0.62rem;
+  font-size: 0.6rem;
   color: var(--teal-300);
   letter-spacing: 3px;
   text-transform: uppercase;
-  margin-bottom: 0.3rem;
 }
 
-.title {
+.infoTitle {
   font-family: 'Archivo Black', sans-serif;
-  font-size: 1rem;
+  font-size: clamp(1.2rem, 2vw, 1.7rem);
   color: var(--text-primary);
-  letter-spacing: 0.5px;
-  line-height: 1.25;
+  line-height: 1.2;
+  margin: 0;
 }
 
-.date {
+.infoDesc {
   font-family: 'DM Sans', sans-serif;
-  font-size: 0.68rem;
+  font-size: 0.82rem;
   color: var(--text-muted);
-  margin-top: 0.35rem;
+  line-height: 1.6;
+  margin: 0;
+  border-left: 2px solid rgba(146, 200, 211, 0.25);
+  padding-left: 0.8rem;
+}
+
+.infoDate {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  letter-spacing: 1px;
+  opacity: 0.7;
+}
+
+.infoControls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.navBtn {
+  background: transparent;
+  border: 1px solid rgba(146, 200, 211, 0.3);
+  color: var(--teal-300);
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
+}
+
+.navBtn:hover {
+  background: rgba(146, 200, 211, 0.1);
+  border-color: rgba(146, 200, 211, 0.6);
+  transform: scale(1.08);
+}
+
+.counter {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  letter-spacing: 2px;
 }
 
 /* ─── Lightbox ──────────────────────────────────────────────────────────────── */
@@ -115,12 +202,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  animation: lbBackdrop 0.4s cubic-bezier(.4,0,.2,1) forwards;
-}
-
-@keyframes lbBackdrop {
-  from { opacity: 0; }
-  to   { opacity: 1; }
 }
 
 .lbInner {
@@ -133,14 +214,8 @@
 }
 
 @keyframes lbSlideUp {
-  from {
-    opacity: 0;
-    transform: scale(0.9) translateY(24px);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1) translateY(0);
-  }
+  from { opacity: 0; transform: scale(0.9) translateY(24px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
 }
 
 .lbInner img {
@@ -156,12 +231,6 @@
   font-size: 0.7rem;
   color: var(--text-muted);
   letter-spacing: 1.5px;
-  animation: lbFadeIn 0.4s ease 0.2s both;
-}
-
-@keyframes lbFadeIn {
-  from { opacity: 0; transform: translateY(6px); }
-  to   { opacity: 1; transform: translateY(0); }
 }
 
 .lbCategory { color: var(--teal-300); text-transform: uppercase; }
@@ -183,11 +252,41 @@
   align-items: center;
   justify-content: center;
   z-index: 10000;
-  animation: lbFadeIn 0.3s ease 0.15s both;
   transition: background 0.25s ease, transform 0.25s ease;
 }
 
 .lbClose:hover {
   background: rgba(146, 200, 211, 0.12);
   transform: rotate(90deg);
+}
+
+/* ─── Responsive ────────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .stage {
+    height: 70vh;
+    min-height: 500px;
+  }
+
+  .curveCard {
+    width: 200px;
+    height: 250px;
+  }
+
+  .curveCardActive {
+    width: 260px;
+    height: 325px;
+  }
+
+  .infoPanel {
+    position: absolute;
+    right: 2%;
+    top: auto;
+    bottom: 1.5rem;
+    transform: none;
+    width: clamp(160px, 40%, 240px);
+  }
+
+  .infoDesc {
+    display: none; /* Hide description on mobile to save space */
+  }
 }

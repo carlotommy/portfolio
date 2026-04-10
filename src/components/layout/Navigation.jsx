@@ -7,9 +7,9 @@ import styles                                       from './Navigation.module.cs
 
 export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
-  const location            = useLocation();
-  const navigate            = useNavigate();
-  const transit             = usePageTransition();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const transit  = usePageTransition();
 
   const overlayRef = useRef(null);
   const bgRef      = useRef(null);
@@ -19,6 +19,7 @@ export default function Navigation() {
   const bar2Ref    = useRef(null);
   const tlRef      = useRef(null);
 
+  /* ── Build GSAP timeline once ───────────────────────────────── */
   useEffect(() => {
     const overlay = overlayRef.current;
     const bg      = bgRef.current;
@@ -35,7 +36,7 @@ export default function Navigation() {
       .set(overlay, { visibility: 'visible' })
       .to(bg,    { scaleY: 1, duration: 0.65, ease: 'expo.inOut' })
       .to(links, { y: 0, opacity: 1, duration: 0.55, stagger: 0.07, ease: 'power3.out' }, '-=0.3')
-      .to(meta,  { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out' }, '-=0.2');
+      .to(meta,  { opacity: 1, y: 0, duration: 0.4,  ease: 'power2.out' }, '-=0.2');
 
     tlRef.current = tl;
   }, []);
@@ -73,6 +74,7 @@ export default function Navigation() {
 
   return (
     <>
+      {/* ── Fixed top bar: hamburger only, always transparent ──── */}
       <header className={styles.header}>
         <button
           className={styles.menuBtn}
@@ -87,8 +89,10 @@ export default function Navigation() {
         </button>
       </header>
 
+      {/* ── Fullscreen overlay ─────────────────────────────────── */}
       <div className={styles.overlay} ref={overlayRef} aria-hidden={!isOpen}>
         <div className={styles.overlayBg} ref={bgRef} />
+
         <div className={styles.overlayInner}>
           <nav className={styles.overlayNav} aria-label="Navigazione principale">
             <ul className={styles.overlayList}>

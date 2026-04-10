@@ -1,17 +1,18 @@
-import { useEffect, useRef }    from 'react';
-import { useNavigate }          from 'react-router-dom';
-import { usePageTransition }    from '@context/TransitionContext';
-import { PROCESS_STEPS }        from '@data/constants';
-import styles                   from './About.module.css';
+import { useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { usePageTransition } from '@context/TransitionContext';
+import { PROCESS_STEPS as PROCESS } from '@data/constants';
+import styles from './About.module.css';
 
 export default function About() {
-  const navigate   = useNavigate();
-  const transit    = usePageTransition();
-  const sectionRef = useRef(null);
-  const imgARef    = useRef(null);
-  const imgBRef    = useRef(null);
-  const revealRefs = useRef([]);
+  const navigate    = useNavigate();
+  const transit     = usePageTransition();
+  const sectionRef  = useRef(null);
+  const imgARef     = useRef(null);
+  const imgBRef     = useRef(null);
+  const revealRefs  = useRef([]);
 
+  /* ── Parallax on two inset images ───────────────────────────────── */
   useEffect(() => {
     const onScroll = () => {
       const sec = sectionRef.current;
@@ -24,12 +25,13 @@ export default function About() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
+  /* ── Reveal on scroll ────────────────────────────────────────────── */
   useEffect(() => {
     const io = new IntersectionObserver(
-      (entries) => entries.forEach((e) => e.isIntersecting && e.target.classList.add(styles.visible)),
-      { threshold: 0.12 },
+      (entries) => entries.forEach(e => e.isIntersecting && e.target.classList.add(styles.visible)),
+      { threshold: 0.12 }
     );
-    revealRefs.current.forEach((el) => el && io.observe(el));
+    revealRefs.current.forEach(el => el && io.observe(el));
     return () => io.disconnect();
   }, []);
 
@@ -39,17 +41,20 @@ export default function About() {
     <section id="about" className={styles.about} ref={sectionRef}>
       <div className="container">
 
+        {/* ── A: Chapter heading ──────────────────────────────────── */}
         <div className={styles.tagLine} ref={reveal(0)}>
           <span className={styles.tagDash} />
           <span className={styles.tagText}>Chi siamo</span>
           <span className={styles.tagDash} />
         </div>
 
+        {/* ── B: Hero statement ───────────────────────────────────── */}
         <h2 className={styles.heroStatement} ref={reveal(1)}>
           Raccontiamo storie<br />
           <span className={styles.heroOutline}>attraverso immagini.</span>
         </h2>
 
+        {/* ── C: Two-column intro ─────────────────────────────────── */}
         <div className={styles.introRow} ref={reveal(2)}>
           <div className={styles.imageBlockA}>
             <div className={styles.imageAInner} ref={imgARef}>
@@ -57,6 +62,7 @@ export default function About() {
               <div className={styles.imageCaption}>Behind the frame</div>
             </div>
           </div>
+
           <div className={styles.introText}>
             <p className={styles.leadText}>
               Siamo Gerardo Romani e un nucleo di collaboratori selezionati.
@@ -64,25 +70,34 @@ export default function About() {
               Portiamo la stessa testa creativa a un videoclip indipendente
               come a una campagna televisiva.
             </p>
+
             <blockquote className={styles.directorQuote}>
-              <p>"Non mi interessa fare bei video.<br />Mi interessa fare cose che rimangono."</p>
+              <p>
+                "Non mi interessa fare bei video.<br />
+                Mi interessa fare cose che rimangono."
+              </p>
               <cite>Gerardo Romani — Director &amp; Sound Designer</cite>
             </blockquote>
           </div>
         </div>
 
+        {/* ── D: Full-width pull quote ─────────────────────────────── */}
         <div className={styles.pullQuote} ref={reveal(3)}>
           <span className={styles.pullMark}>"</span>
-          <p className={styles.pullText}>Ogni fotogramma è una decisione.<br />Ogni suono, un'intenzione.</p>
+          <p className={styles.pullText}>
+            Ogni fotogramma è una decisione.<br />Ogni suono, un'intenzione.
+          </p>
         </div>
 
+        {/* ── E: Second image + strengths text ────────────────────── */}
         <div className={styles.strengthsRow} ref={reveal(4)}>
           <div className={styles.strengthsLeft}>
             <span className={styles.sectionMicro}>// Il nostro approccio</span>
             <p className={styles.strengthsBody}>
               Lavoriamo con brand emergenti, artisti indipendenti e registi
               alla loro prima opera. Non abbiamo un formato standard:
-              costruiamo ogni progetto attorno alla storia che deve raccontare.
+              costruiamo ogni progetto attorno alla storia che deve raccontare,
+              senza mai separare la direzione artistica dalla produzione.
             </p>
             <p className={styles.strengthsBody}>
               Il sound design non è un'aggiunta — è metà della storia.
@@ -90,6 +105,7 @@ export default function About() {
               una visione coerente dall'inizio alla fine.
             </p>
           </div>
+
           <div className={styles.imageBlockB}>
             <div className={styles.imageBInner} ref={imgBRef}>
               <img src="/photos/f3.jpg" alt="Direzione artistica" />
@@ -101,13 +117,14 @@ export default function About() {
           </div>
         </div>
 
+        {/* ── F: Process phases ───────────────────────────────────── */}
         <div className={styles.processSection} ref={reveal(5)}>
           <div className={styles.processHeader}>
             <span className={styles.sectionMicro}>// Il processo</span>
             <h3 className={styles.processTitle}>Dal concept al master</h3>
           </div>
           <div className={styles.processGrid}>
-            {PROCESS_STEPS.map((p) => (
+            {PROCESS.map((p) => (
               <div key={p.n} className={styles.phaseItem}>
                 <span className={styles.phaseNum}>{p.n}</span>
                 <div className={styles.phaseBody}>
@@ -119,11 +136,22 @@ export default function About() {
           </div>
         </div>
 
+        {/* ── G: Final CTA ────────────────────────────────────────── */}
         <div className={styles.ctaBar} ref={reveal(6)}>
           <p className={styles.ctaTagline}>Hai un'idea. Noi la rendiamo reale.</p>
           <div className={styles.ctaButtons}>
-            <button className={styles.btnPrimary}   onClick={() => transit(() => navigate('/servizi'))}>Vedi i servizi</button>
-            <button className={styles.btnSecondary} onClick={() => transit(() => navigate('/servizi'))}>Inizia un progetto →</button>
+            <button
+              className={styles.btnPrimary}
+              onClick={() => transit(() => navigate('/servizi'))}
+            >
+              Vedi i servizi
+            </button>
+            <button
+              className={styles.btnSecondary}
+              onClick={() => transit(() => navigate('/servizi'))}
+            >
+              Inizia un progetto →
+            </button>
           </div>
         </div>
 

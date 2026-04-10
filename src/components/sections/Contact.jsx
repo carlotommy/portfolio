@@ -1,15 +1,16 @@
-import { useState, useRef }   from 'react';
-import BlurText               from '@components/ui/BlurText';
-import GlareCard              from '@components/ui/GlareCard';
-import useContainerScroll     from '@hooks/useContainerScroll';
-import { CONTACT }            from '@data/constants';
-import styles                 from './Contact.module.css';
+import { useState, useRef } from 'react';
+import styles from './Contact.module.css';
+
+import SimpleBlurText from '@ui/SimpleBlurText';
+import GlareCard          from '@ui/GlareCard';
+import useContainerScroll from '@hooks/useContainerScroll';
+import { CONTACT }        from '@data/constants';
 
 const INITIAL_FORM = { name: '', email: '', subject: '', message: '' };
 
 export default function Contact() {
   const [form,   setForm]   = useState(INITIAL_FORM);
-  const [status, setStatus] = useState(null);
+  const [status, setStatus] = useState(null); // null | 'success' | 'error'
   const wrapperRef          = useRef(null);
   const scrollTransform     = useContainerScroll(wrapperRef);
 
@@ -19,6 +20,7 @@ export default function Contact() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      // TODO: replace with real API call
       await new Promise((resolve) => setTimeout(resolve, 1000));
       setForm(INITIAL_FORM);
       setStatus('success');
@@ -30,11 +32,12 @@ export default function Contact() {
 
   return (
     <section id="contact" className={styles.section}>
+
       <div className={styles.sectionHeader}>
         <p className={styles.sectionLabel}>— Parliamoci</p>
-        <h1 className={styles.sectionTitle}>
-          <BlurText as="span" text="Contattami" />
-        </h1>
+        <h2 className={styles.sectionTitle}>
+          <SimpleBlurText as="span" text="Contattami" />
+        </h2>
         <p className={styles.sectionIntro}>
           Hai un progetto in mente? Che si tratti di un videoclip, una campagna,
           un cortometraggio o sound design — siamo qui per ascoltare.
@@ -52,47 +55,69 @@ export default function Contact() {
 
         <div className={styles.cardPerspective}>
           <GlareCard scrollTransform={scrollTransform} className={styles.card}>
+
             <div className={styles.layout}>
 
+              {/* Left column — contact info */}
               <div className={styles.info}>
-                <p className={styles.infoLead}>Hai un progetto in mente?<br />Parliamone.</p>
-                <p className={styles.infoBody}>
-                  Dalla concept strategy alla post-produzione, ogni progetto
-                  è un viaggio verso qualcosa che nessuno ha mai visto prima.
+                <p className={styles.infoLead}>
+                  Hai un progetto in mente?<br />
+                  Parliamone.
                 </p>
+                <p className={styles.infoBody}>
+                  Dalla concept strategy alla post-produzione,
+                  ogni progetto è un viaggio verso qualcosa che
+                  nessuno ha mai visto prima.
+                </p>
+
                 <div className={styles.contactDetails}>
                   <span className={styles.contactLabel}>Email</span>
                   <a href={`mailto:${CONTACT.email}`} className={styles.contactLink}>
                     {CONTACT.email}
                   </a>
                   <span className={styles.contactLabel}>Instagram</span>
-                  <a href={CONTACT.instagramUrl} className={styles.contactLink} target="_blank" rel="noopener noreferrer">
+                  <a href={CONTACT.instagramUrl} className={styles.contactLink}
+                    target="_blank" rel="noopener noreferrer">
                     {CONTACT.instagram}
                   </a>
                 </div>
+
                 <div className={styles.accentBar} />
               </div>
 
+              {/* Right column — contact form */}
               <div className={styles.formCol}>
                 <form className={styles.form} onSubmit={handleSubmit}>
+
                   <div className={styles.row}>
                     <div className={styles.group}>
                       <label htmlFor="name">Nome</label>
-                      <input type="text" id="name" name="name" required placeholder="Il tuo nome" value={form.name} onChange={handleChange} />
+                      <input type="text" id="name" name="name" required
+                        placeholder="Il tuo nome"
+                        value={form.name} onChange={handleChange} />
                     </div>
                     <div className={styles.group}>
                       <label htmlFor="email">Email</label>
-                      <input type="email" id="email" name="email" required placeholder="tua@email.com" value={form.email} onChange={handleChange} />
+                      <input type="email" id="email" name="email" required
+                        placeholder="tua@email.com"
+                        value={form.email} onChange={handleChange} />
                     </div>
                   </div>
+
                   <div className={styles.group}>
                     <label htmlFor="subject">Oggetto</label>
-                    <input type="text" id="subject" name="subject" required placeholder="Di cosa vuoi parlare?" value={form.subject} onChange={handleChange} />
+                    <input type="text" id="subject" name="subject" required
+                      placeholder="Di cosa vuoi parlare?"
+                      value={form.subject} onChange={handleChange} />
                   </div>
+
                   <div className={styles.group}>
                     <label htmlFor="message">Messaggio</label>
-                    <textarea id="message" name="message" rows="6" required placeholder="Descrivi il tuo progetto..." value={form.message} onChange={handleChange} />
+                    <textarea id="message" name="message" rows="6" required
+                      placeholder="Descrivi il tuo progetto..."
+                      value={form.message} onChange={handleChange} />
                   </div>
+
                   <button type="submit" className={styles.btn}>
                     <span>Invia Messaggio</span>
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
@@ -100,11 +125,15 @@ export default function Contact() {
                       <polygon points="22 2 15 22 11 13 2 9 22 2" />
                     </svg>
                   </button>
+
                   {status && (
                     <div className={`${styles.msg} ${styles[status]}`} role="alert">
-                      {status === 'success' ? 'Messaggio inviato! Ti risponderò presto.' : "Errore nell'invio. Riprova più tardi."}
+                      {status === 'success'
+                        ? 'Messaggio inviato! Ti risponderò presto.'
+                        : "Errore nell'invio. Riprova più tardi."}
                     </div>
                   )}
+
                 </form>
               </div>
 
@@ -112,6 +141,7 @@ export default function Contact() {
           </GlareCard>
         </div>
       </div>
+
     </section>
   );
 }

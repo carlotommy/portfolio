@@ -54,7 +54,7 @@
   position: relative;
   padding: 6rem 2rem 4rem;
   /* Each section is tall enough to give scroll room for the animation */
-  min-height: 80vh;
+  min-height: 80svh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -251,7 +251,11 @@
 
   .cardSection {
     padding: 4rem 1rem 2rem;
-    min-height: 60vh;
+    min-height: 50svh;
+  }
+
+  .cardsStack {
+    padding-bottom: 5rem;
   }
 
   .cardTitle {

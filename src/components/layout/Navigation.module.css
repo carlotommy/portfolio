@@ -12,7 +12,7 @@
   display:         flex;
   align-items:     center;
   justify-content: flex-end;
-  padding:         1.5rem 2rem;
+  padding:         max(1.5rem, env(safe-area-inset-top)) 2rem 1.5rem;
   background:      transparent;
 }
 
@@ -232,11 +232,9 @@
 
 /* ── Mobile adjustments ─────────────────────── */
 @media (max-width: 640px) {
-  .header { padding: 0 1.25rem; }
+  .header { padding: max(1rem, env(safe-area-inset-top)) 1.25rem 1rem; }
 
   .overlayInner { padding: 5rem 1.25rem 2rem; }
 
   .linkLabel { font-size: clamp(1.8rem, 11vw, 3rem); }
-
-  }
-
+}

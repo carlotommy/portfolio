@@ -47,11 +47,12 @@ export const SERVICES_FULL = [
 ];
 
 export const PHOTOS = [
-  { title: 'Campagna Autunnale',   category: 'Pubblicità',     date: 'Gennaio 2026',   src: '/photos/1.jpeg' },
-  { title: 'Brand Identity Shoot', category: 'Pubblicità',     date: 'Dicembre 2025',  src: '/photos/2.jpeg' },
-  { title: 'Luce di Mezzogiorno',  category: 'Cortometraggio', date: 'Novembre 2025',  src: '/photos/3.jpeg' },
-  { title: 'Il Confine',           category: 'Cortometraggio', date: 'Ottobre 2025',   src: '/photos/4.jpeg' },
-  { title: 'Neon Nights',          category: 'Video Musicale', date: 'Settembre 2025', src: '/photos/5.jpeg' },
+  { title: 'Campagna Autunnale',   category: 'Pubblicità',     date: 'Gennaio 2026',   src: '/photos/1.jpeg', desc: 'Una campagna visiva autunnale per brand identity, giocata su luce calda e ombre cinematografiche.' },
+  { title: 'Brand Identity Shoot', category: 'Pubblicità',     date: 'Dicembre 2025',  src: '/photos/2.jpeg', desc: 'Ritratti editoriali in studio per campagna di lancio prodotto.' },
+  { title: 'Luce di Mezzogiorno',  category: 'Cortometraggio', date: 'Novembre 2025',  src: '/photos/3.jpeg', desc: 'Still dal set del cortometraggio. Luce naturale, emotività pura.' },
+  { title: 'Il Confine',           category: 'Cortometraggio', date: 'Ottobre 2025',   src: '/photos/4.jpeg', desc: 'Frame emblematico del confine psicologico del personaggio principale.' },
+  { title: 'Neon Nights',          category: 'Video Musicale', date: 'Settembre 2025', src: '/photos/5.jpeg', desc: 'Set fotografico notturno per videoclip. Luce artificiale al neon su pelle.' },
+  { title: 'Scena Finale',         category: 'Cortometraggio', date: 'Agosto 2025',    src: '/photos/1.jpeg', desc: 'L\'ultima inquadratura del film: silenzio, nostalgia e luce di taglio.' },
 ];
 
 export const VIDEOS = [

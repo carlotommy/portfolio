@@ -2,12 +2,12 @@ import { useState, useEffect } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 
-import { TransitionProvider } from './components/TransitionContext';
-import LoadingScreen    from './components/LoadingScreen';
-import Navigation       from './components/Navigation';
-import Footer           from './components/Footer';
-import LightRays        from './components/LightRays';
-import ClickSpark       from './components/ClickSpark';
+import { TransitionProvider } from '@context/TransitionContext';
+import LoadingScreen    from '@ui/LoadingScreen';
+import Navigation       from '@layout/Navigation';
+import Footer           from '@layout/Footer';
+import LightRays        from '@ui/LightRays';
+import ClickSpark       from '@ui/ClickSpark';
 
 import Home    from './pages/Home';
 import Work    from './pages/Work';

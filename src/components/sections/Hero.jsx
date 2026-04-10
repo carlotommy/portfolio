@@ -1,37 +1,33 @@
-import BlurText from '@components/ui/BlurText';
-import styles   from './Hero.module.css';
-
-const gradientStyle = {
-  background:           'linear-gradient(135deg, var(--teal-100), var(--teal-300))',
-  WebkitBackgroundClip: 'text',
-  WebkitTextFillColor:  'transparent',
-  backgroundClip:       'text',
-};
+import { motion } from 'framer-motion';
+import SimpleBlurText from '@ui/SimpleBlurText';
+import styles from './Hero.module.css';
 
 export default function Hero() {
   const scrollToStory = () =>
     document.getElementById('story')?.scrollIntoView({ behavior: 'smooth' });
 
   return (
-    <section id="hero" className={styles.hero}>
-
+    <motion.section
+      id="hero"
+      className={styles.hero}
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+    >
       <div className={styles.topRow}>
         <span className={styles.topLabel}>Studio di Produzione</span>
         <span className={styles.topYear}>Roma · MMXXVI</span>
       </div>
 
       <div className={styles.titleBlock} aria-label="Asse Zero">
-        <BlurText
+        <SimpleBlurText
           as="div"
           text="ASSE ZERO"
           animateBy="letters"
-          direction="top"
           delay={55}
-          stepDuration={0.42}
-          threshold={0.01}
           className={styles.titleLine}
           style={{ justifyContent: 'flex-start', gap: '0.18em' }}
-          spanStyle={gradientStyle}
+          spanClassName={styles.gradientText}
         />
       </div>
 
@@ -48,7 +44,6 @@ export default function Hero() {
           <span className={styles.scrollText}>SCROLL</span>
         </button>
       </div>
-
-    </section>
+    </motion.section>
   );
 }

@@ -1,14 +1,15 @@
-import { CONTACT } from '@data/constants';
-import styles      from './Footer.module.css';
+import styles from './Footer.module.css';
 
 export default function Footer() {
   return (
     <footer className={styles.footerSection}>
       <div className="container">
         <div className={styles.footerContent}>
+
           <p className={styles.copyright}>© 2026 Gerardo Romani</p>
+
           <a
-            href={CONTACT.instagramUrl}
+            href="https://www.instagram.com/"
             target="_blank"
             rel="noopener noreferrer"
             className={styles.instagramLink}
@@ -20,7 +21,9 @@ export default function Footer() {
               <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
             </svg>
           </a>
+
           <p className={styles.tagline}>ADV · FILM · MUSIC · SOUND</p>
+
         </div>
       </div>
     </footer>

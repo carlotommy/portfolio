@@ -1,11 +1,12 @@
-import { useRef }               from 'react';
-import styles                   from './Services.module.css';
-import BlurText                 from '@components/ui/BlurText';
-import GlareCard                from '@components/ui/GlareCard';
-import useContainerScroll       from '@hooks/useContainerScroll';
-import { SERVICES_FULL }        from '@data/constants';
+import { useRef } from 'react';
+import styles from './Services.module.css';
 
-/* ── SVG decorative graphics ──────────────────────────────── */
+import SimpleBlurText from '@ui/SimpleBlurText';
+import GlareCard           from '@ui/GlareCard';
+import useContainerScroll  from '@hooks/useContainerScroll';
+import { SERVICES_FULL as SERVICES } from '@data/constants';
+
+/* ── SVG decorative graphics ───────────────────────────────────────────── */
 function GraphicAdv() {
   return (
     <svg viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg" className={styles.svgGraphic}>
@@ -27,14 +28,16 @@ function GraphicFilm() {
   return (
     <svg viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg" className={styles.svgGraphic}>
       <rect x="0" y="80" width="400" height="140" fill="#C8A951" opacity="0.06" />
-      {[0,1,2,3,4,5,6,7].map((i) => (
+      {[0, 1, 2, 3, 4, 5, 6, 7].map((i) => (
         <g key={i}>
-          <rect x={i*50+5} y="90"  width="16" height="20" rx="2" fill="#C8A951" opacity="0.3" />
-          <rect x={i*50+5} y="190" width="16" height="20" rx="2" fill="#C8A951" opacity="0.3" />
+          <rect x={i * 50 + 5} y="90"  width="16" height="20" rx="2" fill="#C8A951" opacity="0.3" />
+          <rect x={i * 50 + 5} y="190" width="16" height="20" rx="2" fill="#C8A951" opacity="0.3" />
         </g>
       ))}
-      <rect x="30" y="110" width="340" height="80" rx="2" fill="#C8A951" opacity="0.04" stroke="#C8A951" strokeWidth="0.8" strokeOpacity="0.3" />
-      <text x="200" y="158" textAnchor="middle" fontSize="11" fill="#C8A951" opacity="0.5" fontFamily="monospace" letterSpacing="6">SCENE / TAKE / ROLL</text>
+      <rect x="30" y="110" width="340" height="80" rx="2" fill="#C8A951" opacity="0.04"
+        stroke="#C8A951" strokeWidth="0.8" strokeOpacity="0.3" />
+      <text x="200" y="158" textAnchor="middle" fontSize="11" fill="#C8A951" opacity="0.5"
+        fontFamily="monospace" letterSpacing="6">SCENE / TAKE / ROLL</text>
       <circle cx="200" cy="150" r="60" stroke="#C8A951" strokeWidth="0.6" opacity="0.15" />
       <circle cx="200" cy="150" r="40" stroke="#C8A951" strokeWidth="0.6" opacity="0.15" />
     </svg>
@@ -42,15 +45,17 @@ function GraphicFilm() {
 }
 
 function GraphicMusic() {
-  const bars = [18,35,55,70,40,85,60,45,90,65,30,75,50,88,42,72,38,62,80,48];
+  const bars = [18, 35, 55, 70, 40, 85, 60, 45, 90, 65, 30, 75, 50, 88, 42, 72, 38, 62, 80, 48];
   return (
     <svg viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg" className={styles.svgGraphic}>
       {bars.map((h, i) => (
-        <rect key={i} x={i*20+10} y={150-h} width="10" height={h*2} rx="5" fill="#9B30FF" opacity={0.1+(i%3)*0.08} />
+        <rect key={i} x={i * 20 + 10} y={150 - h} width="10" height={h * 2} rx="5"
+          fill="#9B30FF" opacity={0.1 + (i % 3) * 0.08} />
       ))}
       <circle cx="200" cy="150" r="80" stroke="#9B30FF" strokeWidth="1"   opacity="0.2"  strokeDasharray="4 6" />
       <circle cx="200" cy="150" r="50" stroke="#9B30FF" strokeWidth="0.8" opacity="0.15" />
-      <text x="200" y="158" textAnchor="middle" fontSize="32" fontWeight="900" fill="#9B30FF" opacity="0.15" fontFamily="serif">♪</text>
+      <text x="200" y="158" textAnchor="middle" fontSize="32" fontWeight="900"
+        fill="#9B30FF" opacity="0.15" fontFamily="serif">♪</text>
     </svg>
   );
 }
@@ -58,10 +63,14 @@ function GraphicMusic() {
 function GraphicSound() {
   return (
     <svg viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg" className={styles.svgGraphic}>
-      <path d="M0 150 Q50 80 100 150 Q150 220 200 150 Q250 80 300 150 Q350 220 400 150" stroke="#00C8FF" strokeWidth="2" opacity="0.3" fill="none" />
-      <path d="M0 150 Q25 110 50 150 Q75 190 100 150 Q125 110 150 150 Q175 190 200 150 Q225 110 250 150 Q275 190 300 150 Q325 110 350 150 Q375 190 400 150" stroke="#00C8FF" strokeWidth="1" opacity="0.15" fill="none" />
-      {[20,40,60,80,100,130].map((r, i) => (
-        <circle key={i} cx="200" cy="150" r={r} stroke="#00C8FF" strokeWidth="0.6" opacity={0.25-i*0.03} />
+      <path d="M0 150 Q50 80 100 150 Q150 220 200 150 Q250 80 300 150 Q350 220 400 150"
+        stroke="#00C8FF" strokeWidth="2" opacity="0.3" fill="none" />
+      <path d="M0 150 Q25 110 50 150 Q75 190 100 150 Q125 110 150 150 Q175 190 200 150
+               Q225 110 250 150 Q275 190 300 150 Q325 110 350 150 Q375 190 400 150"
+        stroke="#00C8FF" strokeWidth="1" opacity="0.15" fill="none" />
+      {[20, 40, 60, 80, 100, 130].map((r, i) => (
+        <circle key={i} cx="200" cy="150" r={r}
+          stroke="#00C8FF" strokeWidth="0.6" opacity={0.25 - i * 0.03} />
       ))}
       <circle cx="200" cy="150" r="6" fill="#00C8FF" opacity="0.6" />
     </svg>
@@ -70,14 +79,18 @@ function GraphicSound() {
 
 const GRAPHICS = { adv: GraphicAdv, film: GraphicFilm, music: GraphicMusic, sound: GraphicSound };
 
-/* ── ServiceCard ────────────────────────────────────────── */
+/* ── ServiceCard ───────────────────────────────────────────────────────── */
 function ServiceCard({ service, cardIndex, onContact }) {
-  const wrapperRef      = useRef(null);
+  const wrapperRef     = useRef(null);
   const scrollTransform = useContainerScroll(wrapperRef);
-  const Graphic         = GRAPHICS[service.graphic];
+  const Graphic        = GRAPHICS[service.graphic];
 
   return (
-    <div className={styles.cardSection} ref={wrapperRef} style={{ '--accent': service.accent, '--z': cardIndex }}>
+    <div
+      className={styles.cardSection}
+      ref={wrapperRef}
+      style={{ '--accent': service.accent, '--z': cardIndex }}
+    >
       <div className={styles.cardTitle}>
         <span className={styles.cardIndex}>{service.index}</span>
         <h2 className={styles.cardHeadline}>
@@ -87,24 +100,37 @@ function ServiceCard({ service, cardIndex, onContact }) {
       </div>
 
       <div className={styles.cardPerspective}>
-        <GlareCard scrollTransform={scrollTransform} bg={service.bg} color={service.textColor} className={styles.card}>
+        <GlareCard
+          scrollTransform={scrollTransform}
+          bg={service.bg}
+          color={service.textColor}
+          className={styles.card}
+        >
           <div className={styles.cardGraphicCol}>
             <Graphic />
             <div className={styles.cardAccentBar} style={{ background: service.accent }} />
           </div>
+
           <div className={styles.cardContent}>
             <p className={styles.cardDesc}>{service.description}</p>
+
             <ul className={styles.cardTags}>
               {service.tags.map((tag) => (
-                <li key={tag} className={styles.cardTag} style={{ borderColor: service.accent, color: service.accent }}>
+                <li
+                  key={tag}
+                  className={styles.cardTag}
+                  style={{ borderColor: service.accent, color: service.accent }}
+                >
                   {tag}
                 </li>
               ))}
             </ul>
-            <button onClick={onContact} className={styles.cardCta} style={{ '--accent': service.accent }}>
+
+            <button onClick={() => onContact()} className={styles.cardCta} style={{ '--accent': service.accent }}>
               Scopri di più
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor"
+                  strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </button>
           </div>
@@ -114,25 +140,27 @@ function ServiceCard({ service, cardIndex, onContact }) {
   );
 }
 
-/* ── Services ───────────────────────────────────────────── */
+/* ── Services (main export) ────────────────────────────────────────────── */
 export default function Services() {
-  const goToContact = () =>
+  const goToContact = () => {
+    // Smooth-scroll to the Contact section on the same page
     document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
-
+  };
   return (
     <section className={styles.servicesSection}>
       <div className={styles.sectionHeader}>
         <p className={styles.sectionLabel}>— Cosa facciamo</p>
         <h1 className={styles.sectionTitle}>
-          <BlurText as="span" text="I Nostri Servizi" />
+          <SimpleBlurText as="span" text="I Nostri Servizi" />
         </h1>
         <p className={styles.sectionIntro}>
           Dalla strategia creativa alla post-produzione, ogni progetto è un viaggio
           verso qualcosa che nessuno ha mai visto prima.
         </p>
       </div>
+
       <div className={styles.cardsStack}>
-        {SERVICES_FULL.map((service, i) => (
+        {SERVICES.map((service, i) => (
           <ServiceCard key={service.id} service={service} cardIndex={i} onContact={goToContact} />
         ))}
       </div>

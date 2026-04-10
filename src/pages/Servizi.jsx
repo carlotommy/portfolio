@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet-async';
-import Services from '../components/Services';
-import Contact  from '../components/Contact';
+import Services from '@sections/Services';
+import Contact  from '@sections/Contact';
 
 export default function Servizi() {
 
