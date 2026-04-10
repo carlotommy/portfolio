@@ -4,6 +4,8 @@ import { usePageTransition } from '@context/TransitionContext';
 import { PROCESS_STEPS as PROCESS } from '@data/constants';
 import styles from './About.module.css';
 
+import SimpleBlurText from '@ui/SimpleBlurText';
+
 export default function About() {
   const navigate    = useNavigate();
   const transit     = usePageTransition();
@@ -49,10 +51,12 @@ export default function About() {
         </div>
 
         {/* ── B: Hero statement ───────────────────────────────────── */}
-        <h2 className={styles.heroStatement} ref={reveal(1)}>
-          Raccontiamo storie<br />
-          <span className={styles.heroOutline}>attraverso immagini.</span>
-        </h2>
+        <div className={styles.heroStatementWrap}>
+          <SimpleBlurText
+            text="Raccontiamo storie attraverso immagini."
+            className={styles.heroStatement}
+          />
+        </div>
 
         {/* ── C: Two-column intro ─────────────────────────────────── */}
         <div className={styles.introRow} ref={reveal(2)}>

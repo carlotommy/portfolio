@@ -38,20 +38,12 @@ export default function Photos() {
   // Native scroll tracking: map scroll progress through the section to targetScroll
   useEffect(() => {
     const handleScroll = () => {
-      if (!sectionRef.current || !stickyRef.current) return;
-      const parentRect = sectionRef.current.getBoundingClientRect();
-      const stickyRect = stickyRef.current.getBoundingClientRect();
-
-      const maxTravel = parentRect.height - window.innerHeight;
+      if (!sectionRef.current) return;
+      const { top, height } = sectionRef.current.getBoundingClientRect();
+      const maxTravel = height - window.innerHeight;
       if (maxTravel <= 0) return;
 
-      // Distance traveled relative to when the sticky element hit the top.
-      // Since it's sticky at roughly top: 0 (or 1rem), we can just check parent's top
-      // Wait, more simply: parentRect.top starts at 0 or positive. As we scroll down, it goes negative.
-      const traveled = -parentRect.top;
-      
-      let progress = traveled / maxTravel;
-      progress = Math.max(0, Math.min(1, progress));
+      const progress = Math.max(0, Math.min(1, -top / maxTravel));
       targetScroll.current = progress * (N - 1);
     };
 
