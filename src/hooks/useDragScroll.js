@@ -62,12 +62,24 @@ export default function useDragScroll(containerRef, axis = 'x', multiplier = 0.8
       setScroll(state.current.scrollOrigin + delta * multiplier);
     };
 
+    const onWheel = (e) => {
+      if (axis === 'x' && Math.abs(e.deltaY) > 0) {
+        // To avoid fully trapping the user in the section forever on desktop,
+        // typically you don't prevent default if they are scrolling down past the bottom of the section.
+        // But for a dedicated slider, we prevent default to trap vertical scroll and translate to horizontal.
+        e.preventDefault();
+        el.scrollLeft += e.deltaY;
+      }
+    };
+
     el.addEventListener('mousedown',  onMouseDown);
     el.addEventListener('mouseleave', onMouseLeave);
     el.addEventListener('mouseup',    onMouseUp);
     el.addEventListener('mousemove',  onMouseMove);
     el.addEventListener('touchstart', onTouchStart, { passive: true });
     el.addEventListener('touchmove',  onTouchMove,  { passive: true });
+    // Wheel is passive: false because we preventDefault
+    el.addEventListener('wheel',      onWheel,      { passive: false });
 
     return () => {
       el.removeEventListener('mousedown',  onMouseDown);
@@ -76,6 +88,7 @@ export default function useDragScroll(containerRef, axis = 'x', multiplier = 0.8
       el.removeEventListener('mousemove',  onMouseMove);
       el.removeEventListener('touchstart', onTouchStart);
       el.removeEventListener('touchmove',  onTouchMove);
+      el.removeEventListener('wheel',      onWheel);
     };
   }, [containerRef, axis, multiplier]);
 }
