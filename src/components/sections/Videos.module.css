@@ -1,23 +1,24 @@
 .videosSection { 
-   padding: 0; 
+   padding: 8rem 0 0 0; /* Room for the header */
+   padding-bottom: 10rem; /* Buffer for the footer */
    scroll-margin-top: 0;
    position: relative;
  }
  
  .stickyWrapper {
-   position: sticky;
-   top: 0;
-   height: 100vh;
-   display: flex;
-   flex-direction: column;
-   justify-content: center;
-   overflow: hidden;
- }
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    /* Removed overflow: hidden to prevent cutting off bottom content */
+  }
 
  .containerStyle {
    display: flex;
    flex-direction: column;
-   gap: 2rem;
+   gap: 1rem; /* Tightened from 2rem */
    width: 100%;
    max-width: 1350px;
    margin: 0 auto;
@@ -25,16 +26,18 @@
  }
 
  .galleryCore {
-   display: flex;
-   align-items: center; 
-   gap: 4rem;
-   width: 100%;
- }
+  display: flex;
+  align-items: center; 
+  gap: 4rem;
+  width: 100%;
+  margin-top: -2rem; /* Pull up slightly to give more room at bottom */
+}
 
  .playerSection {
    flex: 1;
    display: flex;
    flex-direction: column;
+   gap: 1.5rem; /* Space between player and info */
  }
  
  @media(max-width: 900px) {
@@ -121,19 +124,21 @@
  }
  
  .displayArea {
-   width: 100%;
-   height: 600px;
-   background: #040c0e;
-   border: 1px solid rgba(146,200,211,.2);
-   border-radius: 8px;
-   position: relative;
-   overflow: hidden;
-   display: flex;
-   align-items: center;
-   justify-content: center;
-   box-shadow: 0 4px 60px rgba(146, 200, 211, 0.05), inset 0 0 20px rgba(146, 200, 211, 0.05);
-   transition: box-shadow 0.5s ease, border-color 0.5s ease;
- }
+  width: 100%;
+  height: 45vh; /* Responsive height relative to viewport */
+  min-height: 380px;
+  max-height: 520px;
+  background: #040c0e;
+  border: 1px solid rgba(146,200,211,.2);
+  border-radius: 8px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 60px rgba(146, 200, 211, 0.05), inset 0 0 20px rgba(146, 200, 211, 0.05);
+  transition: all 0.5s ease;
+}
  
  @media(max-width: 900px) {
    .displayArea {
@@ -166,40 +171,65 @@
  }
  
  .playBtnBig {
-   position: absolute;
-   width: 80px; height: 80px;
-   border-radius: 50%;
-   background: rgba(146,200,211,.15);
-   border: 1px solid var(--teal-300);
-   backdrop-filter: blur(4px);
-   display: flex; align-items: center; justify-content: center;
-   color: var(--teal-100);
-   transition: transform 0.4s cubic-bezier(0.3, 1.5, 0.5, 1), background 0.4s ease, border-color 0.4s ease;
-   animation: pulseGlow 2.5s infinite;
-   z-index: 5;
- }
- 
- .displayArea:hover .playBtnBig {
-   transform: scale(1.15);
-   background: rgba(146,200,211,.3);
-   border-color: #fff;
-   color: #fff;
- }
- 
- .playBtnBig svg { width: 30px; height: 30px; margin-left: 4px; }
+  position: absolute;
+  width: 90px; height: 90px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(146, 200, 211, 0.3);
+  backdrop-filter: blur(12px);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--teal-100);
+  transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2), inset 0 0 15px rgba(146, 200, 211, 0.1);
+  animation: pulseGlow 3s infinite ease-in-out;
+  z-index: 5;
+}
+
+.displayArea:hover .playBtnBig {
+  transform: scale(1.1);
+  background: rgba(146, 200, 211, 0.15);
+  border-color: var(--teal-300);
+  color: #fff;
+  box-shadow: 0 0 40px rgba(146, 200, 211, 0.3), inset 0 0 20px rgba(255, 255, 255, 0.1);
+}
+
+.playBtnBig svg { 
+  width: 34px; 
+  height: 34px; 
+  margin-left: 5px; 
+  filter: drop-shadow(0 0 8px rgba(146, 200, 211, 0.5));
+  transition: transform 0.5s ease;
+}
+
+.displayArea:hover .playBtnBig svg {
+  transform: scale(1.1);
+}
  
  /* Player Info and Controls */
  .playerBottom {
-   display: flex;
-   justify-content: space-between;
-   align-items: flex-start;
- }
- 
- .infoBlock {
-   display: flex;
-   flex-direction: column;
-   gap: 0.5rem;
- }
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center everything under the video */
+  width: 100%;
+}
+
+@media (max-width: 900px) {
+  .playerBottom {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+  }
+}
+
+.infoBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.3rem;
+  width: 100%;
+}
  
  .label {
    font-family: 'Space Mono', monospace;
@@ -210,10 +240,22 @@
  }
  
  .title {
-   font-family: 'Archivo Black', sans-serif;
-   font-size: 1.8rem;
-   color: var(--text-primary);
- }
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 1.8rem; /* Scaled down for better fit */
+  color: var(--text-primary);
+  margin: 0.1rem 0;
+  letter-spacing: -0.5px;
+}
+
+.description {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--text-secondary);
+  max-width: 600px;
+  margin: 0.2rem auto 0.5rem auto; /* Centered margin */
+  opacity: 0.85;
+}
  
  .date {
    font-family: 'DM Sans', sans-serif;
@@ -222,10 +264,11 @@
  }
  
  .controls {
-   display: flex;
-   gap: 1rem;
-   padding-top: 0.5rem;
- }
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+  justify-content: center;
+}
  
  .navBtn {
    background: transparent;

@@ -14,14 +14,14 @@ const hexToRgb = (hex) => {
 const getAnchorAndDir = (origin, w, h) => {
   const outside = 0.2;
   switch (origin) {
-    case 'top-left':      return { anchor: [0,              -outside * h],      dir: [0,  1] };
-    case 'top-right':     return { anchor: [w,              -outside * h],      dir: [0,  1] };
-    case 'left':          return { anchor: [-outside * w,    0.5 * h],          dir: [1,  0] };
-    case 'right':         return { anchor: [(1 + outside)*w, 0.5 * h],          dir: [-1, 0] };
-    case 'bottom-left':   return { anchor: [0,              (1 + outside) * h], dir: [0, -1] };
-    case 'bottom-center': return { anchor: [0.5 * w,        (1 + outside) * h], dir: [0, -1] };
-    case 'bottom-right':  return { anchor: [w,              (1 + outside) * h], dir: [0, -1] };
-    default:              return { anchor: [0.5 * w,        -outside * h],      dir: [0,  1] }; // top-center
+    case 'top-left': return { anchor: [0, -outside * h], dir: [0, 1] };
+    case 'top-right': return { anchor: [w, -outside * h], dir: [0, 1] };
+    case 'left': return { anchor: [-outside * w, 0.5 * h], dir: [1, 0] };
+    case 'right': return { anchor: [(1 + outside) * w, 0.5 * h], dir: [-1, 0] };
+    case 'bottom-left': return { anchor: [0, (1 + outside) * h], dir: [0, -1] };
+    case 'bottom-center': return { anchor: [0.5 * w, (1 + outside) * h], dir: [0, -1] };
+    case 'bottom-right': return { anchor: [w, (1 + outside) * h], dir: [0, -1] };
+    default: return { anchor: [0.5 * w, -outside * h], dir: [0, 1] }; // top-center
   }
 };
 
@@ -135,28 +135,28 @@ void main() {
 /* ── Component ─────────────────────────────────────────────────────────── */
 
 const LightRays = ({
-  raysOrigin    = 'top-center',
-  raysColor     = '#92c8d3',
-  raysSpeed     = 0.4,
-  lightSpread   = 0.7,
-  rayLength     = 1.2,
-  followMouse   = true,
-  mouseInfluence = 0.1,
-  noiseAmount   = 0,
-  distortion    = 0,
-  className     = 'custom-rays',
-  pulsating     = false,
-  fadeDistance  = 1,
-  saturation    = 1.7,
+  raysOrigin = 'top-center',
+  raysColor = '#92c8d3',
+  raysSpeed = 0.4,
+  lightSpread = 1,
+  rayLength = 1.7,
+  followMouse = true,
+  mouseInfluence = 0.2,
+  noiseAmount = 0,
+  distortion = 0,
+  className = 'custom-rays',
+  pulsating = false,
+  fadeDistance = 1.5,
+  saturation = 1.8,
 }) => {
-  const containerRef      = useRef(null);
-  const uniformsRef       = useRef(null);
-  const rendererRef       = useRef(null);
-  const mouseRef          = useRef({ x: 0.5, y: 0.5 });
-  const smoothMouseRef    = useRef({ x: 0.5, y: 0.5 });
-  const animationIdRef    = useRef(null);
-  const meshRef           = useRef(null);
-  const cleanupRef        = useRef(null);
+  const containerRef = useRef(null);
+  const uniformsRef = useRef(null);
+  const rendererRef = useRef(null);
+  const mouseRef = useRef({ x: 0.5, y: 0.5 });
+  const smoothMouseRef = useRef({ x: 0.5, y: 0.5 });
+  const animationIdRef = useRef(null);
+  const meshRef = useRef(null);
+  const cleanupRef = useRef(null);
   const [isVisible, setIsVisible] = useState(false);
 
   /* ── Visibility observer — pause rendering when off-screen ── */
@@ -191,34 +191,34 @@ const LightRays = ({
       rendererRef.current = renderer;
 
       const gl = renderer.gl;
-      gl.canvas.style.width  = '100%';
+      gl.canvas.style.width = '100%';
       gl.canvas.style.height = '100%';
 
       // Replace any previous canvas
       containerRef.current.replaceChildren(gl.canvas);
 
       const uniforms = {
-        iTime:          { value: 0 },
-        iResolution:    { value: [1, 1] },
-        rayPos:         { value: [0, 0] },
-        rayDir:         { value: [0, 1] },
-        raysColor:      { value: hexToRgb(raysColor) },
-        raysSpeed:      { value: raysSpeed },
-        lightSpread:    { value: lightSpread },
-        rayLength:      { value: rayLength },
-        pulsating:      { value: pulsating ? 1.0 : 0.0 },
-        fadeDistance:   { value: fadeDistance },
-        saturation:     { value: saturation },
-        mousePos:       { value: [0.5, 0.5] },
+        iTime: { value: 0 },
+        iResolution: { value: [1, 1] },
+        rayPos: { value: [0, 0] },
+        rayDir: { value: [0, 1] },
+        raysColor: { value: hexToRgb(raysColor) },
+        raysSpeed: { value: raysSpeed },
+        lightSpread: { value: lightSpread },
+        rayLength: { value: rayLength },
+        pulsating: { value: pulsating ? 1.0 : 0.0 },
+        fadeDistance: { value: fadeDistance },
+        saturation: { value: saturation },
+        mousePos: { value: [0.5, 0.5] },
         mouseInfluence: { value: mouseInfluence },
-        noiseAmount:    { value: noiseAmount },
-        distortion:     { value: distortion },
+        noiseAmount: { value: noiseAmount },
+        distortion: { value: distortion },
       };
       uniformsRef.current = uniforms;
 
       const geometry = new Triangle(gl);
-      const program  = new Program(gl, { vertex: VERT, fragment: FRAG, uniforms });
-      const mesh     = new Mesh(gl, { geometry, program });
+      const program = new Program(gl, { vertex: VERT, fragment: FRAG, uniforms });
+      const mesh = new Mesh(gl, { geometry, program });
       meshRef.current = mesh;
 
       const updateSize = () => {
@@ -288,16 +288,16 @@ const LightRays = ({
     const u = uniformsRef.current;
     if (!u || !containerRef.current || !rendererRef.current) return;
 
-    u.raysColor.value      = hexToRgb(raysColor);
-    u.raysSpeed.value      = raysSpeed;
-    u.lightSpread.value    = lightSpread;
-    u.rayLength.value      = rayLength;
-    u.pulsating.value      = pulsating ? 1.0 : 0.0;
-    u.fadeDistance.value   = fadeDistance;
-    u.saturation.value     = saturation;
+    u.raysColor.value = hexToRgb(raysColor);
+    u.raysSpeed.value = raysSpeed;
+    u.lightSpread.value = lightSpread;
+    u.rayLength.value = rayLength;
+    u.pulsating.value = pulsating ? 1.0 : 0.0;
+    u.fadeDistance.value = fadeDistance;
+    u.saturation.value = saturation;
     u.mouseInfluence.value = mouseInfluence;
-    u.noiseAmount.value    = noiseAmount;
-    u.distortion.value     = distortion;
+    u.noiseAmount.value = noiseAmount;
+    u.distortion.value = distortion;
 
     const { clientWidth: w, clientHeight: h } = containerRef.current;
     const dpr = rendererRef.current.dpr;
@@ -318,7 +318,7 @@ const LightRays = ({
       const rect = containerRef.current.getBoundingClientRect();
       mouseRef.current = {
         x: (e.clientX - rect.left) / rect.width,
-        y: (e.clientY - rect.top)  / rect.height,
+        y: (e.clientY - rect.top) / rect.height,
       };
     };
 

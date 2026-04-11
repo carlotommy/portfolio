@@ -81,19 +81,19 @@ export default function Videos() {
       ref={sectionRef} 
       style={{ height: `calc(100vh + ${N * 60}vh)` }} // Increased scroll space for stability
     >
-      <div className={styles.stickyWrapper}>
-        <div className="container">
-          <motion.div
-            className="section-header"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-          >
-            <h2 className="section-title">VIDEO GALLERIA</h2>
-          </motion.div>
-        </div>
+      <div className="container">
+        <motion.div
+          className="section-header"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+        >
+          <h2 className="section-title">VIDEO GALLERIA</h2>
+        </motion.div>
+      </div>
 
+      <div className={styles.stickyWrapper}>
         <div className={styles.containerStyle}>
           
           <div className={styles.galleryCore}>
@@ -168,44 +168,45 @@ export default function Videos() {
                   <svg viewBox="0 0 24 24" fill="none"><path d="M8 5v14l11-7z" fill="currentColor" /></svg>
                 </div>
               </a>
-            </div>
-          </div>
 
-          {/* Project Info & Controls (Shared across both sides) */}
-          <div className={styles.playerBottom}>
-            <div className={styles.infoBlock}>
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={activeVideo.id}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <span className={styles.label}>{activeVideo.label}</span>
-                  <h3 className={styles.title}>Project Selection</h3>
-                  <span className={styles.date}>{activeVideo.date}</span>
-                </motion.div>
-              </AnimatePresence>
-            </div>
+              {/* Project Info & Controls now grouped with the player */}
+              <div className={styles.playerBottom}>
+                <div className={styles.infoBlock}>
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={activeVideo.id}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <span className={styles.label}>PROGETTO SELEZIONATO</span>
+                      <h3 className={styles.title}>{activeVideo.label}</h3>
+                      <p className={styles.description}>{activeVideo.desc}</p>
+                      <span className={styles.date}>{activeVideo.date}</span>
+                    </motion.div>
+                  </AnimatePresence>
+                </div>
 
-            <div className={styles.controls}>
-              <button 
-                className={styles.navBtn} 
-                onClick={() => scrollToIdx(activeIndex - 1)} 
-                disabled={activeIndex === 0}
-                data-cursor="view"
-              >
-                PREV
-              </button>
-              <button 
-                className={styles.navBtn} 
-                onClick={() => scrollToIdx(activeIndex + 1)} 
-                disabled={activeIndex === N - 1}
-                data-cursor="view"
-              >
-                NEXT
-              </button>
+                <div className={styles.controls}>
+                  <button 
+                    className={styles.navBtn} 
+                    onClick={() => scrollToIdx(activeIndex - 1)} 
+                    disabled={activeIndex === 0}
+                    data-cursor="view"
+                  >
+                    PREV
+                  </button>
+                  <button 
+                    className={styles.navBtn} 
+                    onClick={() => scrollToIdx(activeIndex + 1)} 
+                    disabled={activeIndex === N - 1}
+                    data-cursor="view"
+                  >
+                    NEXT
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
 
