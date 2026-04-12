@@ -78,6 +78,17 @@ export default function useChapterSnap() {
     const snapToNearest = () => {
       if (userActive.current) return;  // don't snap while user is actively scrolling
 
+      const viewCenter = window.innerHeight / 2;
+
+      // Skip snap if viewport center is inside a "no-snap" zone (e.g. sticky sections)
+      const noSnaps = document.querySelectorAll('[data-no-snap="true"]');
+      for (const el of noSnaps) {
+        const rect = el.getBoundingClientRect();
+        if (rect.top <= viewCenter && rect.bottom >= viewCenter) {
+          return;
+        }
+      }
+
       const target = nearestChapter();
       if (!target) return;
 
@@ -94,7 +105,6 @@ export default function useChapterSnap() {
 
       // Calculate where to scroll so the chapter centers in the viewport
       const elCenter = target.rect.top + target.rect.height / 2;
-      const viewCenter = window.innerHeight / 2;
       const scrollTarget = window.scrollY + (elCenter - viewCenter);
 
       smoothScrollTo(scrollTarget);
