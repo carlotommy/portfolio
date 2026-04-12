@@ -2,6 +2,11 @@
   padding:   4rem 4rem 6rem;
   max-width: 1400px;
   margin:    0 auto;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  scroll-snap-align: center;
 }
 
 @media (max-width: 900px) {

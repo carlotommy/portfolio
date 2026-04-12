@@ -1,11 +1,12 @@
 .hero {
-  height:         100svh;
-  display:        grid;
+  height:             100svh;
+  display:            grid;
   grid-template-rows: auto 1fr auto;
-  padding:        0 3.5rem;
-  position:       relative;
-  z-index:        1;
-  overflow:       hidden;
+  padding:            0 3.5rem;
+  position:           relative;
+  z-index:            1;
+  overflow:           hidden;
+  scroll-snap-align:  center;
 }
 
 .gradientText {

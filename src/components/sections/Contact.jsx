@@ -31,9 +31,9 @@ export default function Contact() {
   };
 
   return (
-    <section id="contact" className={styles.section}>
+    <section id="contact" className={styles.section} data-chapter="contact">
 
-      <div className={styles.sectionHeader}>
+      <div className={styles.sectionHeader} data-chapter="contact-header">
         <p className={styles.sectionLabel}>— Parliamoci</p>
         <h2 className={styles.sectionTitle}>
           <SimpleBlurText as="span" text="Contattami" />
@@ -44,7 +44,7 @@ export default function Contact() {
         </p>
       </div>
 
-      <div className={styles.cardSection} ref={wrapperRef}>
+      <div className={styles.cardSection} ref={wrapperRef} data-chapter="contact-form">
         <div className={styles.cardTitle}>
           <span className={styles.cardIndex}>→</span>
           <h2 className={styles.cardHeadline}>

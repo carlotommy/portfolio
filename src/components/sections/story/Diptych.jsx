@@ -15,7 +15,7 @@ const revealVariants = {
 
 export default function Diptych({ onNavigate }) {
   return (
-    <section className={styles.diptych} aria-label="Dichiarazione">
+    <section className={styles.diptych} aria-label="Dichiarazione" data-chapter="diptych">
       <motion.div
         className={styles.diptychPhoto}
         initial={{ clipPath: 'inset(0 100% 0 0)' }}

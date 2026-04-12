@@ -1,22 +1,10 @@
-import { useState, useRef, useMemo, useEffect } from 'react';
+import { useState, useRef, useMemo, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { VIDEOS as videos } from '@data/constants';
+import { verticalPath, bellCurve } from '@utils/math';
 import styles from './Videos.module.css';
 
 const N = videos.length;
-
-// Vertical Path: Straight line centered in the column
-function verticalPath(t) {
-  return {
-    x: 50, // Fixed center-X
-    y: t * 100, // Linear Y mapping
-  };
-}
-
-// Gaussian-ish bell curve for proximity-based effects
-function bellCurve(x) {
-  return Math.exp(-x * x * 3.2);
-}
 
 export default function Videos() {
   const [scrollPos, setScrollPos] = useState(0);
@@ -47,13 +35,13 @@ export default function Videos() {
     };
   }, []);
 
-  // 2. Smooth Lerp Loop
+  // 2. Smooth Lerp Loop (Continuous)
   useEffect(() => {
     const animate = () => {
       setScrollPos(prev => {
         const diff = targetScroll.current - prev;
         if (Math.abs(diff) < 0.001) return targetScroll.current;
-        return prev + diff * 0.15; // Increased smoothness/responsiveness
+        return prev + diff * 0.15; 
       });
       animFrame.current = requestAnimationFrame(animate);
     };
@@ -65,21 +53,21 @@ export default function Videos() {
   const activeIndex = Math.max(0, Math.min(N - 1, Math.round(scrollPos)));
   const activeVideo = videos[activeIndex];
 
-  const scrollToIdx = (idx) => {
+  const scrollToIdx = useCallback((idx) => {
     if (!sectionRef.current) return;
     const progress = idx / (N - 1);
     const parentRect = sectionRef.current.getBoundingClientRect();
     const maxTravel  = parentRect.height - window.innerHeight;
     const targetY    = window.scrollY + parentRect.top + (progress * maxTravel);
     window.scrollTo({ top: targetY, behavior: 'smooth' });
-  };
+  }, []);
 
   return (
     <section 
       id="videos" 
       className={styles.videosSection} 
       ref={sectionRef} 
-      style={{ height: `calc(100vh + ${N * 60}vh)` }} // Increased scroll space for stability
+      style={{ height: `calc(100vh + ${N * 60}vh)` }} 
     >
       <div className="container">
         <motion.div
@@ -103,14 +91,14 @@ export default function Videos() {
                 {videos.map((vid, i) => {
                   const rawOffset = i - scrollPos;
                   const CENTER_T  = 0.5; 
-                  const SPREAD    = 0.22; // Refined spacing
+                  const SPREAD    = 0.22; 
                   const t = CENTER_T + rawOffset * SPREAD;
 
                   if (t < -0.3 || t > 1.3) return null;
 
                   const clampedT = Math.max(0, Math.min(1, t));
                   const pos = verticalPath(clampedT);
-                  const proximity = bellCurve(rawOffset);
+                  const proximity = bellCurve(rawOffset, 3.2);
 
                   const scale    = 0.5 + proximity * 0.7; 
                   const opacity  = 0.2 + proximity * 0.8;
@@ -169,7 +157,6 @@ export default function Videos() {
                 </div>
               </a>
 
-              {/* Project Info & Controls now grouped with the player */}
               <div className={styles.playerBottom}>
                 <div className={styles.infoBlock}>
                   <AnimatePresence mode="wait">

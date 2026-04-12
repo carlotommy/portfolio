@@ -1,41 +1,21 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { PHOTOS as photosData } from '@data/constants';
+import { bezierPoint, bellCurve } from '@utils/math';
 import styles from './Photos.module.css';
 
 const N = photosData.length;
 
-// Cubic Bézier: top-left → bottom-right with a pronounced swoop
-function bezierPoint(t) {
-  const P0 = { x: 3,  y: 8  };   // start top-left
-  const P1 = { x: 5,  y: 55 };   // control 1: pulls hard downward early
-  const P2 = { x: 55, y: 30 };   // control 2: pulls back up, creating the S-swoop
-  const P3 = { x: 88, y: 82 };   // end bottom-right
-
-  const mt = 1 - t;
-  return {
-    x: mt*mt*mt*P0.x + 3*mt*mt*t*P1.x + 3*mt*t*t*P2.x + t*t*t*P3.x,
-    y: mt*mt*mt*P0.y + 3*mt*mt*t*P1.y + 3*mt*t*t*P2.y + t*t*t*P3.y,
-  };
-}
-
-// Smooth ease function: bell curve centered at 0
-function bellCurve(x) {
-  return Math.exp(-x * x * 3.5);
-}
-
 export default function Photos() {
-  // Continuous scroll position (float), not discrete index
   const [scrollPos, setScrollPos] = useState(0);
   const [lightbox, setLightbox] = useState(null);
-  const sectionRef = useRef(null);
-  const stageRef = useRef(null);
+  const sectionRef   = useRef(null);
+  const stageRef     = useRef(null);
   const targetScroll = useRef(0);
-  const animFrame = useRef(null);
+  const animFrame    = useRef(null);
+  const stickyRef    = useRef(null);
 
-  const stickyRef = useRef(null);
-
-  // Native scroll tracking: map scroll progress through the section to targetScroll
+  // Native scroll tracking
   useEffect(() => {
     const handleScroll = () => {
       if (!sectionRef.current) return;
@@ -56,24 +36,12 @@ export default function Photos() {
     };
   }, []);
 
-  const scrollToTargetIndex = (idx) => {
-    if (!sectionRef.current) return;
-    const clampedIdx = Math.max(0, Math.min(N - 1, idx));
-    const progress = clampedIdx / (N - 1);
-    const parentRect = sectionRef.current.getBoundingClientRect();
-    const maxTravel = parentRect.height - window.innerHeight;
-    const targetY = window.scrollY + parentRect.top + (progress * maxTravel);
-    window.scrollTo({ top: targetY, behavior: 'smooth' });
-  };
-
   // Smooth lerp animation loop
   useEffect(() => {
     const animate = () => {
       setScrollPos(prev => {
         const diff = targetScroll.current - prev;
-        // If close enough, snap
         if (Math.abs(diff) < 0.001) return targetScroll.current;
-        // Lerp towards target
         return prev + diff * 0.12;
       });
       animFrame.current = requestAnimationFrame(animate);
@@ -82,7 +50,17 @@ export default function Photos() {
     return () => { if (animFrame.current) cancelAnimationFrame(animFrame.current); };
   }, []);
 
-  // Keyboard
+  const scrollToTargetIndex = useCallback((idx) => {
+    if (!sectionRef.current) return;
+    const clampedIdx = Math.max(0, Math.min(N - 1, idx));
+    const progress   = clampedIdx / (N - 1);
+    const parentRect = sectionRef.current.getBoundingClientRect();
+    const maxTravel  = parentRect.height - window.innerHeight;
+    const targetY    = window.scrollY + parentRect.top + (progress * maxTravel);
+    window.scrollTo({ top: targetY, behavior: 'smooth' });
+  }, []);
+
+  // Keyboard navigation
   useEffect(() => {
     const onKey = (e) => {
       if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
@@ -96,11 +74,9 @@ export default function Photos() {
     return () => window.removeEventListener('keydown', onKey);
   }, []);
 
-  // Derive active index from continuous scroll — Linear (clamped)
   const activeIndex = Math.max(0, Math.min(N - 1, Math.round(scrollPos)));
   const activePhoto = photosData[activeIndex];
 
-  // Generate SVG path string for the decorative curve
   const svgPath = (() => {
     const P0 = { x: 3, y: 8 };
     const P1 = { x: 5, y: 55 };
@@ -129,7 +105,6 @@ export default function Photos() {
       <div className={styles.stickyWrapper} ref={stickyRef}>
         <div className={styles.stage} ref={stageRef}>
 
-          {/* SVG decorative curve */}
           <svg className={styles.curveSvg} viewBox="0 0 100 100" preserveAspectRatio="none">
             <path
               d={svgPath}
@@ -140,26 +115,24 @@ export default function Photos() {
             />
           </svg>
 
-          {/* Cards along the curve */}
           {photosData.map((photo, i) => {
-            // Linear offset from the "center" position
             const rawOffset = i - scrollPos;
 
             const CENTER_T = 0.42;
-            const SPREAD = 0.11; 
-            const t = CENTER_T + rawOffset * SPREAD;
+            const SPREAD   = 0.11; 
+            const t        = CENTER_T + rawOffset * SPREAD;
 
             if (t < -0.15 || t > 1.15) return null;
 
             const clampedT = Math.max(0, Math.min(1, t));
-            const pos = bezierPoint(clampedT);
+            const pos      = bezierPoint(clampedT);
 
-            const proximity = bellCurve(rawOffset);
+            const proximity = bellCurve(rawOffset, 3.5);
 
-            const scale  = 0.35 + proximity * 0.65;   
-            const opacity = 0.2 + proximity * 0.8;     
-            const blur   = (1 - proximity) * 2.5;      
-            const zIndex = Math.round(proximity * 10);
+            const scale    = 0.35 + proximity * 0.65;   
+            const opacity  = 0.2 + proximity * 0.8;     
+            const blur     = (1 - proximity) * 2.5;      
+            const zIndex   = Math.round(proximity * 10);
             const rotation = rawOffset * -4;        
 
             const isCenter = Math.abs(rawOffset) < 0.4;
@@ -177,11 +150,8 @@ export default function Photos() {
                   zIndex,
                 }}
                 onClick={() => {
-                  if (isCenter) {
-                    setLightbox(photo);
-                  } else {
-                    scrollToTargetIndex(i);
-                  }
+                  if (isCenter) setLightbox(photo);
+                  else scrollToTargetIndex(i);
                 }}
                 data-cursor="view"
               >
@@ -199,7 +169,6 @@ export default function Photos() {
             );
           })}
 
-          {/* Info panel */}
           <div className={styles.infoPanel}>
             <AnimatePresence mode="wait">
               <motion.div
@@ -228,7 +197,6 @@ export default function Photos() {
         </div>
       </div>
 
-      {/* Lightbox */}
       <AnimatePresence>
         {lightbox && (
           <motion.div

@@ -2,6 +2,7 @@
   background:  var(--bg-surface);
   padding:     3rem 0;
   border-top:  1px solid rgba(146, 200, 211, 0.08);
+  scroll-snap-align: end;
 }
 
 .footerContent {

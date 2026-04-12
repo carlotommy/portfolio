@@ -8,6 +8,7 @@
   margin:     0 auto;
   gap:        4rem;
   position:   relative;
+  scroll-snap-align: center;
 }
 
 @media (max-width: 900px) {

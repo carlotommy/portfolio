@@ -8,6 +8,7 @@ import Navigation       from '@layout/Navigation';
 import Footer           from '@layout/Footer';
 import LightRays        from '@ui/LightRays';
 import ClickSpark       from '@ui/ClickSpark';
+import useChapterSnap   from '@hooks/useChapterSnap';
 
 import Home    from './pages/Home';
 import Work    from './pages/Work';
@@ -21,6 +22,9 @@ export default function App() {
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'instant' });
   }, [pathname]);
+
+  // Magnetic chapter snapping — runs globally
+  useChapterSnap();
 
   return (
     <TransitionProvider>

@@ -90,6 +90,7 @@ function ServiceCard({ service, cardIndex, onContact }) {
       className={styles.cardSection}
       ref={wrapperRef}
       style={{ '--accent': service.accent, '--z': cardIndex }}
+      data-chapter={`service-${service.id}`}
     >
       <div className={styles.cardTitle}>
         <span className={styles.cardIndex}>{service.index}</span>
@@ -147,8 +148,8 @@ export default function Services() {
     document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
   };
   return (
-    <section className={styles.servicesSection}>
-      <div className={styles.sectionHeader}>
+    <section className={styles.servicesSection} data-chapter="services">
+      <div className={styles.sectionHeader} data-chapter="services-header">
         <p className={styles.sectionLabel}>— Cosa facciamo</p>
         <h1 className={styles.sectionTitle}>
           <SimpleBlurText as="span" text="I Nostri Servizi" />

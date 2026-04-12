@@ -30,7 +30,14 @@ export default function About() {
   /* ── Reveal on scroll ────────────────────────────────────────────── */
   useEffect(() => {
     const io = new IntersectionObserver(
-      (entries) => entries.forEach(e => e.isIntersecting && e.target.classList.add(styles.visible)),
+      (entries) => {
+        entries.forEach(e => {
+          if (e.isIntersecting) {
+            e.target.classList.add(styles.visible);
+            io.unobserve(e.target); // Unobserve to save memory once revealed
+          }
+        });
+      },
       { threshold: 0.12 }
     );
     revealRefs.current.forEach(el => el && io.observe(el));
@@ -40,7 +47,7 @@ export default function About() {
   const reveal = (i) => (el) => { revealRefs.current[i] = el; };
 
   return (
-    <section id="about" className={styles.about} ref={sectionRef}>
+    <section id="about" className={styles.about} ref={sectionRef} data-chapter="about">
       <div className="container">
 
         {/* ── A: Chapter heading ──────────────────────────────────── */}
