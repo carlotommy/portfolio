@@ -9,17 +9,14 @@
 import { Helmet }        from 'react-helmet-async';
 import Hero              from '@sections/Hero';
 import HomeStory         from '@sections/HomeStory';
+import { SEO }           from '@data/seoData';
 
 export default function Home() {
-
   return (
     <>
       <Helmet>
-        <title>ASSE ZERO | Home</title>
-        <meta
-          name="description"
-          content="ASSE ZERO – Studio di produzione creativa. Advertising, Short Films, Music Videos, Sound Design."
-        />
+        <title>{SEO.home.title}</title>
+        <meta name="description" content={SEO.home.description} />
       </Helmet>
 
       {/* Full-viewport animated title */}

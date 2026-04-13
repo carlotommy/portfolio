@@ -8,7 +8,7 @@
   position: sticky;
   top: 0;
   width: 100%;
-  height: 100vh;
+  height: 100dvh;
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -16,40 +16,48 @@
   align-items: center;
   background: var(--bg-surface);
   perspective: 1200px;
+  perspective-origin: center center;
 }
 
 .header {
   position: absolute;
-  top: 8vh;
+  top: 3dvh;
   left: 0;
   right: 0;
   text-align: center;
-  z-index: 20;
+  z-index: 30;
 }
 
 .stage {
   position: relative;
   width: 100%;
-  height: 100%;
+  height: 100dvh;
   display: flex;
   align-items: center;
   justify-content: center;
   transform-style: preserve-3d;
+  overflow: hidden;
+  /* Cushion per evitare compenetrazione con il titolo */
+  padding-top: 6dvh;
 }
 
+
+/* La card centrale è gestita dinamicamente via JS per opacità e blur */
 .slide {
   position: absolute;
-  left: 50%;
-  top: 50%;
-  /* Transform origin center to allow clean 3D rotation */
-  transform-origin: center center;
+  /* Centering via absolute position without top/left drift */
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
   width: 88%;
   max-width: 420px;
-  will-change: transform, opacity;
+  will-change: transform, opacity, filter;
+  transition: opacity 0.4s ease, filter 0.4s ease;
+  transform-origin: center center;
+  backface-visibility: hidden;
 }
+
+
 
 .playerWrapper {
   width: 100%;
@@ -138,3 +146,14 @@
   color: var(--text-secondary);
   opacity: 0.7;
 }
+
+@keyframes hapticPulse {
+  0% { filter: brightness(1); }
+  50% { filter: brightness(1.3); transform: scale(1.02); }
+  100% { filter: brightness(1); }
+}
+
+.hapticPulse {
+  animation: hapticPulse 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+}
+

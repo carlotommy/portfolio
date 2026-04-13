@@ -41,13 +41,31 @@ export default function Photos() {
     const animate = () => {
       setScrollPos(prev => {
         const diff = targetScroll.current - prev;
-        if (Math.abs(diff) < 0.001) return targetScroll.current;
+        if (Math.abs(diff) < 0.0005) {
+          if (animFrame.current) {
+            cancelAnimationFrame(animFrame.current);
+            animFrame.current = null;
+          }
+          return targetScroll.current;
+        }
         return prev + diff * 0.12;
       });
       animFrame.current = requestAnimationFrame(animate);
     };
+
+    const handleScroll = () => {
+      if (!animFrame.current) {
+        animFrame.current = requestAnimationFrame(animate);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
     animFrame.current = requestAnimationFrame(animate);
-    return () => { if (animFrame.current) cancelAnimationFrame(animFrame.current); };
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (animFrame.current) cancelAnimationFrame(animFrame.current);
+    };
   }, []);
 
   const scrollToTargetIndex = useCallback((idx) => {
@@ -108,10 +126,10 @@ export default function Photos() {
           <svg className={styles.curveSvg} viewBox="0 0 100 100" preserveAspectRatio="none">
             <path
               d={svgPath}
-              stroke="rgba(146,200,211,0.12)"
-              strokeWidth="0.3"
+              stroke="rgba(146,200,211,0.08)"
+              strokeWidth="0.15"
               fill="none"
-              strokeDasharray="1.2 1.8"
+              strokeDasharray="1, 4"
             />
           </svg>
 
@@ -138,15 +156,27 @@ export default function Photos() {
             const isCenter = Math.abs(rawOffset) < 0.4;
 
             return (
-              <div
+              <motion.div
                 key={i}
                 className={`${styles.curveCard} ${isCenter ? styles.curveCardActive : ''}`}
-                style={{
+                initial={false}
+                animate={{
                   left: `${pos.x}%`,
                   top: `${pos.y}%`,
-                  transform: `translate(-50%, -50%) scale(${scale}) rotate(${rotation}deg)`,
+                  x: "-50%",
+                  y: isCenter ? ["-50%", "-52%", "-50%"] : "-50%",
+                  scale,
+                  rotate: rotation,
                   opacity,
                   filter: `blur(${blur}px)`,
+                }}
+                transition={{
+                  scale: { duration: 0.4 },
+                  opacity: { duration: 0.4 },
+                  filter: { duration: 0.4 },
+                  y: isCenter ? { duration: 3, repeat: Infinity, ease: "easeInOut" } : { duration: 0.4 }
+                }}
+                style={{
                   zIndex,
                 }}
                 onClick={() => {
@@ -165,7 +195,7 @@ export default function Photos() {
                 {isCenter && (
                   <div className={styles.activeGlow} />
                 )}
-              </div>
+              </motion.div>
             );
           })}
 
@@ -182,12 +212,16 @@ export default function Photos() {
                 <span className={styles.infoCategory}>{activePhoto.category}</span>
                 <h3 className={styles.infoTitle}>{activePhoto.title}</h3>
                 <p className={styles.infoDesc}>{activePhoto.desc}</p>
-                <span className={styles.infoDate}>{activePhoto.date}</span>
-                <div className={styles.infoControls}>
-                  <button className={styles.navBtn} onClick={() => scrollToTargetIndex(activeIndex - 1)} aria-label="Precedente" data-cursor="view">←</button>
+                
+                <div className={styles.infoMeta}>
+                  <span className={styles.infoDate}>{activePhoto.date}</span>
                   <span className={styles.counter}>
                     {String(activeIndex + 1).padStart(2, '0')} / {String(N).padStart(2, '0')}
                   </span>
+                </div>
+
+                <div className={styles.infoControls}>
+                  <button className={styles.navBtn} onClick={() => scrollToTargetIndex(activeIndex - 1)} aria-label="Precedente" data-cursor="view">←</button>
                   <button className={styles.navBtn} onClick={() => scrollToTargetIndex(activeIndex + 1)} aria-label="Successivo" data-cursor="view">→</button>
                 </div>
               </motion.div>

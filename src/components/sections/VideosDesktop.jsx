@@ -40,13 +40,31 @@ export default function Videos() {
     const animate = () => {
       setScrollPos(prev => {
         const diff = targetScroll.current - prev;
-        if (Math.abs(diff) < 0.001) return targetScroll.current;
+        if (Math.abs(diff) < 0.0005) {
+          if (animFrame.current) {
+            cancelAnimationFrame(animFrame.current);
+            animFrame.current = null;
+          }
+          return targetScroll.current;
+        }
         return prev + diff * 0.15; 
       });
       animFrame.current = requestAnimationFrame(animate);
     };
+
+    const handleScroll = () => {
+      if (!animFrame.current) {
+        animFrame.current = requestAnimationFrame(animate);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
     animFrame.current = requestAnimationFrame(animate);
-    return () => { if (animFrame.current) cancelAnimationFrame(animFrame.current); };
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (animFrame.current) cancelAnimationFrame(animFrame.current);
+    };
   }, []);
 
   // 3. Derived Active Index
@@ -89,6 +107,8 @@ export default function Videos() {
             {/* Sinistra: Stage delle Miniature (Linea Retta) */}
             <div className={styles.thumbListWrapper}>
               <div className={styles.thumbList}>
+                {/* Overlay Vignette per focalizzare il centro */}
+                <div className={styles.listVignette} />
                 {videos.map((vid, i) => {
                   const rawOffset = i - scrollPos;
                   const CENTER_T  = 0.5; 
@@ -113,9 +133,10 @@ export default function Videos() {
                       style={{
                         left: `${pos.x}%`,
                         top: `${pos.y}%`,
-                        transform: `translate(-50%, -50%) scale(${scale})`,
+                        transform: `translate3d(-50%, -50%, 0) scale(${scale})`,
                         opacity,
                         zIndex,
+                        filter: isCenter ? 'none' : 'blur(1px) grayscale(80%)'
                       }}
                       onClick={() => scrollToIdx(i)}
                       data-cursor="view"
@@ -146,10 +167,10 @@ export default function Videos() {
                     key={activeVideo.id}
                     src={`/images/video${activeVideo.id}-thumb.jpg`} 
                     alt="Active Video Poster"
-                    initial={{ opacity: 0, scale: 0.98 }}
+                    initial={{ opacity: 0, scale: 1.05 }}
                     animate={{ opacity: 0.8, scale: 1 }}
-                    exit={{ opacity: 0, scale: 1.02 }}
-                    transition={{ duration: 0.4 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
                     loading="eager"
                   />
                 </AnimatePresence>
@@ -163,10 +184,10 @@ export default function Videos() {
                   <AnimatePresence mode="wait">
                     <motion.div
                       key={activeVideo.id}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                      transition={{ duration: 0.3 }}
+                      initial={{ opacity: 0, y: 30, filter: 'blur(10px)' }}
+                      animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                      exit={{ opacity: 0, y: -30, filter: 'blur(10px)' }}
+                      transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
                     >
                       <span className={styles.label}>PROGETTO SELEZIONATO</span>
                       <h3 className={styles.title}>{activeVideo.label}</h3>
@@ -190,7 +211,7 @@ export default function Videos() {
                     onClick={() => scrollToIdx(activeIndex + 1)} 
                     disabled={activeIndex === N - 1}
                     data-cursor="view"
-                  >
+                   >
                     NEXT
                   </button>
                 </div>

@@ -138,7 +138,26 @@
 }
 
 
-.overlayLink.active { color: #fff; }
+.overlayLink.active { 
+  color: var(--teal-300); 
+}
+
+.overlayLink.active::after {
+  width: 100%;
+  background: var(--teal-300);
+  box-shadow: 0 0 12px var(--teal-500);
+}
+
+.overlayLink.active .linkArrow {
+  opacity: 1;
+  transform: translate(0, 0);
+  color: var(--teal-300);
+}
+
+.overlayLink.active .charInner,
+.overlayLink.active .charClone {
+  color: var(--teal-100);
+}
 
 .linkNum {
   font-family: 'Space Mono', monospace;

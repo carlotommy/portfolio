@@ -22,7 +22,7 @@ export default function Hero() {
 
       <div className={styles.titleBlock} aria-label="Asse Zero">
         <SimpleBlurText
-          as="div"
+          as="h1"
           text="ASSE ZERO"
           animateBy="letters"
           delay={55}

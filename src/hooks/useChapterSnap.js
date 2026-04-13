@@ -82,9 +82,10 @@ export default function useChapterSnap() {
 
       // Skip snap if viewport center is inside a "no-snap" zone (e.g. sticky sections)
       const noSnaps = document.querySelectorAll('[data-no-snap="true"]');
+      const BUFFER = 50; // px padding to prevent edge-snapping jitter
       for (const el of noSnaps) {
         const rect = el.getBoundingClientRect();
-        if (rect.top <= viewCenter && rect.bottom >= viewCenter) {
+        if (rect.top - BUFFER <= viewCenter && rect.bottom + BUFFER >= viewCenter) {
           return;
         }
       }

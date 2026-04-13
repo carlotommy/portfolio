@@ -33,19 +33,54 @@ export default function VideosMobile() {
     };
   }, []);
 
+  const [feedback, setFeedback] = useState(false);
+  const lastIndex = useRef(0);
+
   // 2. Smooth Lerp Loop per un'animazione burrosa del rullo
   useEffect(() => {
     const animate = () => {
       setScrollPos(prev => {
         const diff = targetScroll.current - prev;
-        if (Math.abs(diff) < 0.001) return targetScroll.current;
+        if (Math.abs(diff) < 0.0003) {
+          // Quando siamo molto vicini al target, fermiamo l'animazione per risparmiare CPU
+          if (animFrame.current) {
+            cancelAnimationFrame(animFrame.current);
+            animFrame.current = null;
+          }
+          return targetScroll.current;
+        }
         return prev + diff * 0.12; 
       });
       animFrame.current = requestAnimationFrame(animate);
     };
+
+    const handleScroll = () => {
+      // Se l'animazione non è già in esecuzione, avviala
+      if (!animFrame.current) {
+        animFrame.current = requestAnimationFrame(animate);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    // Avvio iniziale
     animFrame.current = requestAnimationFrame(animate);
-    return () => { if (animFrame.current) cancelAnimationFrame(animFrame.current); };
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (animFrame.current) cancelAnimationFrame(animFrame.current);
+    };
   }, []);
+
+  // 3. Simulo Feedback Aptico (Visivo) allo snap
+  const activeIndex = Math.max(0, Math.min(N - 1, Math.round(scrollPos)));
+  useEffect(() => {
+    if (activeIndex !== lastIndex.current) {
+      setFeedback(true);
+      const tt = setTimeout(() => setFeedback(false), 300);
+      lastIndex.current = activeIndex;
+      return () => clearTimeout(tt);
+    }
+  }, [activeIndex]);
 
   return (
     <section 
@@ -56,7 +91,15 @@ export default function VideosMobile() {
       style={{ height: `calc(100vh + ${N * 50}vh)` }} 
     >
       <div className={styles.stickyWrapper}>
-        <div className={styles.header}>
+        <div 
+          className={styles.header}
+          style={{ 
+            opacity: Math.max(0, 1 - scrollPos * 8), 
+            transform: `translateY(${scrollPos * -40}px)`,
+            pointerEvents: scrollPos > 0.1 ? 'none' : 'auto',
+            transition: 'opacity 0.4s ease, transform 0.4s ease'
+          }}
+        >
           <h2 className="section-title">VIDEO GALLERIA</h2>
         </div>
 
@@ -69,31 +112,37 @@ export default function VideosMobile() {
 
             const absOffset = Math.abs(rawOffset);
 
-            // LOGICA RUOTA FISSA ESTERNA:
-            // L'elemento si sposta in Y in base all'offset per creare spazio verticale.
-            const y = rawOffset * 150; // distanza in px sull'asse Y tra una card e l'altra
+            // LOGICA RUOTA FISSA ESTERNA (RAFFINATA):
+            // L'elemento si sposta in Y in base all'altezza del viewport per evitare sovrapposizioni.
+            const y = rawOffset * (window.innerHeight * 0.22); 
 
-            // Inclinazione: se è sotto il centro (rawOffset > 0), si piega mostrando la sua sommità verso di noi (angolo positivo, la base fugge = ruota esterna).
-            // Se è sopra il centro (rawOffset < 0), angolo negativo.
-            const rotateX = rawOffset * 45; // gradi effettivi calcolati proporzionalmente
+            // Inclinazione ridotta (30deg) per preservare la leggibilità del testo.
+            const rotateX = rawOffset * 30; 
             
-            // Spinta in profondità 3D man mano che si allontanano dal centro
-            const z = absOffset * -250; 
+            // Spinta in profondità 3D più marcata per il background.
+            const z = absOffset * -300; 
             
-            // Scala e Opacità per aggiungere profondità "cinematografica" 
-            const scale = Math.max(0.6, 1 - (absOffset * 0.15)); 
-            const opacity = Math.max(0, 1 - (absOffset * 0.8));
+            // RUOTA RAFFINATA: Trasparenza esponenziale e filtri dinamici
+            // L'opacità svanisce molto più "cinematicamente" man mano che si allontana dal centro.
+            const opacity = Math.pow(Math.max(0, 1 - absOffset * 0.7), 2.5);
+            const scale   = Math.max(0.6, 1 - (absOffset * 0.18)); 
 
-            // Z-index garantisce che la card centrale sia sempre sovrapposta
-            const zIndex = Math.round((2 - absOffset) * 10);
+            // Filtri dinamici: più è lontano, più è sfocato e scuro.
+            const blur = absOffset * 3; 
+            const brightness = Math.max(0.4, 1 - absOffset * 0.5);
+
+            // Z-index dinamico.
+            const zIndex = Math.round((5 - absOffset) * 10);
+            const isCenter = absOffset < 0.45;
 
             return (
               <div 
                 key={vid.id} 
-                className={styles.slide}
+                className={`${styles.slide} ${isCenter ? styles.activeSlide : ''} ${feedback && absOffset < 0.1 ? styles.hapticPulse : ''}`}
                 style={{
-                  transform: `translate(-50%, -50%) translateY(${y}px) translateZ(${z}px) rotateX(${rotateX}deg) scale(${scale})`,
+                  transform: `translate3d(0, ${y}px, ${z}px) rotateX(${rotateX}deg) scale(${scale})`,
                   opacity,
+                  filter: `blur(${blur}px) brightness(${brightness})`,
                   zIndex
                 }}
               >
@@ -107,7 +156,8 @@ export default function VideosMobile() {
                     <img 
                       src={`/images/video${vid.id}-thumb.jpg`} 
                       alt={vid.label} 
-                      loading="lazy" 
+                      loading="lazy"
+                      decoding="async"
                     />
                     <div className={styles.playBtnBig}>
                       <svg viewBox="0 0 24 24" fill="none">
