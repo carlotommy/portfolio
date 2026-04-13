@@ -31,7 +31,7 @@ export default function Contact() {
   };
 
   return (
-    <section id="contact" className={styles.section} data-chapter="contact">
+    <section id="contact" className={styles.section}>
 
       <div className={styles.sectionHeader} data-chapter="contact-header">
         <p className={styles.sectionLabel}>— Parliamoci</p>

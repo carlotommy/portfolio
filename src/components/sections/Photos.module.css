@@ -4,9 +4,19 @@
 .section {
   padding: 4rem 0 0;
   position: relative;
-  scroll-margin-top: 0;
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
+  scroll-margin-top: 100px;
+}
+
+/* Invisible Snap Strip for Desktop Granular Snapping */
+.snapStrip {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.snapPoint {
+  width: 100%;
 }
 
 .stickyWrapper {
@@ -64,7 +74,7 @@
   background: var(--bg-surface);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.55);
   /* x/y -50% centering is applied via motion animate */
-  will-change: transform, opacity;
+  will-change: transform, opacity, filter;
 }
 
 .curveCardActive {

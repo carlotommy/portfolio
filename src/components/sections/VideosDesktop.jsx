@@ -1,16 +1,68 @@
-import { useState, useRef, useMemo, useEffect, useCallback } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useRef, useEffect, useCallback } from 'react';
+import { motion, AnimatePresence, useMotionValue, useTransform } from 'framer-motion';
 import { VIDEOS as videos } from '@data/constants';
 import { verticalPath, bellCurve } from '@utils/math';
 import styles from './Videos.module.css';
 
 const N = videos.length;
 
+/* ── Sub-component for optimized thumbnail list ─────────────────── */
+/* ── Sub-component for optimized thumbnail list ─────────────────── */
+function ThumbItem({ vid, index, scrollPos, onScrollTo, isActive }) {
+  const rawOffset = useTransform(scrollPos, (s) => index - s);
+  
+  const CENTER_T  = 0.5; 
+  const SPREAD    = 0.32; // Increased from 0.22 for more vertical air
+  const t = useTransform(rawOffset, (o) => CENTER_T + o * SPREAD);
+
+  const clampedT = useTransform(t, (v) => Math.max(0, Math.min(1, v)));
+  const pos = useTransform(clampedT, (v) => verticalPath(v));
+  const proximity = useTransform(rawOffset, (o) => bellCurve(o, 3.2));
+
+  // Opacity: hits 0 at +/- 1.4 to prevent stacking at edges
+  const opacity = useTransform(
+    rawOffset, 
+    [-1.4, -0.6, 0, 0.6, 1.4], 
+    [0, 0.4, 1, 0.4, 0]
+  );
+  
+  const scale = useTransform(proximity, (p) => 0.46 + p * 0.66);
+  const zIndex = useTransform(proximity, (p) => Math.round(p * 100));
+
+  return (
+    <motion.div
+      className={`${styles.thumbItem} ${isActive ? styles.activeThumb : ''}`}
+      style={{
+        left: useTransform(pos, (p) => `${p.x - 15}%`), // Shifted from 50% to ~35%
+        top: useTransform(pos, (p) => `${p.y}%`),
+        transform: "translate3d(-50%, -50%, 0)",
+        rotate: 0, // Forced zero tilt
+        scale,
+        opacity,
+        zIndex,
+        willChange: "transform, opacity"
+      }}
+      onClick={() => onScrollTo(index)}
+      data-cursor="view"
+    >
+      <img
+        src={`/photos/${((vid.id - 1) % 5) + 1}.jpeg`}
+        alt={vid.label}
+        loading="lazy"
+      />
+      {isActive && <div className={styles.activeGlow} />}
+    </motion.div>
+  );
+}
+
 export default function Videos() {
-  const [scrollPos, setScrollPos] = useState(0);
+  const [activeIndex, setActiveIndex] = useState(0);
   const sectionRef   = useRef(null);
   const targetScroll = useRef(0);
   const animFrame    = useRef(null);
+
+  // Optimized Scroll Tracking: Use MotionValue
+  const scrollPos = useMotionValue(0);
 
   // 1. Sync Section Scroll to Gallery Progress
   useEffect(() => {
@@ -22,7 +74,9 @@ export default function Videos() {
       const maxTravel = height - viewportH;
       if (maxTravel <= 0) return;
 
-      const progress = Math.max(0, Math.min(1, -top / maxTravel));
+      // Account for the 100px offset from the header snap point
+      const effectiveTop = top - 100;
+      const progress = Math.max(0, Math.min(1, -effectiveTop / maxTravel));
       targetScroll.current = progress * (N - 1);
     };
 
@@ -35,40 +89,45 @@ export default function Videos() {
     };
   }, []);
 
-  // 2. Smooth Lerp Loop (Continuous)
+  // 2. Smooth Lerp Loop via MotionValue
   useEffect(() => {
     const animate = () => {
-      setScrollPos(prev => {
-        const diff = targetScroll.current - prev;
-        if (Math.abs(diff) < 0.0005) {
-          if (animFrame.current) {
-            cancelAnimationFrame(animFrame.current);
-            animFrame.current = null;
-          }
-          return targetScroll.current;
-        }
-        return prev + diff * 0.15; 
-      });
+      const current = scrollPos.get();
+      const diff = targetScroll.current - current;
+      
+      if (Math.abs(diff) < 0.0005) {
+        scrollPos.set(targetScroll.current);
+        animFrame.current = null;
+        return;
+      }
+      
+      const next = current + diff * 0.15;
+      scrollPos.set(next);
+
+      // Update active index for player section (React State)
+      const nextIdx = Math.max(0, Math.min(N - 1, Math.round(next)));
+      if (nextIdx !== activeIndex) {
+        setActiveIndex(nextIdx);
+      }
+
       animFrame.current = requestAnimationFrame(animate);
     };
 
-    const handleScroll = () => {
+    const runLoop = () => {
       if (!animFrame.current) {
         animFrame.current = requestAnimationFrame(animate);
       }
     };
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('scroll', runLoop, { passive: true });
     animFrame.current = requestAnimationFrame(animate);
 
     return () => {
-      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('scroll', runLoop);
       if (animFrame.current) cancelAnimationFrame(animFrame.current);
     };
-  }, []);
+  }, [activeIndex]);
 
-  // 3. Derived Active Index
-  const activeIndex = Math.max(0, Math.min(N - 1, Math.round(scrollPos)));
   const activeVideo = videos[activeIndex];
 
   const scrollToIdx = useCallback((idx) => {
@@ -85,9 +144,20 @@ export default function Videos() {
       id="videos" 
       className={styles.videosSection} 
       ref={sectionRef} 
-      data-no-snap="true"
-      style={{ height: `calc(100vh + ${N * 60}vh)` }} 
+      style={{ height: `calc(100svh + ${N * 60}vh)` }} 
     >
+      {/* Invisible Snap Points for Desktop Granular Magnetism */}
+      <div className={styles.snapStrip}>
+        {videos.map((_, i) => (
+          <div 
+            key={`snap-${i}`} 
+            className={styles.snapPoint} 
+            style={{ height: '60vh' }}
+            data-chapter={`video-desktop-${i}`} 
+          />
+        ))}
+      </div>
+
       <div className="container">
         <motion.div
           className="section-header"
@@ -97,6 +167,9 @@ export default function Videos() {
           transition={{ duration: 0.8 }}
         >
           <h2 className="section-title">VIDEO GALLERIA</h2>
+          <p className={styles.description}>
+            Produzioni video d'eccellenza — spot, docufilm, storytelling
+          </p>
         </motion.div>
       </div>
 
@@ -104,96 +177,66 @@ export default function Videos() {
         <div className={styles.containerStyle}>
           
           <div className={styles.galleryCore}>
-            {/* Sinistra: Stage delle Miniature (Linea Retta) */}
             <div className={styles.thumbListWrapper}>
               <div className={styles.thumbList}>
-                {/* Overlay Vignette per focalizzare il centro */}
-                <div className={styles.listVignette} />
-                {videos.map((vid, i) => {
-                  const rawOffset = i - scrollPos;
-                  const CENTER_T  = 0.5; 
-                  const SPREAD    = 0.22; 
-                  const t = CENTER_T + rawOffset * SPREAD;
-
-                  if (t < -0.3 || t > 1.3) return null;
-
-                  const clampedT = Math.max(0, Math.min(1, t));
-                  const pos = verticalPath(clampedT);
-                  const proximity = bellCurve(rawOffset, 3.2);
-
-                  const scale    = 0.5 + proximity * 0.7; 
-                  const opacity  = 0.2 + proximity * 0.8;
-                  const zIndex   = Math.round(proximity * 10);
-                  const isCenter = Math.abs(rawOffset) < 0.45;
-
-                  return (
-                    <div
-                      key={`${vid.id}-${i}`}
-                      className={`${styles.thumbItem} ${isCenter ? styles.activeThumb : ''}`}
-                      style={{
-                        left: `${pos.x}%`,
-                        top: `${pos.y}%`,
-                        transform: `translate3d(-50%, -50%, 0) scale(${scale})`,
-                        opacity,
-                        zIndex,
-                        filter: isCenter ? 'none' : 'blur(1px) grayscale(80%)'
-                      }}
-                      onClick={() => scrollToIdx(i)}
-                      data-cursor="view"
-                    >
-                      <img
-                        src={`/images/video${vid.id}-thumb.jpg`}
-                        alt={vid.label}
-                        loading="lazy"
-                      />
-                      {isCenter && <div className={styles.activeGlow} />}
-                    </div>
-                  );
-                })}
+                {videos.map((vid, i) => (
+                  <ThumbItem 
+                    key={`${vid.id}-${i}`}
+                    vid={vid}
+                    index={i}
+                    scrollPos={scrollPos}
+                    onScrollTo={scrollToIdx}
+                    isActive={activeIndex === i}
+                  />
+                ))}
               </div>
             </div>
 
-            {/* Destra: Player Gigante */}
             <div className={styles.playerSection}>
-              <a 
-                href={activeVideo.url} 
-                target="_blank" 
-                rel="noopener noreferrer" 
-                className={styles.displayArea}
-                data-cursor="view"
-              >
-                <AnimatePresence mode="wait">
-                  <motion.img 
-                    key={activeVideo.id}
-                    src={`/images/video${activeVideo.id}-thumb.jpg`} 
-                    alt="Active Video Poster"
-                    initial={{ opacity: 0, scale: 1.05 }}
-                    animate={{ opacity: 0.8, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.95 }}
-                    transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-                    loading="eager"
-                  />
-                </AnimatePresence>
-                <div className={styles.playBtnBig}>
-                  <svg viewBox="0 0 24 24" fill="none"><path d="M8 5v14l11-7z" fill="currentColor" /></svg>
-                </div>
-              </a>
+              {activeVideo && (
+                <a 
+                  href={activeVideo.url} 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className={styles.displayArea}
+                  data-cursor="view"
+                >
+                  <AnimatePresence mode="wait">
+                    <motion.img 
+                      key={activeVideo.id}
+                      src={`/photos/${((activeVideo.id + 1) % 5) + 1}.jpeg`} 
+                      alt={activeVideo.label}
+                      initial={{ opacity: 0, scale: 1.02, rotate: 0 }}
+                      animate={{ opacity: 0.8, scale: 1, rotate: 0 }}
+                      exit={{ opacity: 0, scale: 0.98, rotate: 0 }}
+                      transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                      loading="eager"
+                      style={{ rotate: 0 }}
+                    />
+                  </AnimatePresence>
+                  <div className={styles.playBtnBig}>
+                    <svg viewBox="0 0 24 24" fill="none"><path d="M8 5v14l11-7z" fill="currentColor" /></svg>
+                  </div>
+                </a>
+              )}
 
               <div className={styles.playerBottom}>
                 <div className={styles.infoBlock}>
                   <AnimatePresence mode="wait">
-                    <motion.div
-                      key={activeVideo.id}
-                      initial={{ opacity: 0, y: 30, filter: 'blur(10px)' }}
-                      animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-                      exit={{ opacity: 0, y: -30, filter: 'blur(10px)' }}
-                      transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                    >
-                      <span className={styles.label}>PROGETTO SELEZIONATO</span>
-                      <h3 className={styles.title}>{activeVideo.label}</h3>
-                      <p className={styles.description}>{activeVideo.desc}</p>
-                      <span className={styles.date}>{activeVideo.date}</span>
-                    </motion.div>
+                    {activeVideo && (
+                      <motion.div
+                        key={activeVideo.id}
+                        initial={{ opacity: 0, y: 30 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -30 }}
+                        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                      >
+                        <span className={styles.label}>PROGETTO SELEZIONATO</span>
+                        <h3 className={styles.title}>{activeVideo.label}</h3>
+                        <p className={styles.description}>{activeVideo.desc}</p>
+                        <span className={styles.date}>{activeVideo.date}</span>
+                      </motion.div>
+                    )}
                   </AnimatePresence>
                 </div>
 

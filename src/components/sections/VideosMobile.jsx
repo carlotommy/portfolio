@@ -1,14 +1,81 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
+import { motion, useMotionValue, useTransform } from 'framer-motion';
 import { VIDEOS as videos } from '@data/constants';
 import styles from './VideosMobile.module.css';
 
 const N = videos.length;
 
+/* ── Sub-component for individual 3D Slide performance ─────────── */
+function MobileSlide({ vid, index, scrollPos, isActive }) {
+  const rawOffset = useTransform(scrollPos, (s) => index - s);
+  const absOffset = useTransform(rawOffset, (o) => Math.abs(o));
+  
+  // RUOTA 3D calculations - Fixed geometry for buttery tracking
+  const y = useTransform(rawOffset, (o) => o * (window.innerHeight * 0.25));
+  const rotateX = useTransform(rawOffset, (o) => o * 28); 
+  const z = useTransform(absOffset, (a) => a * -500); 
+  
+  // "Evanescence" - Exponential smooth fading
+  const opacity = useTransform(absOffset, (a) => Math.exp(-a * a * 1.5));
+  const scale = useTransform(absOffset, (a) => Math.max(0.6, 1 - (a * 0.2)));
+  const zIndex = useTransform(absOffset, (a) => Math.round((N - a) * 10));
+
+  const placeholderIdx = ((index + 2) % 5) + 1;
+  const imgSrc = `/photos/${placeholderIdx}.jpeg`;
+
+  return (
+    <motion.div
+      className={`${styles.slide} ${isActive ? styles.activeSlide : ''}`}
+      style={{
+        transform: useTransform([y, z, rotateX, scale], ([yV, zV, rxV, sV]) => 
+          `translate3d(0, ${yV}px, ${zV}px) rotateX(${rxV}deg) scale(${sV})`
+        ),
+        opacity,
+        zIndex,
+        rotate: 0,
+        willChange: "transform, opacity"
+      }}
+    >
+      <div className={styles.playerWrapper}>
+        <a 
+          href={vid.url} 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          className={styles.displayArea}
+        >
+          <img 
+            src={imgSrc} 
+            alt={vid.label} 
+            loading="lazy"
+            decoding="async"
+          />
+          <div className={styles.playBtnBig}>
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M8 5v14l11-7z" fill="currentColor" />
+            </svg>
+          </div>
+        </a>
+      </div>
+
+      <div className={styles.infoWrapper}>
+        <span className={styles.label}>PROGETTO SELEZIONATO</span>
+        <h3 className={styles.title}>{vid.label}</h3>
+        <p className={styles.description}>{vid.desc}</p>
+        <span className={styles.date}>{vid.date}</span>
+      </div>
+    </motion.div>
+  );
+}
+
 export default function VideosMobile() {
-  const [scrollPos, setScrollPos] = useState(0);
   const sectionRef   = useRef(null);
   const targetScroll = useRef(0);
   const animFrame    = useRef(null);
+  const lastIndex    = useRef(0);
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  // Optimized Scroll Tracking: Use MotionValue
+  const scrollPos = useMotionValue(0);
 
   // 1. Sync Section Scroll to Gallery Progress
   useEffect(() => {
@@ -16,7 +83,6 @@ export default function VideosMobile() {
       if (!sectionRef.current) return;
       const { top, height } = sectionRef.current.getBoundingClientRect();
       const viewportH = window.innerHeight;
-      
       const maxTravel = height - viewportH;
       if (maxTravel <= 0) return;
 
@@ -33,149 +99,88 @@ export default function VideosMobile() {
     };
   }, []);
 
-  const [feedback, setFeedback] = useState(false);
-  const lastIndex = useRef(0);
-
-  // 2. Smooth Lerp Loop per un'animazione burrosa del rullo
+  // 2. High-Performance Loop: 0.18 LERP factor for jitter-free tracking
   useEffect(() => {
     const animate = () => {
-      setScrollPos(prev => {
-        const diff = targetScroll.current - prev;
-        if (Math.abs(diff) < 0.0003) {
-          // Quando siamo molto vicini al target, fermiamo l'animazione per risparmiare CPU
-          if (animFrame.current) {
-            cancelAnimationFrame(animFrame.current);
-            animFrame.current = null;
-          }
-          return targetScroll.current;
-        }
-        return prev + diff * 0.12; 
-      });
+      const current = scrollPos.get();
+      const diff = targetScroll.current - current;
+      
+      // Extremely tight landing threshold to prevent "pixel snapping" jitter
+      if (Math.abs(diff) < 0.0001) {
+        scrollPos.set(targetScroll.current);
+        animFrame.current = null;
+        return;
+      }
+      
+      // Increased LERP speed (0.18) to move in lock-step with magnetic snapping
+      const next = current + diff * 0.18;
+      scrollPos.set(next);
+
+      const nextIdx = Math.max(0, Math.min(N - 1, Math.round(next)));
+      if (nextIdx !== lastIndex.current) {
+        lastIndex.current = nextIdx;
+        setActiveIndex(nextIdx);
+      }
+
       animFrame.current = requestAnimationFrame(animate);
     };
 
-    const handleScroll = () => {
-      // Se l'animazione non è già in esecuzione, avviala
-      if (!animFrame.current) {
-        animFrame.current = requestAnimationFrame(animate);
-      }
+    const runLoop = () => {
+      if (!animFrame.current) animFrame.current = requestAnimationFrame(animate);
     };
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    // Avvio iniziale
+    window.addEventListener('scroll', runLoop, { passive: true });
     animFrame.current = requestAnimationFrame(animate);
 
     return () => {
-      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('scroll', runLoop);
       if (animFrame.current) cancelAnimationFrame(animFrame.current);
     };
   }, []);
 
-  // 3. Simulo Feedback Aptico (Visivo) allo snap
-  const activeIndex = Math.max(0, Math.min(N - 1, Math.round(scrollPos)));
-  useEffect(() => {
-    if (activeIndex !== lastIndex.current) {
-      setFeedback(true);
-      const tt = setTimeout(() => setFeedback(false), 300);
-      lastIndex.current = activeIndex;
-      return () => clearTimeout(tt);
-    }
-  }, [activeIndex]);
+  // 3. Optimize rendering: don't re-create list on index change
+  const slides = useMemo(() => (
+    videos.map((vid, i) => (
+      <MobileSlide 
+        key={vid.id}
+        vid={vid}
+        index={i}
+        scrollPos={scrollPos}
+        isActive={i === activeIndex}
+      />
+    ))
+  ), [activeIndex]);
 
   return (
     <section 
       ref={sectionRef} 
       className={styles.mobileSection} 
-      data-no-snap="true"
-      // Diamo spazio per permettere all'utente di "girare" la ruota scrollando giù
-      style={{ height: `calc(100vh + ${N * 50}vh)` }} 
+      style={{ height: `calc(100svh + ${N * 60}vh)` }} 
     >
+      <div className={styles.snapStrip}>
+        {videos.map((_, i) => (
+          <div 
+            key={`snap-${i}`} 
+            className={styles.snapPoint} 
+            data-chapter={`video-mobile-${i}`} 
+          />
+        ))}
+      </div>
+
       <div className={styles.stickyWrapper}>
-        <div 
+        <motion.div 
           className={styles.header}
           style={{ 
-            opacity: Math.max(0, 1 - scrollPos * 8), 
-            transform: `translateY(${scrollPos * -40}px)`,
-            pointerEvents: scrollPos > 0.1 ? 'none' : 'auto',
-            transition: 'opacity 0.4s ease, transform 0.4s ease'
+            opacity: useTransform(scrollPos, s => Math.max(0, 1 - s * 8)), 
+            y: useTransform(scrollPos, s => s * -40),
+            pointerEvents: useTransform(scrollPos, s => s > 0.1 ? 'none' : 'auto')
           }}
         >
           <h2 className="section-title">VIDEO GALLERIA</h2>
-        </div>
+        </motion.div>
 
         <div className={styles.stage}>
-          {videos.map((vid, i) => {
-            const rawOffset = i - scrollPos;
-            
-            // Ottimizzazione: non renderizziamo le card troppo lontane dalla vista
-            if (rawOffset < -2 || rawOffset > 2) return null;
-
-            const absOffset = Math.abs(rawOffset);
-
-            // LOGICA RUOTA FISSA ESTERNA (RAFFINATA):
-            // L'elemento si sposta in Y in base all'altezza del viewport per evitare sovrapposizioni.
-            const y = rawOffset * (window.innerHeight * 0.22); 
-
-            // Inclinazione ridotta (30deg) per preservare la leggibilità del testo.
-            const rotateX = rawOffset * 30; 
-            
-            // Spinta in profondità 3D più marcata per il background.
-            const z = absOffset * -300; 
-            
-            // RUOTA RAFFINATA: Trasparenza esponenziale e filtri dinamici
-            // L'opacità svanisce molto più "cinematicamente" man mano che si allontana dal centro.
-            const opacity = Math.pow(Math.max(0, 1 - absOffset * 0.7), 2.5);
-            const scale   = Math.max(0.6, 1 - (absOffset * 0.18)); 
-
-            // Filtri dinamici: più è lontano, più è sfocato e scuro.
-            const blur = absOffset * 3; 
-            const brightness = Math.max(0.4, 1 - absOffset * 0.5);
-
-            // Z-index dinamico.
-            const zIndex = Math.round((5 - absOffset) * 10);
-            const isCenter = absOffset < 0.45;
-
-            return (
-              <div 
-                key={vid.id} 
-                className={`${styles.slide} ${isCenter ? styles.activeSlide : ''} ${feedback && absOffset < 0.1 ? styles.hapticPulse : ''}`}
-                style={{
-                  transform: `translate3d(0, ${y}px, ${z}px) rotateX(${rotateX}deg) scale(${scale})`,
-                  opacity,
-                  filter: `blur(${blur}px) brightness(${brightness})`,
-                  zIndex
-                }}
-              >
-                <div className={styles.playerWrapper}>
-                  <a 
-                    href={vid.url} 
-                    target="_blank" 
-                    rel="noopener noreferrer" 
-                    className={styles.displayArea}
-                  >
-                    <img 
-                      src={`/images/video${vid.id}-thumb.jpg`} 
-                      alt={vid.label} 
-                      loading="lazy"
-                      decoding="async"
-                    />
-                    <div className={styles.playBtnBig}>
-                      <svg viewBox="0 0 24 24" fill="none">
-                        <path d="M8 5v14l11-7z" fill="currentColor" />
-                      </svg>
-                    </div>
-                  </a>
-                </div>
-
-                <div className={styles.infoWrapper}>
-                  <span className={styles.label}>PROGETTO SELEZIONATO</span>
-                  <h3 className={styles.title}>{vid.label}</h3>
-                  <p className={styles.description}>{vid.desc}</p>
-                  <span className={styles.date}>{vid.date}</span>
-                </div>
-              </div>
-            );
-          })}
+          {slides}
         </div>
       </div>
     </section>

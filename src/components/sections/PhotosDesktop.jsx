@@ -1,21 +1,80 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useMotionValue, useTransform, useSpring } from 'framer-motion';
 import { PHOTOS as photosData } from '@data/constants';
 import { bezierPoint, bellCurve } from '@utils/math';
 import styles from './Photos.module.css';
 
 const N = photosData.length;
 
+/* ── Sub-component for individual card performance ──────────────── */
+function CurveCard({ photo, index, scrollPos, onLightbox, onScrollTo, isActive }) {
+  // We use useTransform to calculate all positions/effects based on the motion value
+  // This runs on the animation thread, not the React render cycle!
+  
+  const rawOffset = useTransform(scrollPos, (s) => index - s);
+  
+  const CENTER_T = 0.42;
+  const SPREAD   = 0.11;
+  const t = useTransform(rawOffset, (o) => CENTER_T + o * SPREAD);
+  
+  const clampedT = useTransform(t, (v) => Math.max(0, Math.min(1, v)));
+  const pos = useTransform(clampedT, (v) => bezierPoint(v));
+  
+  const proximity = useTransform(rawOffset, (o) => bellCurve(o, 3.5));
+  
+  const scale = useTransform(proximity, (p) => 0.35 + p * 0.65);
+  // Sharper opacity falloff to prevent bunching at curve ends
+  const opacity = useTransform(rawOffset, [-4.5, -2, 0, 2, 4.5], [0, 0.4, 1, 0.4, 0]);
+  const zIndex = useTransform(proximity, (p) => Math.round(p * 100));
+  const rotation = useTransform(rawOffset, (o) => o * -4);
+  
+  const left = useTransform(pos, (p) => `${p.x}%`);
+  const top = useTransform(pos, (p) => `${p.y}%`);
+
+  return (
+    <motion.div
+      className={`${styles.curveCard} ${isActive ? styles.curveCardActive : ''}`}
+      style={{
+        left,
+        top,
+        x: "-50%",
+        y: "-50%", 
+        scale,
+        rotate: rotation,
+        opacity,
+        zIndex,
+        willChange: "transform, opacity"
+      }}
+      onClick={() => {
+        // If it's near center, open lightbox, else scroll to it
+        if (Math.abs(index - scrollPos.get()) < 0.4) onLightbox(photo);
+        else onScrollTo(index);
+      }}
+      data-cursor="view"
+    >
+      <img
+        src={photo.src}
+        alt={photo.title}
+        className={styles.curveCardImg}
+        loading="lazy"
+        decoding="async"
+      />
+      {isActive && <div className={styles.activeGlow} />}
+    </motion.div>
+  );
+}
+
 export default function Photos() {
-  const [scrollPos, setScrollPos] = useState(0);
+  const [activeIndex, setActiveIndex] = useState(0);
   const [lightbox, setLightbox] = useState(null);
   const sectionRef   = useRef(null);
-  const stageRef     = useRef(null);
   const targetScroll = useRef(0);
   const animFrame    = useRef(null);
-  const stickyRef    = useRef(null);
 
-  // Native scroll tracking
+  // Optimized Scroll Tracking: Use MotionValue
+  const scrollPos = useMotionValue(0);
+
+  // Sync section scroll to target progress
   useEffect(() => {
     const handleScroll = () => {
       if (!sectionRef.current) return;
@@ -36,37 +95,44 @@ export default function Photos() {
     };
   }, []);
 
-  // Smooth lerp animation loop
+  // Smother Lerp via useMotionValue
   useEffect(() => {
     const animate = () => {
-      setScrollPos(prev => {
-        const diff = targetScroll.current - prev;
-        if (Math.abs(diff) < 0.0005) {
-          if (animFrame.current) {
-            cancelAnimationFrame(animFrame.current);
-            animFrame.current = null;
-          }
-          return targetScroll.current;
-        }
-        return prev + diff * 0.12;
-      });
+      const current = scrollPos.get();
+      const diff = targetScroll.current - current;
+      
+      if (Math.abs(diff) < 0.0005) {
+        scrollPos.set(targetScroll.current);
+        animFrame.current = null;
+        return;
+      }
+      
+      const next = current + diff * 0.12;
+      scrollPos.set(next);
+      
+      // Update active index for info panel (React State)
+      const nextIdx = Math.max(0, Math.min(N - 1, Math.round(next)));
+      if (nextIdx !== activeIndex) {
+        setActiveIndex(nextIdx);
+      }
+
       animFrame.current = requestAnimationFrame(animate);
     };
 
-    const handleScroll = () => {
+    const runLoop = () => {
       if (!animFrame.current) {
         animFrame.current = requestAnimationFrame(animate);
       }
     };
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('scroll', runLoop, { passive: true });
     animFrame.current = requestAnimationFrame(animate);
 
     return () => {
-      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('scroll', runLoop);
       if (animFrame.current) cancelAnimationFrame(animFrame.current);
     };
-  }, []);
+  }, [activeIndex]);
 
   const scrollToTargetIndex = useCallback((idx) => {
     if (!sectionRef.current) return;
@@ -92,7 +158,6 @@ export default function Photos() {
     return () => window.removeEventListener('keydown', onKey);
   }, []);
 
-  const activeIndex = Math.max(0, Math.min(N - 1, Math.round(scrollPos)));
   const activePhoto = photosData[activeIndex];
 
   const svgPath = (() => {
@@ -104,7 +169,23 @@ export default function Photos() {
   })();
 
   return (
-    <section id="photos" className={styles.section} ref={sectionRef} data-no-snap="true" style={{ height: `calc(100vh + ${N * 50}vh)` }}>
+    <section 
+      id="photos" 
+      className={styles.section} 
+      ref={sectionRef} 
+      style={{ height: `calc(100svh + ${N * 50}vh)` }}
+    >
+      {/* Invisible Snap Points for Desktop Granular Magnetism */}
+      <div className={styles.snapStrip}>
+        {photosData.map((_, i) => (
+          <div 
+            key={`snap-${i}`} 
+            className={styles.snapPoint} 
+            style={{ height: '50vh' }}
+            data-chapter={`photo-desktop-${i}`} 
+          />
+        ))}
+      </div>
       <div className="container">
         <motion.div
           className="section-header"
@@ -120,8 +201,8 @@ export default function Photos() {
         </motion.div>
       </div>
 
-      <div className={styles.stickyWrapper} ref={stickyRef}>
-        <div className={styles.stage} ref={stageRef}>
+      <div className={styles.stickyWrapper}>
+        <div className={styles.stage}>
 
           <svg className={styles.curveSvg} viewBox="0 0 100 100" preserveAspectRatio="none">
             <path
@@ -133,103 +214,50 @@ export default function Photos() {
             />
           </svg>
 
-          {photosData.map((photo, i) => {
-            const rawOffset = i - scrollPos;
-
-            const CENTER_T = 0.42;
-            const SPREAD   = 0.11; 
-            const t        = CENTER_T + rawOffset * SPREAD;
-
-            if (t < -0.15 || t > 1.15) return null;
-
-            const clampedT = Math.max(0, Math.min(1, t));
-            const pos      = bezierPoint(clampedT);
-
-            const proximity = bellCurve(rawOffset, 3.5);
-
-            const scale    = 0.35 + proximity * 0.65;   
-            const opacity  = 0.2 + proximity * 0.8;     
-            const blur     = (1 - proximity) * 2.5;      
-            const zIndex   = Math.round(proximity * 10);
-            const rotation = rawOffset * -4;        
-
-            const isCenter = Math.abs(rawOffset) < 0.4;
-
-            return (
-              <motion.div
-                key={i}
-                className={`${styles.curveCard} ${isCenter ? styles.curveCardActive : ''}`}
-                initial={false}
-                animate={{
-                  left: `${pos.x}%`,
-                  top: `${pos.y}%`,
-                  x: "-50%",
-                  y: isCenter ? ["-50%", "-52%", "-50%"] : "-50%",
-                  scale,
-                  rotate: rotation,
-                  opacity,
-                  filter: `blur(${blur}px)`,
-                }}
-                transition={{
-                  scale: { duration: 0.4 },
-                  opacity: { duration: 0.4 },
-                  filter: { duration: 0.4 },
-                  y: isCenter ? { duration: 3, repeat: Infinity, ease: "easeInOut" } : { duration: 0.4 }
-                }}
-                style={{
-                  zIndex,
-                }}
-                onClick={() => {
-                  if (isCenter) setLightbox(photo);
-                  else scrollToTargetIndex(i);
-                }}
-                data-cursor="view"
-              >
-                <img
-                  src={photo.src}
-                  alt={photo.title}
-                  className={styles.curveCardImg}
-                  loading="lazy"
-                  decoding="async"
-                />
-                {isCenter && (
-                  <div className={styles.activeGlow} />
-                )}
-              </motion.div>
-            );
-          })}
+          {photosData.map((photo, i) => (
+            <CurveCard 
+              key={i}
+              photo={photo}
+              index={i}
+              scrollPos={scrollPos}
+              onLightbox={setLightbox}
+              onScrollTo={scrollToTargetIndex}
+              isActive={activeIndex === i}
+            />
+          ))}
 
           <div className={styles.infoPanel}>
             <AnimatePresence mode="wait">
-              <motion.div
-                key={activeIndex}
-                className={styles.infoPanelInner}
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-                transition={{ duration: 0.35 }}
-              >
-                <span className={styles.infoCategory}>{activePhoto.category}</span>
-                <h3 className={styles.infoTitle}>{activePhoto.title}</h3>
-                <p className={styles.infoDesc}>{activePhoto.desc}</p>
-                
-                <div className={styles.infoMeta}>
-                  <span className={styles.infoDate}>{activePhoto.date}</span>
-                  <span className={styles.counter}>
-                    {String(activeIndex + 1).padStart(2, '0')} / {String(N).padStart(2, '0')}
-                  </span>
-                </div>
+              {activePhoto && (
+                <motion.div
+                  key={activeIndex}
+                  className={styles.infoPanelInner}
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  transition={{ duration: 0.35 }}
+                >
+                  <span className={styles.infoCategory}>{activePhoto.category}</span>
+                  <h3 className={styles.infoTitle}>{activePhoto.title}</h3>
+                  <p className={styles.infoDesc}>{activePhoto.desc}</p>
+                  
+                  <div className={styles.infoMeta}>
+                    <span className={styles.infoDate}>{activePhoto.date}</span>
+                    <span className={styles.counter}>
+                      {String(activeIndex + 1).padStart(2, '0')} / {String(N).padStart(2, '0')}
+                    </span>
+                  </div>
 
-                <div className={styles.infoControls}>
-                  <button className={styles.navBtn} onClick={() => scrollToTargetIndex(activeIndex - 1)} aria-label="Precedente" data-cursor="view">←</button>
-                  <button className={styles.navBtn} onClick={() => scrollToTargetIndex(activeIndex + 1)} aria-label="Successivo" data-cursor="view">→</button>
-                </div>
-              </motion.div>
+                  <div className={styles.infoControls}>
+                    <button className={styles.navBtn} onClick={() => scrollToTargetIndex(activeIndex - 1)} aria-label="Precedente" data-cursor="view">←</button>
+                    <button className={styles.navBtn} onClick={() => scrollToTargetIndex(activeIndex + 1)} aria-label="Successivo" data-cursor="view">→</button>
+                  </div>
+                </motion.div>
+              )}
             </AnimatePresence>
-          </div>
-
         </div>
       </div>
+    </div>
 
       <AnimatePresence>
         {lightbox && (

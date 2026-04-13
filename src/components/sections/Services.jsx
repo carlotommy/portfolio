@@ -148,7 +148,7 @@ export default function Services() {
     document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
   };
   return (
-    <section className={styles.servicesSection} data-chapter="services">
+    <section className={styles.servicesSection}>
       <div className={styles.sectionHeader} data-chapter="services-header">
         <p className={styles.sectionLabel}>— Cosa facciamo</p>
         <h1 className={styles.sectionTitle}>

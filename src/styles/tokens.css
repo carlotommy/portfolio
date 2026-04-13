@@ -35,4 +35,9 @@
   --darker-bg:      var(--bg-base);
   --text-white:     var(--text-primary);
   --text-gray:      var(--text-secondary);
+
+  /* Viewport & Layout */
+  --vh-100: 100vh;
+  --svh-100: 100svh;
+  --chapter-min-height: 100svh;
 }

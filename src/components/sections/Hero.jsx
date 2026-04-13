@@ -14,6 +14,7 @@ export default function Hero() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
       data-chapter="hero"
+      style={{ height: 'var(--svh-100)' }}
     >
       <div className={styles.topRow}>
         <span className={styles.topLabel}>Studio di Produzione</span>

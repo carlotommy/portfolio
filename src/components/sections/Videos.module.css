@@ -1,19 +1,15 @@
 .videosSection { 
-   padding: 8rem 0 0 0; /* Room for the header */
-   padding-bottom: 10rem; /* Buffer for the footer */
-   scroll-margin-top: 0;
-   position: relative;
-   scroll-snap-align: start;
- }
+  position: relative;
+  scroll-margin-top: 100px;
+}
  
  .stickyWrapper {
     position: sticky;
-    top: 0;
-    height: 100vh;
+    top: 100px; /* Aligned with scroll-margin-top */
+    height: calc(100svh - 100px); /* Usable vertical space under header */
     display: flex;
     flex-direction: column;
     justify-content: center;
-    /* Removed overflow: hidden to prevent cutting off bottom content */
   }
 
  .containerStyle {
@@ -29,7 +25,7 @@
  .galleryCore {
   display: flex;
   align-items: center; 
-  gap: 4rem;
+  gap: 7rem; /* Increased from 4rem for better separation */
   width: 100%;
   margin-top: -2rem; /* Pull up slightly to give more room at bottom */
 }
@@ -53,10 +49,11 @@
  
  /* Left side - thumb list */
 .thumbListWrapper {
-  width: 220px;
+  width: 250px; /* Wider to allow more room for rotation/scaling */
   height: 600px;
   flex-shrink: 0;
   position: relative;
+  margin-left: -2rem; /* Pull towards left edge */
 }
 
 @media(max-width: 900px) {
@@ -75,18 +72,16 @@
   overflow: visible; /* To allow curve protruding */
 }
 
-.listVignette {
+/* Invisible Snap Strip for Desktop Granular Snapping */
+.snapStrip {
   position: absolute;
-  inset: -20px 0;
-  background: linear-gradient(
-    to bottom,
-    var(--bg-surface) 0%,
-    transparent 15%,
-    transparent 85%,
-    var(--bg-surface) 100%
-  );
-  z-index: 15;
+  top: 0; left: 0; right: 0; bottom: 0;
   pointer-events: none;
+  z-index: 1;
+}
+
+.snapPoint {
+  width: 100%;
 }
 
 
