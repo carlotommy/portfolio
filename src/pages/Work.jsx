@@ -1,19 +1,21 @@
 import { Helmet } from 'react-helmet-async';
-import Photos from '../components/Photos';
-import Videos from '../components/Videos';
-import useScrollReveal from '../hooks/useScrollReveal';
+import Photos from '@sections/Photos';
+import Videos from '@sections/Videos';
+import { SEO }  from '@data/seoData';
+import ChapterSeparator from '@ui/ChapterSeparator';
 
 export default function Work() {
-  useScrollReveal('section');
-
   return (
     <>
       <Helmet>
-        <title>ASSE ZERO | Work</title>
-        <meta name="description" content="Portfolio di ASSE ZERO – foto e video dei nostri progetti: pubblicità, cortometraggi, videoclip musicali." />
+        <title>{SEO.work.title}</title>
+        <meta name="description" content={SEO.work.description} />
       </Helmet>
 
       <Photos />
+      
+      <ChapterSeparator height="30svh" />
+
       <Videos />
     </>
   );

@@ -1,0 +1,18 @@
+.container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: rgba(146, 200, 211, 0.05);
+  z-index: 10001; /* Higher than navigation but lower than click spark if needed */
+  pointer-events: none;
+}
+
+.bar {
+  height: 100%;
+  background: var(--teal-300);
+  box-shadow: 0 0 10px rgba(146, 200, 211, 0.4);
+  will-change: width;
+  transition: width 0.1s ease-out;
+}
