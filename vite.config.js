@@ -7,18 +7,6 @@ export default defineConfig({
   
   build: {
     /* Image optimization settings */
-    rollupOptions: {
-      output: {
-        manualChunks: {
-          /* Code splitting per performance */
-          'vendor': ['react', 'react-dom'],
-          'animations': ['framer-motion', 'gsap'],
-          'router': ['react-router-dom'],
-        }
-      }
-    },
-    
-    /* Compress images during build */
     assetsInlineLimit: 4096, /* Inline assets < 4KB */
     minify: 'terser',
     terserOptions: {

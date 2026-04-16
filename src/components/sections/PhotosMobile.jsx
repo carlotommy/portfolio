@@ -3,7 +3,7 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 import { PHOTOS as photosData } from '@data/constants';
 import styles from './PhotosMobile.module.css';
 
-function PhotoSlide({ photo }) {
+function PhotoSlide({ photo, index }) {
   const ref = useRef(null);
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -15,7 +15,7 @@ function PhotoSlide({ photo }) {
   const scale = useTransform(scrollYProgress, [0, 0.5, 1], [1.1, 1, 1.1]);
 
   return (
-    <section ref={ref} className={styles.slide} data-chapter="true">
+    <section ref={ref} className={styles.slide} data-center={`photo-mobile-${index}`}>
       <div className={styles.imageWrapper}>
         <motion.img 
           src={photo.src} 
@@ -28,6 +28,7 @@ function PhotoSlide({ photo }) {
       
       <motion.div 
         className={styles.infoWrapper}
+        data-center-target="true"
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-10% 0px" }}
@@ -53,20 +54,22 @@ export default function PhotosMobile() {
   const headerY = useTransform(scrollYProgress, [0, 0.5], [0, -40]);
 
   return (
-    <div ref={containerRef} className={styles.mobileContainer} data-no-snap="true">
+    <div ref={containerRef} className={styles.mobileContainer} data-no-center="true">
       <motion.div 
         className={styles.header}
+        data-center="photos-mobile-intro"
+        data-center-target="true"
         style={{ opacity: headerOpacity, y: headerY }}
       >
-        <h2 className="section-title">LE MIE FOTO</h2>
+        <h2 className="section-title">PORTFOLIO FOTOGRAFICO</h2>
         <p className={styles.subtitle}>
-          Scatti dal set — pubblicità, cortometraggi, videoclip
+          Scatti dal set tra advertising, cortometraggi e videoclip
         </p>
       </motion.div>
 
       <div className={styles.scrollArea}>
         {photosData.map((photo, i) => (
-          <PhotoSlide key={i} photo={photo} />
+          <PhotoSlide key={i} photo={photo} index={i} />
         ))}
       </div>
     </div>

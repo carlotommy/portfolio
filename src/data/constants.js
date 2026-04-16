@@ -5,14 +5,14 @@ export const NAV_ITEMS = [
   { to: '/',        label: 'Home',    num: '01' },
   { to: '/work',    label: 'Work',    num: '02' },
   { to: '/servizi', label: 'Servizi', num: '03' },
-  { to: '/about',   label: 'About',   num: '04' },
+  { to: '/our-team', label: 'Our Team', num: '04' },
 ];
 
 export const SERVICES_PREVIEW = [
-  { num: '01', title: 'Advertising',  sub: 'Brand · Spot TV · Campaigns',  img: '/photos/f1.webp' },
-  { num: '02', title: 'Short Films',  sub: 'Cinema · Festival · Narrative', img: '/photos/f2.webp' },
-  { num: '03', title: 'Music Videos', sub: 'Artists · Labels · Concerts',   img: '/photos/f3.webp' },
-  { num: '04', title: 'Sound Design', sub: 'Score · Mix · Mastering',       img: '/photos/f4.webp' },
+  { num: '01', title: 'Advertising',  sub: 'Brand · Spot TV · Campaigns',  img: '/photos/1.webp' },
+  { num: '02', title: 'Short Films',  sub: 'Cinema · Festival · Narrative', img: '/photos/2.webp' },
+  { num: '03', title: 'Music Videos', sub: 'Artists · Labels · Concerts',   img: '/photos/3.webp' },
+  { num: '04', title: 'Sound Design', sub: 'Score · Mix · Mastering',       img: '/photos/4.webp' },
 ];
 
 export const SERVICES_FULL = [

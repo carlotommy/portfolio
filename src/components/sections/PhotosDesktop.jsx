@@ -173,8 +173,8 @@ export default function Photos() {
       id="photos" 
       className={styles.section} 
       ref={sectionRef}
-      data-no-snap="true"
-      style={{ height: `calc(100svh + ${N * 50}vh)` }}
+      data-no-center="true"
+      style={{ height: `calc(var(--viewport-height) + ${N * 50}vh)` }}
     >
       {/* Invisible Snap Points for Desktop Granular Magnetism */}
       <div className={styles.snapStrip}>
@@ -183,21 +183,25 @@ export default function Photos() {
             key={`snap-${i}`} 
             className={styles.snapPoint} 
             style={{ height: '50vh' }}
-            data-chapter={`photo-desktop-${i}`} 
-          />
+            data-center={`photo-desktop-${i}`} 
+          >
+            <span className={styles.snapTarget} data-center-target="true" aria-hidden="true" />
+          </div>
         ))}
       </div>
       <div className="container">
         <motion.div
           className="section-header"
+          data-center="photos-intro"
+          data-center-target="true"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
         >
-          <h2 className="section-title">LE MIE FOTO</h2>
+          <h2 className="section-title">PORTFOLIO FOTOGRAFICO</h2>
           <p className={styles.subtitle}>
-            Scatti dal set — pubblicità, cortometraggi, videoclip
+            Scatti dal set tra advertising, cortometraggi e videoclip
           </p>
         </motion.div>
       </div>

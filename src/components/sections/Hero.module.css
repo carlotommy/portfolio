@@ -1,5 +1,5 @@
 .hero {
-  height:             100svh;
+  min-height:         var(--chapter-min-height);
   display:            grid;
   grid-template-rows: auto 1fr auto;
   padding:            0 3.5rem;

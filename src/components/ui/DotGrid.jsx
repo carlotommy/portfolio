@@ -16,6 +16,10 @@ function resolveCanvasColor(value) {
     .trim() || value;
 }
 
+function randomDotSize() {
+  return Number((Math.random() * 8).toFixed(2));
+}
+
 /* ── COSTANTI DI CONFIGURAZIONE ────────────────────────────── */
 const DOT_GRID_CONFIG = {
   dotRadius:     5,
@@ -94,7 +98,17 @@ const DotField = memo(({
         for (let col = 0; col < cols; col++) {
           const ax = padX + col * step + step / 2;
           const ay = padY + row * step + step / 2;
-          dots[idx++] = { ax, ay, sx: ax, sy: ay, vx: 0, vy: 0, x: ax, y: ay };
+          dots[idx++] = {
+            ax,
+            ay,
+            sx: ax,
+            sy: ay,
+            vx: 0,
+            vy: 0,
+            x: ax,
+            y: ay,
+            size: randomDotSize(),
+          };
         }
       }
       dotsRef.current = dots;
@@ -146,8 +160,6 @@ const DotField = memo(({
 
       const cr   = p.cursorRadius;
       const crSq = cr * cr;
-      const rad  = p.dotRadius / 2;
-
       ctx.beginPath();
 
       for (let i = 0; i < len; i++) {
@@ -180,6 +192,7 @@ const DotField = memo(({
           drawX += Math.cos(d.ay * 0.03 + t * 0.7)  * p.waveAmplitude * 0.5;
         }
 
+        const rad = d.size / 2;
         ctx.moveTo(drawX + rad, drawY);
         ctx.arc(drawX, drawY, rad, 0, TWO_PI);
       }

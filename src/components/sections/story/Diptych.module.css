@@ -1,7 +1,7 @@
 .diptych {
   display:               grid;
   grid-template-columns: 58% 42%;
-  min-height:            100svh;
+  min-height:            var(--chapter-min-height);
   overflow:              hidden;
   scroll-snap-align:     center;
 }

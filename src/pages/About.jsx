@@ -1,14 +1,12 @@
-import { Helmet } from 'react-helmet-async';
-import About          from '@sections/About';
-import { SEO }           from '@data/seoData';
+import About from '@sections/About';
+import PageSeo from '@components/seo/PageSeo';
+import { SEO } from '@data/seoData';
 
 export default function AboutPage() {
   return (
     <>
-      <Helmet>
-        <title>{SEO.about.title}</title>
-        <meta name="description" content={SEO.about.description} />
-      </Helmet>
+      <PageSeo {...SEO.about} />
+      <h1 className="srOnly">{SEO.about.heading}</h1>
       <About />
     </>
   );

@@ -1,6 +1,5 @@
 import { useState, useEffect, lazy, Suspense } from 'react';
-import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
-import { Helmet } from 'react-helmet-async';
+import { Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom';
 
 import { TransitionProvider } from '@context/TransitionContext';
 import LoadingScreen    from '@ui/LoadingScreen';
@@ -9,12 +8,14 @@ import Footer           from '@layout/Footer';
 import ClickSpark       from '@ui/ClickSpark';
 import ScrollProgress   from '@ui/ScrollProgress';
 import DotGrid          from '@ui/DotGrid';
-import useChapterSnap   from '@hooks/useChapterSnap';
+import useViewportSystem from '@hooks/useViewportSystem';
+import useAccentramento from '@hooks/useAccentramento';
 
 const Home    = lazy(() => import('./pages/Home'));
 const Work    = lazy(() => import('./pages/Work'));
 const Servizi = lazy(() => import('./pages/Servizi'));
 const About   = lazy(() => import('./pages/About'));
+const NotFound = lazy(() => import('./pages/NotFound'));
 
 function FixedTitle() {
   const navigate = useNavigate();
@@ -63,19 +64,16 @@ export default function App() {
   const { pathname } = useLocation();
 
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'instant' });
+    window.scrollTo({ top: 0, behavior: 'auto' });
   }, [pathname]);
 
-  // Magnetic chapter snapping — runs globally
-  useChapterSnap();
+  useViewportSystem();
+
+  // Simple viewport-centering — runs globally
+  useAccentramento();
 
   return (
     <TransitionProvider>
-      <Helmet>
-        <title>ASSE ZERO | Home</title>
-        <meta name="description" content="Studio di produzione creativa. Advertising, Short Films, Music Videos, Sound Design." />
-      </Helmet>
-
       <DotGrid />
       <FixedTitle />
       {loading && <LoadingScreen onComplete={() => setLoading(false)} />}
@@ -89,8 +87,9 @@ export default function App() {
             <Route path="/"        element={<Home />} />
             <Route path="/work"    element={<Work />} />
             <Route path="/servizi" element={<Servizi />} />
-            <Route path="/about"   element={<About />} />
-            <Route path="*"        element={<Home />} />
+            <Route path="/our-team" element={<About />} />
+            <Route path="/about"    element={<Navigate to="/our-team" replace />} />
+            <Route path="*"        element={<NotFound />} />
           </Routes>
         </Suspense>
       </main>
