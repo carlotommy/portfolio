@@ -21,17 +21,7 @@ export default function Hero() {
         <span className={styles.topYear}>Roma · MMXXVI</span>
       </div>
 
-      <div className={styles.titleBlock} aria-label="Asse Zero">
-        <SimpleBlurText
-          as="h1"
-          text="ASSE ZERO"
-          animateBy="letters"
-          delay={55}
-          className={styles.titleLine}
-          style={{ justifyContent: 'center', gap: '0.18em' }}
-          spanClassName={styles.gradientText}
-        />
-      </div>
+      <div className={styles.titleBlock} aria-label="Asse Zero" />
 
       <div className={styles.bottomRow}>
         <p className={styles.disciplines}>

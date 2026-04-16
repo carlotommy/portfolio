@@ -27,7 +27,7 @@
   font-size: 0.72rem;
   letter-spacing: 0.3em;
   text-transform: uppercase;
-  color: var(--color-dark-red);
+  color: var(--color-error);
   margin: 0 0 1.4rem;
 }
 
@@ -36,7 +36,7 @@
   font-size: clamp(3rem, 8vw, 7rem);
   font-weight: 400;
   letter-spacing: 0.02em;
-  color: var(--color-black);
+  color: var(--color-text);
   margin: 0 0 2rem;
   line-height: 1;
 }
@@ -44,7 +44,7 @@
 .sectionIntro {
   font-family: var(--font-body);
   font-size: clamp(1rem, 1.8vw, 1.15rem);
-  color: var(--text-muted);
+  color: rgba(35, 35, 35, 0.6);
   line-height: 1.75;
   max-width: 560px;
   margin: 0 auto;
@@ -75,7 +75,7 @@
   font-size: 0.7rem;
   letter-spacing: 0.25em;
   text-transform: uppercase;
-  color: var(--color-red);
+  color: var(--color-error);
   margin-bottom: 0.8rem;
 }
 
@@ -84,7 +84,7 @@
   font-size: clamp(2rem, 5vw, 3.8rem);
   font-weight: 400;
   letter-spacing: 0.01em;
-  color: var(--color-black);
+  color: var(--color-text);
   margin: 0 0 1rem;
   line-height: 1.05;
 }
@@ -92,7 +92,7 @@
 .categoryIntro {
   font-family: var(--font-body);
   font-size: clamp(0.92rem, 1.5vw, 1.05rem);
-  color: var(--text-muted);
+  color: rgba(35, 35, 35, 0.6);
   line-height: 1.7;
   max-width: 520px;
 }
@@ -106,7 +106,7 @@
 
 /* ─── Singola card verticale ───────────────────────────────────── */
 .card {
-  background: var(--bg-surface);
+  background: var(--color-bg);
   border: 1px solid rgba(0,0,0,0.08);
   border-radius: 16px;
   overflow: hidden;
@@ -133,7 +133,7 @@
   position: relative;
   width: 100%;
   aspect-ratio: 4/3;
-  background: color-mix(in srgb, var(--accent) 5%, var(--bg-surface));
+  background: color-mix(in srgb, var(--color-primary) 5%, var(--color-bg));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -168,7 +168,7 @@
   font-family: var(--font-mono);
   font-size: 0.65rem;
   letter-spacing: 0.2em;
-  color: var(--accent);
+  color: var(--color-primary);
   flex-shrink: 0;
   margin-top: 4px;
 }
@@ -177,7 +177,7 @@
   font-family: var(--font-display);
   font-size: clamp(1.15rem, 2vw, 1.5rem);
   font-weight: 400;
-  color: var(--color-black);
+  color: var(--color-text);
   margin: 0 0 0.2rem;
   line-height: 1.1;
   letter-spacing: 0.01em;
@@ -188,7 +188,7 @@
   font-size: 0.62rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--accent);
+  color: var(--color-primary);
   display: block;
 }
 
@@ -197,7 +197,7 @@
   font-family: var(--font-body);
   font-size: 0.9rem;
   line-height: 1.72;
-  color: var(--text-secondary);
+  color: var(--color-text);
   padding: 0.6rem 1.6rem 0;
   margin: 0;
   flex: 1;
@@ -236,7 +236,7 @@
   font-size: 0.72rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--accent);
+  color: var(--color-primary);
   background: none;
   border: none;
   border-bottom: 1px solid transparent;
@@ -247,9 +247,52 @@
 }
 
 .cardCta:hover {
-  border-color: var(--accent);
+  border-color: var(--color-primary);
   gap: 0.9rem;
   letter-spacing: 0.2em;
+}
+
+/* ─── Griglia verticale con sovraimpressione ─────────────────── */
+.cardsGridVertical {
+  display:         grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap:             2.5rem;
+  perspective:     1200px;
+  position:        relative;
+  padding:         3rem 0;
+}
+
+.cardWrapperVertical {
+  position:        relative;
+  transform-style: preserve-3d;
+  animation:       cardFloat 4s ease-in-out infinite;
+  animation-delay: calc(var(--card-index) * 0.3s);
+}
+
+@keyframes cardFloat {
+  0%, 100% {
+    transform: translateY(0) rotateZ(0deg);
+  }
+  50% {
+    transform: translateY(-18px) rotateZ(0.3deg);
+  }
+}
+
+.cardWrapperVertical:nth-child(odd) {
+  transform: perspective(800px) rotateY(6deg) rotateX(-8deg);
+}
+
+.cardWrapperVertical:nth-child(even) {
+  transform: perspective(800px) rotateY(-6deg) rotateX(-8deg);
+  z-index: 20;
+  margin-top: -2.5rem;
+}
+
+.cardWrapperVertical:nth-child(even) .card {
+  box-shadow:
+    0 10px 40px rgba(0,0,0,0.15),
+    0 25px 60px rgba(0,0,0,0.12),
+    0 0 0 1px rgba(0,0,0,0.08);
 }
 
 /* ─── Divisore tra categorie ──────────────────────────────────── */
@@ -282,6 +325,15 @@
   .sectionHeader { padding: 6rem 1.5rem 4rem; }
   .categorySection { padding: 3.5rem 1.2rem 4rem; }
   .cardsGrid { grid-template-columns: 1fr; gap: 1.4rem; }
+  .cardsGridVertical { 
+    grid-template-columns: 1fr; 
+    gap: 1.5rem;
+    padding: 1.5rem 0;
+  }
+  .cardWrapperVertical:nth-child(even) {
+    margin-top: 0;
+    transform: perspective(800px) rotateY(-6deg) rotateX(-8deg);
+  }
   .card { border-radius: 12px; }
 }
 

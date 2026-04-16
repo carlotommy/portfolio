@@ -1,42 +1,80 @@
 /* src/styles/tokens.css
-   Design tokens estratti da global.css — importare PRIMA di global.css.
-   Contiene solo custom properties, nessuna regola di stile applicata. */
+   Design tokens - Trap editoriale pulita: avorio, bordeaux ossido, rame, petrolio */
 
 :root {
-  /* Teal scale */
-  --teal-100: #d6eef2;
-  --teal-200: #b8dde4;
-  --teal-300: #92c8d3;
-  --teal-400: #5a9aaa;
-  --teal-500: #2d6b78;
-  --teal-600: #1a4550;
+  --white:           #ffffff;
+  --color-bg:        #f7f1e8;
+  --color-primary:   #a3382f;
+  --color-secondary: #b7845d;
+  --color-tertiary:  #d8b694;
+  --color-accent:    #6a7a7f;
+  --color-neutral:   #241816;
+  --color-success:   #9d6c4d;
+  --color-warning:   #bf5b42;
+  --color-error:     #8c2f28;
+  --color-bg-alt:    #efe6da;
+  --color-text:      #241816;
+
+  --primary-rgb:   163 56 47;
+  --secondary-rgb: 183 132 93;
+  --accent-rgb:    106 122 127;
+  --text-rgb:      74 35 28;
+
+  --slate-gray: #726963;
 
   /* Backgrounds */
-  --bg-base:    #03090a;
-  --bg-surface: #071215;
-  --bg-overlay: #0d1e22;
+  --bg-base:      #f7f1e8;
+  --bg-surface:   #efe6da;
+  --bg-overlay:   #e6dacb;
+  --bg-dark:      #d9c9b8;
 
-  /* Text */
-  --text-primary:   #e4f3f6;
-  --text-secondary: #92c8d3;
-  --text-muted:     #4a7a87;
-  --text-dark:      #071215;
+  /* Text colors */
+  --text-primary:   #4a231c;
+  --text-secondary: #6a7a7f;
+  --text-muted:     #8f7d72;
+  --text-dark:      #351814;
+
+  /* Accent colors */
+  --accent-red:       #8c2f28;
+  --accent-brown:     #7b4b3a;
+  --accent-teal:      #6a7a7f;
+  --accent-cream:     #e5d7c7;
+  --accent-copper:    #b7845d;
+  --accent-teal-dark: #4d5a5e;
+
+  /* Legacy aliases */
+  --color-red:      #8c2f28;
+  --color-black:    #351814;
+  --color-dark-red: #4a231c;
+
+  /* Accent scale kept for backwards compatibility */
+  --teal-100: #e8eded;
+  --teal-200: #d3dcde;
+  --teal-300: #b6c3c6;
+  --teal-400: #91a0a4;
+  --teal-500: #6a7a7f;
+  --teal-600: #4d5a5e;
+
+  /* Typography */
+  --font-display: 'Roboto Condensed', Arial, sans-serif;
+  --font-body:    'Roboto', Arial, sans-serif;
+  --font-mono:    'Roboto Mono', monospace;
 
   /* Semantic aliases */
-  --primary-white:  var(--teal-100);
-  --light-gray:     var(--teal-200);
-  --medium-gray:    var(--teal-200);
-  --primary-blue:   var(--teal-300);
-  --secondary-blue: var(--teal-400);
-  --light-blue:     var(--teal-100);
-  --accent-blue:    var(--teal-400);
-  --dark-blue:      var(--teal-500);
-  --dark-bg:        var(--bg-surface);
-  --darker-bg:      var(--bg-base);
+  --primary-white:  var(--white);
+  --light-gray:     var(--bg-surface);
+  --medium-gray:    var(--bg-overlay);
+  --primary-blue:   var(--accent-teal);
+  --secondary-blue: var(--accent-teal);
+  --light-blue:     var(--accent-teal);
+  --accent-blue:    var(--accent-teal);
+  --dark-blue:      var(--accent-teal);
+  --dark-bg:        var(--bg-dark);
+  --darker-bg:      var(--bg-surface);
   --text-white:     var(--text-primary);
   --text-gray:      var(--text-secondary);
 
-  /* Viewport & Layout */
+  /* Viewport */
   --vh-100: 100vh;
   --svh-100: 100svh;
   --chapter-min-height: 100svh;

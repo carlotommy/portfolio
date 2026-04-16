@@ -1,7 +1,7 @@
 .mobileContainer {
   padding: 6rem 0 0 0;
   min-height: 100vh;
-  background: var(--bg-surface);
+  background: var(--color-bg);
 }
 
 .header {
@@ -13,7 +13,7 @@
 .subtitle {
   font-family: 'DM Sans', sans-serif;
   font-size: 0.9rem;
-  color: var(--text-muted);
+  color: rgba(35, 35, 35, 0.6);
   letter-spacing: 1px;
   margin-top: 0.5rem;
 }
@@ -40,7 +40,7 @@
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
-  border: 1px solid rgba(146, 200, 211, 0.15);
+  border: 1px solid rgb(var(--accent-rgb) / 0.14);
 }
 
 .imageWrapper img {

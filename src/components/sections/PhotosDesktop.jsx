@@ -172,7 +172,8 @@ export default function Photos() {
     <section 
       id="photos" 
       className={styles.section} 
-      ref={sectionRef} 
+      ref={sectionRef}
+      data-no-snap="true"
       style={{ height: `calc(100svh + ${N * 50}vh)` }}
     >
       {/* Invisible Snap Points for Desktop Granular Magnetism */}
@@ -207,7 +208,7 @@ export default function Photos() {
           <svg className={styles.curveSvg} viewBox="0 0 100 100" preserveAspectRatio="none">
             <path
               d={svgPath}
-              stroke="rgba(146,200,211,0.08)"
+              stroke="rgb(var(--accent-rgb) / 0.1)"
               strokeWidth="0.15"
               fill="none"
               strokeDasharray="1, 4"

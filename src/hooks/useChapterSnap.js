@@ -1,47 +1,58 @@
 /**
  * useChapterSnap.js
  * ─────────────────────────────────────────────────────────────
- * Total Restoration - Authoritative Zone-Based Magnetic Snapping.
+ * Magnetic Snapping with Smart Locking
  *
- * Logic: 
- * - Sextic Ease-Out (L-Shape) for instant dash.
- * - Reactive 200ms debounce.
- * - Direct handover: starts even if drifting (velocity < 15).
+ * Behavior:
+ * - LOCKED: Capitolo centrato (dist < STABLE_ZONE) → pausa totale, no re-snap
+ * - DRIFTING: Fuori dal centro → aspetta 0.350s di inattività, poi riaccentra una volta
+ * - USER ACTIVE: Scroll/wheel/touch in corso → cancella tutto, resetta
+ *
+ * Benefits: No infinite re-snapping, smooth recovery when drifting, immediate unlock on input
  */
 import { useEffect, useRef } from 'react';
 import { easeOutStrong } from '@utils/math';
 
-const DEBOUNCE_MS   = 180;    
-const STABLE_ZONE   = 100;     // Center silent zone (increased for firm locking)
-const SNAP_DURATION = 650;    // Zip towards target
-const EDGE_GUARD    = 60;     
+/* ── Configurazione ────────────────────────────────────────────── */
+const DRIFT_TIMEOUT_MS      = 350;  // Attesa prima di riaccentrare (ms)
+const SNAP_DURATION         = 650;  // Durata animazione (ms)
+const STABLE_ZONE           = 100;  // Raggio "bloccato" attorno al centro (px)
+const EDGE_GUARD            = 60;   // Margine di sicurezza ai bordi (px)
+const VELOCITY_THRESHOLD    = 15;   // Soglia velocità per bloccare snap (px/frame)
+const ACTIVE_SCROLL_THRESHOLD = 5;  // Soglia per considerare "active scroll" (px)
 
 export default function useChapterSnap() {
-  const timer           = useRef(null);
-  const isSnapping      = useRef(false);
-  const userActive      = useRef(false);
-  const animFrame       = useRef(null);
-  const chaptersRef     = useRef([]);
-  const lastScrollY     = useRef(0);
-  const scrollVelocity  = useRef(0);
+  /* ── Refs di stato ────────────────────────────────────────── */
+  const timer              = useRef(null);
+  const isSnapping         = useRef(false);
+  const userActive         = useRef(false);
+  const animFrame          = useRef(null);
+  const chaptersRef        = useRef([]);
+  const lastScrollY        = useRef(0);
+  const scrollVelocity     = useRef(0);
+  const lockedChapter      = useRef(null);     // Capitolo attualmente bloccato
+  const lastMoveTime       = useRef(Date.now()); // Timestamp ultimo movimento utente
 
-  // Cache chapters
+  /* ── Setup: Refresh chapters su resize ────────────────────── */
   useEffect(() => {
     const refreshChapters = () => {
-      // Find all chapters but filter out those marked as data-no-snap
       const all = Array.from(document.querySelectorAll('[data-chapter]'));
       chaptersRef.current = all.filter(el => el.getAttribute('data-no-snap') !== 'true');
     };
+    
     refreshChapters();
     window.addEventListener('resize', refreshChapters);
-    const t = setInterval(refreshChapters, 2000);
+    const cacheInterval = setInterval(refreshChapters, 2000);
+    
     return () => {
       window.removeEventListener('resize', refreshChapters);
-      clearInterval(t);
+      clearInterval(cacheInterval);
     };
   }, []);
 
+  /* ── Main snap engine ──────────────────────────────────────── */
   useEffect(() => {
+    /* Trova il capitolo più vicino al centro della viewport */
     const getNearest = () => {
       const chapters = chaptersRef.current;
       if (!chapters.length) return null;
@@ -63,6 +74,7 @@ export default function useChapterSnap() {
       return best;
     };
 
+    /* Smooth scroll con sextic easing */
     const smoothScrollTo = (targetY) => {
       const startY = window.scrollY;
       const distance = targetY - startY;
@@ -72,9 +84,8 @@ export default function useChapterSnap() {
         if (startTime === null) startTime = currentTime;
         const timeElapsed = currentTime - startTime;
         const rawProgress = Math.min(timeElapsed / SNAP_DURATION, 1);
-        
-        // Sextic curve for the instant "L" start
         const easedProgress = easeOutStrong(rawProgress);
+        
         window.scrollTo(0, startY + Math.round(distance * easedProgress));
 
         if (timeElapsed < SNAP_DURATION) {
@@ -89,49 +100,73 @@ export default function useChapterSnap() {
       animFrame.current = requestAnimationFrame(animation);
     };
 
+    /* Core snap logic */
     const snapLogic = () => {
       if (userActive.current || isSnapping.current) return;
-      if (Math.abs(scrollVelocity.current) > 15) return;
+      if (Math.abs(scrollVelocity.current) > VELOCITY_THRESHOLD) return;
 
       const target = getNearest();
       if (!target) return;
 
-      // 1. Tall section logic (Priority for Desktop Galleries)
+      // Step 1: Se il capitolo è nel STABLE_ZONE → LOCK, stop snapping
+      if (target.dist < STABLE_ZONE) {
+        lockedChapter.current = target.el;
+        return;
+      }
+
+      // Step 2: Se il capitolo target è diverso da quello locked → unlock
+      if (lockedChapter.current && lockedChapter.current !== target.el) {
+        lockedChapter.current = null;
+      }
+
+      // Step 3: Controlla timeout di inattività
+      const timeSinceLastMove = Date.now() - lastMoveTime.current;
+      if (timeSinceLastMove < DRIFT_TIMEOUT_MS) {
+        return; // Aspetta ancora
+      }
+
+      // Step 4: Tall section logic (desktop galleries e hero)
       if (target.rect.height > window.innerHeight * 1.5) {
-        // LOCK TO TOP: If top border is close to the top, it snaps to its position
-        // This is key for the "Integration" on desktop.
         if (Math.abs(target.rect.top) < window.innerHeight * 0.45) {
           smoothScrollTo(window.scrollY + target.rect.top);
+          lockedChapter.current = target.el;
           return;
         }
       }
 
-      // 2. Zone Stability Check
-      if (target.dist < STABLE_ZONE) return;
-
-      // 3. Edge Guard
+      // Step 5: Edge guard (non snap ai margini)
       const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
       const scrollY = window.scrollY;
       if (scrollY < EDGE_GUARD || scrollY > maxScroll - EDGE_GUARD) return;
 
-      // 4. Center-Point Snap
+      // Step 6: Center-point snap
       const viewCenter = window.innerHeight / 2;
       const elCenter = target.rect.top + target.rect.height / 2;
       smoothScrollTo(window.scrollY + (elCenter - viewCenter));
+      lockedChapter.current = target.el;
     };
 
+    /* ── Event handlers ────────────────────────────────────── */
     const onScroll = () => {
       const currentY = window.scrollY;
       scrollVelocity.current = currentY - lastScrollY.current;
       lastScrollY.current = currentY;
+      lastMoveTime.current = Date.now();
 
       if (isSnapping.current) return;
+
+      // Unlock se lo scroll è attivo
+      if (Math.abs(scrollVelocity.current) > ACTIVE_SCROLL_THRESHOLD) {
+        lockedChapter.current = null;
+      }
+
       clearTimeout(timer.current);
-      timer.current = setTimeout(snapLogic, DEBOUNCE_MS);
+      timer.current = setTimeout(snapLogic, DRIFT_TIMEOUT_MS);
     };
 
     const cancelSnap = () => {
       userActive.current = true;
+      lockedChapter.current = null;
       clearTimeout(timer.current);
       if (animFrame.current) {
         cancelAnimationFrame(animFrame.current);
@@ -139,11 +174,13 @@ export default function useChapterSnap() {
       }
     };
 
-    const onWheelStart  = () => cancelSnap();
-    const onWheelEnd    = () => {
+    const onWheelStart = () => cancelSnap();
+
+    const onWheelEnd = () => {
       userActive.current = false;
+      lastMoveTime.current = Date.now();
       clearTimeout(timer.current);
-      timer.current = setTimeout(snapLogic, DEBOUNCE_MS);
+      timer.current = setTimeout(snapLogic, DRIFT_TIMEOUT_MS);
     };
 
     let wheelEndTimer = null;
@@ -154,17 +191,21 @@ export default function useChapterSnap() {
     };
 
     const onTouchStart = () => cancelSnap();
-    const onTouchEnd   = () => {
+
+    const onTouchEnd = () => {
       userActive.current = false;
+      lastMoveTime.current = Date.now();
       clearTimeout(timer.current);
-      timer.current = setTimeout(snapLogic, DEBOUNCE_MS + 50);
+      timer.current = setTimeout(snapLogic, DRIFT_TIMEOUT_MS);
     };
 
+    /* ── Attach listeners ──────────────────────────────────── */
     window.addEventListener('scroll',     onScroll,     { passive: true });
     window.addEventListener('wheel',      onWheel,      { passive: true });
     window.addEventListener('touchstart', onTouchStart, { passive: true });
     window.addEventListener('touchend',   onTouchEnd,   { passive: true });
 
+    /* ── Cleanup ──────────────────────────────────────────── */
     return () => {
       clearTimeout(timer.current);
       clearTimeout(wheelEndTimer);

@@ -1,54 +1,60 @@
 /**
- * DotField — implementazione dal file sfondo.docx
- * Props usate:
- *   dotRadius={5}  dotSpacing={16}  bulgeStrength={0}  glowRadius={50}
- *   sparkle={false}  waveAmplitude={3}  cursorRadius={100}  cursorForce={0.08}
- *   bulgeOnly={false}  gradientFrom="#fbfbfb"  gradientTo="#6FD1D1"
- *   glowColor="#ffffff"
+ * DotField — interactive dot grid background
+ * Props: dotRadius, dotSpacing, cursorRadius, cursorForce, waveAmplitude, gradientFrom, gradientTo
  */
 import { useEffect, useRef, memo } from 'react';
 import styles from './DotGrid.module.css';
 
 const TWO_PI = Math.PI * 2;
 
+function resolveCanvasColor(value) {
+  if (typeof value !== 'string') return value;
+  const match = value.match(/^var\((--[^),\s]+)\)$/);
+  if (!match) return value;
+  return getComputedStyle(document.documentElement)
+    .getPropertyValue(match[1])
+    .trim() || value;
+}
+
+/* ── COSTANTI DI CONFIGURAZIONE ────────────────────────────── */
+const DOT_GRID_CONFIG = {
+  dotRadius:     5,
+  dotSpacing:    32,
+  cursorRadius:  100,
+  cursorForce:   0.08,
+  waveAmplitude: 3,
+  gradientFrom:  'var(--color-accent)',   // Soft Cyan - Pastel Trap
+  gradientTo:    'var(--color-accent)',   // Soft Cyan - unified color
+};
+
 const DotField = memo(({
-  dotRadius     = 5,
-  dotSpacing    = 16,
-  cursorRadius  = 100,
-  cursorForce   = 0.08,
-  bulgeOnly     = false,
-  bulgeStrength = 0,
-  glowRadius    = 50,
-  sparkle       = false,
-  waveAmplitude = 3,
-  gradientFrom  = '#fbfbfb',
-  gradientTo    = '#6FD1D1',
-  glowColor     = '#ffffff',
+  dotRadius     = DOT_GRID_CONFIG.dotRadius,
+  dotSpacing    = DOT_GRID_CONFIG.dotSpacing,
+  cursorRadius  = DOT_GRID_CONFIG.cursorRadius,
+  cursorForce   = DOT_GRID_CONFIG.cursorForce,
+  waveAmplitude = DOT_GRID_CONFIG.waveAmplitude,
+  gradientFrom  = DOT_GRID_CONFIG.gradientFrom,
+  gradientTo    = DOT_GRID_CONFIG.gradientTo,
 }) => {
   const canvasRef   = useRef(null);
-  const svgRef      = useRef(null);
-  const glowRef     = useRef(null);
   const dotsRef     = useRef([]);
   const mouseRef    = useRef({ x: -9999, y: -9999, prevX: -9999, prevY: -9999, speed: 0 });
   const rafRef      = useRef(null);
   const sizeRef     = useRef({ w: 0, h: 0, offsetX: 0, offsetY: 0 });
-  const glowOpacity = useRef(0);
   const engagement  = useRef(0);
   const propsRef    = useRef({});
   const rebuildRef  = useRef(null);
-  const glowId      = useRef(`dot-glow-${Math.random().toString(36).slice(2, 9)}`);
 
   useEffect(() => {
     propsRef.current = {
-      dotRadius, dotSpacing, cursorRadius, cursorForce,
-      bulgeOnly, bulgeStrength, sparkle, waveAmplitude,
-      gradientFrom, gradientTo,
+      dotRadius, dotSpacing, cursorRadius, cursorForce, waveAmplitude,
+      gradientFrom: resolveCanvasColor(gradientFrom),
+      gradientTo: resolveCanvasColor(gradientTo),
     };
-  });
+  }, [dotRadius, dotSpacing, cursorRadius, cursorForce, waveAmplitude, gradientFrom, gradientTo]);
 
   useEffect(() => {
     const canvas  = canvasRef.current;
-    const glowEl  = glowRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d', { alpha: true });
     if (!ctx) return;
@@ -130,14 +136,6 @@ const DotField = memo(({
       if (engagement.current < 0.001) engagement.current = 0;
       const eng = engagement.current;
 
-      /* glow SVG */
-      glowOpacity.current += (eng - glowOpacity.current) * 0.08;
-      if (glowEl) {
-        glowEl.setAttribute('cx', String(m.x));
-        glowEl.setAttribute('cy', String(m.y));
-        glowEl.style.opacity = String(glowOpacity.current);
-      }
-
       ctx.clearRect(0, 0, w, h);
 
       /* gradiente lineare per tutti i dot */
@@ -160,34 +158,18 @@ const DotField = memo(({
 
         if (distSq < crSq && eng > 0.01) {
           const dist  = Math.sqrt(distSq);
-
-          if (p.bulgeOnly) {
-            /* modalità bulge (bulgeStrength=0 → nessun effetto bulge) */
-            const tFactor = 1 - dist / cr;
-            const push    = tFactor * tFactor * p.bulgeStrength * eng;
-            const angle   = Math.atan2(dy, dx);
-            d.sx += (d.ax - Math.cos(angle) * push - d.sx) * 0.15;
-            d.sy += (d.ay - Math.sin(angle) * push - d.sy) * 0.15;
-          } else {
-            /* modalità repel — velocity-based */
-            const angle = Math.atan2(dy, dx);
-            const move  = (500 / dist) * (m.speed * p.cursorForce);
-            d.vx += Math.cos(angle) * -move;
-            d.vy += Math.sin(angle) * -move;
-          }
-        } else if (p.bulgeOnly) {
-          d.sx += (d.ax - d.sx) * 0.1;
-          d.sy += (d.ay - d.sy) * 0.1;
+          const angle = Math.atan2(dy, dx);
+          const move  = (500 / dist) * (m.speed * p.cursorForce);
+          d.vx += Math.cos(angle) * -move;
+          d.vy += Math.sin(angle) * -move;
         }
 
-        if (!p.bulgeOnly) {
-          d.vx *= 0.9;
-          d.vy *= 0.9;
-          d.x   = d.ax + d.vx;
-          d.y   = d.ay + d.vy;
-          d.sx += (d.x - d.sx) * 0.1;
-          d.sy += (d.y - d.sy) * 0.1;
-        }
+        d.vx *= 0.9;
+        d.vy *= 0.9;
+        d.x   = d.ax + d.vx;
+        d.y   = d.ay + d.vy;
+        d.sx += (d.x - d.sx) * 0.1;
+        d.sy += (d.y - d.sy) * 0.1;
 
         let drawX = d.sx;
         let drawY = d.sy;
@@ -198,19 +180,8 @@ const DotField = memo(({
           drawX += Math.cos(d.ay * 0.03 + t * 0.7)  * p.waveAmplitude * 0.5;
         }
 
-        if (p.sparkle) {
-          const hash = ((i * 2654435761) ^ (frameCount >> 3)) >>> 0;
-          if ((hash % 100) < 3) {
-            ctx.moveTo(drawX + rad * 1.8, drawY);
-            ctx.arc(drawX, drawY, rad * 1.8, 0, TWO_PI);
-          } else {
-            ctx.moveTo(drawX + rad, drawY);
-            ctx.arc(drawX, drawY, rad, 0, TWO_PI);
-          }
-        } else {
-          ctx.moveTo(drawX + rad, drawY);
-          ctx.arc(drawX, drawY, rad, 0, TWO_PI);
-        }
+        ctx.moveTo(drawX + rad, drawY);
+        ctx.arc(drawX, drawY, rad, 0, TWO_PI);
       }
 
       ctx.fill();
@@ -247,47 +218,22 @@ const DotField = memo(({
         ref={canvasRef}
         style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}
       />
-      <svg
-        ref={svgRef}
-        style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', pointerEvents: 'none' }}
-      >
-        <defs>
-          <radialGradient id={glowId.current}>
-            <stop offset="0%"   stopColor={glowColor} />
-            <stop offset="100%" stopColor="transparent" />
-          </radialGradient>
-        </defs>
-        <circle
-          ref={glowRef}
-          cx="-9999"
-          cy="-9999"
-          r={glowRadius}
-          fill={`url(#${glowId.current})`}
-          style={{ opacity: 0, willChange: 'opacity' }}
-        />
-      </svg>
     </div>
   );
 });
 
 DotField.displayName = 'DotField';
 
-/* ── Wrapper con le props esatte del Word doc ────────────────── */
 export default function DotGrid() {
   return (
     <DotField
-      dotRadius={5}
-      dotSpacing={16}
-      bulgeStrength={0}
-      glowRadius={50}
-      sparkle={false}
-      waveAmplitude={3}
-      cursorRadius={100}
-      cursorForce={0.08}
-      bulgeOnly={false}
-      gradientFrom="#fbfbfb"
-      gradientTo="#6FD1D1"
-      glowColor="#ffffff"
+      dotRadius={DOT_GRID_CONFIG.dotRadius}
+      dotSpacing={DOT_GRID_CONFIG.dotSpacing}
+      waveAmplitude={DOT_GRID_CONFIG.waveAmplitude}
+      cursorRadius={DOT_GRID_CONFIG.cursorRadius}
+      cursorForce={DOT_GRID_CONFIG.cursorForce}
+      gradientFrom={DOT_GRID_CONFIG.gradientFrom}
+      gradientTo={DOT_GRID_CONFIG.gradientTo}
     />
   );
 }

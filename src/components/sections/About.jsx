@@ -68,7 +68,7 @@ export default function About() {
           <div className={styles.introRow} ref={reveal(2)}>
             <div className={styles.imageBlockA}>
               <div className={styles.imageAInner} ref={imgARef}>
-                <img src="/photos/f1.jpg" alt="Set cinematografico" />
+                <img src="/photos/f1.webp" alt="Set cinematografico" />
                 <div className={styles.imageCaption}>Behind the frame</div>
               </div>
             </div>
@@ -119,7 +119,7 @@ export default function About() {
 
             <div className={styles.imageBlockB}>
               <div className={styles.imageBInner} ref={imgBRef}>
-                <img src="/photos/f3.jpg" alt="Direzione artistica" />
+                <img src="/photos/f3.webp" alt="Direzione artistica" />
               </div>
               <div className={styles.imageBLabel}>
                 <span>Post-production</span>

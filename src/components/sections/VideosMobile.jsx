@@ -21,7 +21,7 @@ function MobileSlide({ vid, index, scrollPos, isActive }) {
   const zIndex = useTransform(absOffset, (a) => Math.round((N - a) * 10));
 
   const placeholderIdx = ((index + 2) % 5) + 1;
-  const imgSrc = `/photos/${placeholderIdx}.jpeg`;
+  const imgSrc = `/photos/${placeholderIdx}.webp`;
 
   return (
     <motion.div
@@ -154,7 +154,8 @@ export default function VideosMobile() {
   return (
     <section 
       ref={sectionRef} 
-      className={styles.mobileSection} 
+      className={styles.mobileSection}
+      data-no-snap="true"
       style={{ height: `calc(100svh + ${N * 60}vh)` }} 
     >
       <div className={styles.snapStrip}>

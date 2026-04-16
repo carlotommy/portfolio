@@ -3,19 +3,23 @@
 
 export const SEO = {
   home: {
-    title:       'ASSE ZERO | Home',
-    description: 'ASSE ZERO – Studio di produzione creativa. Advertising, Short Films, Music Videos, Sound Design.',
+    title:       'ASSE ZERO | Studio Produzione Video Ferrara - Video Production',
+    description: 'Studio di produzione creativa a Ferrara. Advertising, Short Films, Music Videos, Sound Design. Regia, post-produzione e sound design in-house con Gerardo Romani.',
+    keywords: 'video production ferrara, produzione video emilia romagna, advertising, videoclip, sound design',
   },
   work: {
-    title:       'ASSE ZERO | Work',
-    description: 'Portfolio di ASSE ZERO – foto e video dei nostri progetti: pubblicità, cortometraggi, videoclip musicali.',
+    title:       'ASSE ZERO | Portfolio - Video Production Ferrara',
+    description: 'Portfolio di ASSE ZERO – foto e video dei nostri progetti: pubblicità, cortometraggi, videoclip musicali, sound design. Produzione video a Ferrara.',
+    keywords: 'portfolio video ferrara, produzione video, videoclip, cortometraggi, advertising ferrara',
   },
   servizi: {
-    title:       'ASSE ZERO | Servizi',
-    description: 'I servizi di ASSE ZERO: Video Production, Photography, Sound Design, Cortometraggi, Videoclip, Pubblicità.',
+    title:       'ASSE ZERO | Servizi - Produzione Video Ferrara',
+    description: 'Servizi di produzione video: Video Production, Photography, Sound Design, Cortometraggi, Videoclip, Pubblicità. Studio creativo a Ferrara.',
+    keywords: 'produzione video ferrara, sound design ferrara, video production, advertising, regia video',
   },
   about: {
-    title:       'ASSE ZERO | Chi Siamo',
-    description: 'ASSE ZERO – Chi siamo: Gerardo Romani, director e sound designer. Il processo creativo, dall\'idea al master.',
+    title:       'ASSE ZERO | Chi Siamo - Gerardo Romani Director',
+    description: 'ASSE ZERO – Chi siamo: Gerardo Romani, director e sound designer. Il nostro processo creativo dalla concept al master.',
+    keywords: 'gerardo romani director, sound design, produzione video ferrara, regia, post-produzione',
   },
 };

@@ -53,7 +53,7 @@ export default function PhotosMobile() {
   const headerY = useTransform(scrollYProgress, [0, 0.5], [0, -40]);
 
   return (
-    <div ref={containerRef} className={styles.mobileContainer}>
+    <div ref={containerRef} className={styles.mobileContainer} data-no-snap="true">
       <motion.div 
         className={styles.header}
         style={{ opacity: headerOpacity, y: headerY }}

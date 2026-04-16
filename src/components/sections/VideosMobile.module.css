@@ -85,8 +85,8 @@
   height: 50vh;
   min-height: 350px;
   max-height: 480px;
-  background: #040c0e;
-  border: 1px solid rgba(146,200,211,.2);
+  background: var(--color-bg);
+  border: 1px solid rgb(var(--accent-rgb) / 0.18);
   border-radius: 8px;
   position: relative;
   overflow: hidden;
@@ -108,7 +108,7 @@
   width: 60px; height: 60px;
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(146, 200, 211, 0.3);
+  border: 1px solid rgb(var(--accent-rgb) / 0.2);
   backdrop-filter: blur(8px);
   display: flex; align-items: center; justify-content: center;
   color: var(--teal-100);
@@ -120,7 +120,7 @@
   width: 24px; 
   height: 24px; 
   margin-left: 4px; 
-  filter: drop-shadow(0 0 8px rgba(146, 200, 211, 0.5));
+  filter: drop-shadow(0 0 8px rgb(var(--accent-rgb) / 0.32));
 }
 
 .infoWrapper {

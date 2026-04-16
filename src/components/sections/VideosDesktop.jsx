@@ -46,9 +46,10 @@ function ThumbItem({ vid, index, scrollPos, onScrollTo, isActive }) {
       data-cursor="view"
     >
       <img
-        src={`/photos/${((vid.id - 1) % 5) + 1}.jpeg`}
+        src={`/photos/${((vid.id - 1) % 5) + 1}.webp`}
         alt={vid.label}
         loading="lazy"
+        decoding="async"
       />
       {isActive && <div className={styles.activeGlow} />}
     </motion.div>
@@ -143,7 +144,8 @@ export default function Videos() {
     <section 
       id="videos" 
       className={styles.videosSection} 
-      ref={sectionRef} 
+      ref={sectionRef}
+      data-no-snap="true"
       style={{ height: `calc(100svh + ${N * 60}vh)` }} 
     >
       {/* Invisible Snap Points for Desktop Granular Magnetism */}
@@ -204,7 +206,7 @@ export default function Videos() {
                   <AnimatePresence mode="wait">
                     <motion.img 
                       key={activeVideo.id}
-                      src={`/photos/${((activeVideo.id + 1) % 5) + 1}.jpeg`} 
+                      src={`/photos/${((activeVideo.id + 1) % 5) + 1}.webp`} 
                       alt={activeVideo.label}
                       initial={{ opacity: 0, scale: 1.02, rotate: 0 }}
                       animate={{ opacity: 0.8, scale: 1, rotate: 0 }}
