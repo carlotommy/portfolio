@@ -28,7 +28,7 @@ export default function Hero() {
           animateBy="letters"
           delay={55}
           className={styles.titleLine}
-          style={{ justifyContent: 'flex-start', gap: '0.18em' }}
+          style={{ justifyContent: 'center', gap: '0.18em' }}
           spanClassName={styles.gradientText}
         />
       </div>
