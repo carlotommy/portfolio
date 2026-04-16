@@ -17,6 +17,11 @@ body {
   overflow-x:  hidden;
   position:    relative;
   z-index:     1;
+  min-height:  var(--viewport-height);
+}
+
+html[data-motion="reduce"] {
+  scroll-behavior: auto;
 }
 
 /* ── Text selection ─────────────────────────────────────────────────────── */
@@ -45,9 +50,17 @@ body {
 
 /* ── Section scroll-reveal ─────────────────────────────────────────────── */
 section {
-  padding:    8rem 0;
+  padding:    var(--viewport-section-pad) 0;
   position:   relative;
   z-index:    1;
+}
+
+[data-center] {
+  scroll-margin-top: var(--viewport-header-offset);
+}
+
+[data-center-target="true"] {
+  scroll-margin-top: var(--viewport-header-offset);
 }
 
 /* ── Section header ────────────────────────────────────────────────────── */
@@ -66,4 +79,16 @@ section {
   background-clip:        text;
   margin-bottom:          1rem;
   letter-spacing:         3px;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }

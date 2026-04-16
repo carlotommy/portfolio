@@ -145,8 +145,8 @@ export default function Videos() {
       id="videos" 
       className={styles.videosSection} 
       ref={sectionRef}
-      data-no-snap="true"
-      style={{ height: `calc(100svh + ${N * 60}vh)` }} 
+      data-no-center="true"
+      style={{ height: `calc(var(--viewport-height) + ${N * 60}vh)` }} 
     >
       {/* Invisible Snap Points for Desktop Granular Magnetism */}
       <div className={styles.snapStrip}>
@@ -155,7 +155,7 @@ export default function Videos() {
             key={`snap-${i}`} 
             className={styles.snapPoint} 
             style={{ height: '60vh' }}
-            data-chapter={`video-desktop-${i}`} 
+            data-center={`video-desktop-${i}`} 
           />
         ))}
       </div>
@@ -163,14 +163,16 @@ export default function Videos() {
       <div className="container">
         <motion.div
           className="section-header"
+          data-center="videos-intro"
+          data-center-target="true"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
         >
-          <h2 className="section-title">VIDEO GALLERIA</h2>
+          <h2 className="section-title">PORTFOLIO VIDEO</h2>
           <p className={styles.description}>
-            Produzioni video d'eccellenza — spot, docufilm, storytelling
+            Produzioni video tra spot, storytelling e formati narrativi
           </p>
         </motion.div>
       </div>

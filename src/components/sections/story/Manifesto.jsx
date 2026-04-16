@@ -29,7 +29,11 @@ const wordVariants = {
 
 export default function Manifesto() {
   return (
-    <section className={styles.manifestoWrap} aria-label="Manifesto" data-chapter="manifesto">
+    <section
+      className={styles.manifestoWrap}
+      aria-label="Manifesto"
+      data-center="manifesto"
+    >
       <motion.div
         className={styles.manifestoInner}
         initial="hidden"

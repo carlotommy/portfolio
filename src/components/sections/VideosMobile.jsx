@@ -155,15 +155,15 @@ export default function VideosMobile() {
     <section 
       ref={sectionRef} 
       className={styles.mobileSection}
-      data-no-snap="true"
-      style={{ height: `calc(100svh + ${N * 60}vh)` }} 
+      data-no-center="true"
+      style={{ height: `calc(var(--viewport-height) + ${N * 60}vh)` }} 
     >
       <div className={styles.snapStrip}>
         {videos.map((_, i) => (
           <div 
             key={`snap-${i}`} 
             className={styles.snapPoint} 
-            data-chapter={`video-mobile-${i}`} 
+            data-center={`video-mobile-${i}`} 
           />
         ))}
       </div>
@@ -171,13 +171,15 @@ export default function VideosMobile() {
       <div className={styles.stickyWrapper}>
         <motion.div 
           className={styles.header}
+          data-center="videos-mobile-intro"
+          data-center-target="true"
           style={{ 
             opacity: useTransform(scrollPos, s => Math.max(0, 1 - s * 8)), 
             y: useTransform(scrollPos, s => s * -40),
             pointerEvents: useTransform(scrollPos, s => s > 0.1 ? 'none' : 'auto')
           }}
         >
-          <h2 className="section-title">VIDEO GALLERIA</h2>
+          <h2 className="section-title">PORTFOLIO VIDEO</h2>
         </motion.div>
 
         <div className={styles.stage}>

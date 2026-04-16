@@ -1,12 +1,12 @@
 .videosSection { 
   position: relative;
-  scroll-margin-top: 100px;
+  scroll-margin-top: var(--viewport-header-offset);
 }
  
  .stickyWrapper {
     position: sticky;
-    top: 100px; /* Aligned with scroll-margin-top */
-    height: calc(100svh - 100px); /* Usable vertical space under header */
+    top: var(--viewport-sticky-top);
+    height: calc(var(--viewport-height) - var(--viewport-sticky-top));
     display: flex;
     flex-direction: column;
     justify-content: center;

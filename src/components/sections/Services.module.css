@@ -1,21 +1,17 @@
-/* Services.module.css — layout verticale, palette chiara */
-
-/* ─── Section wrapper ──────────────────────────────────────────── */
 .servicesSection {
   width: 100%;
   overflow: hidden;
   position: relative;
-  z-index:  1;
+  z-index: 1;
   padding-bottom: 8rem;
 }
 
-/* ─── Hero header ──────────────────────────────────────────────── */
 .sectionHeader {
   max-width: 820px;
   margin: 0 auto;
   padding: 10rem 2rem 6rem;
   text-align: center;
-  min-height: 100svh;
+  min-height: var(--chapter-min-height);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -50,24 +46,28 @@
   margin: 0 auto;
 }
 
-/* ─── Chapter wrapper (per snap) ──────────────────────────────── */
-[data-chapter="services-video"],
-[data-chapter="services-social"] {
-  min-height: 100svh;
+[data-center="services-video"],
+[data-center="services-social"] {
+  min-height: var(--chapter-content-min-height);
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
 
-/* ─── Category section ─────────────────────────────────────────── */
 .categorySection {
   padding: 5rem 2rem 6rem;
   max-width: 1400px;
   margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .categoryHeader {
   margin-bottom: 4rem;
+  width: 100%;
+  max-width: 780px;
+  text-align: center;
 }
 
 .categoryLabel {
@@ -95,207 +95,87 @@
   color: rgba(35, 35, 35, 0.6);
   line-height: 1.7;
   max-width: 520px;
+  margin: 0 auto;
 }
 
-/* ─── Cards grid (verticale) ───────────────────────────────────── */
-.cardsGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 2rem;
-}
-
-/* ─── Singola card verticale ───────────────────────────────────── */
-.card {
-  background: var(--color-bg);
-  border: 1px solid rgba(0,0,0,0.08);
-  border-radius: 16px;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  cursor: default;
-  transition: transform 0.12s ease-out, box-shadow 0.25s ease;
-  will-change: transform;
-  box-shadow:
-    0 2px 8px rgba(0,0,0,0.06),
-    0 8px 24px rgba(0,0,0,0.04);
-}
-
-.card:hover {
-  box-shadow:
-    0 4px 16px rgba(0,0,0,0.10),
-    0 20px 48px rgba(0,0,0,0.08),
-    0 0 0 1px rgba(0,0,0,0.06);
-}
-
-/* ─── Grafica decorativa (in cima) ────────────────────────────── */
-.cardGraphic {
+.wheelWrapper {
   position: relative;
   width: 100%;
-  aspect-ratio: 4/3;
-  background: color-mix(in srgb, var(--color-primary) 5%, var(--color-bg));
+  min-height: 22rem;
+  max-width: 900px;
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
+  overflow: visible;
+  perspective: 2200px;
+  padding: 0 0 3rem;
+  margin: 0 auto;
 }
 
-.svgGraphic {
-  width: 55%;
-  height: auto;
-  position: relative;
-  z-index: 1;
-}
-
-.cardAccentBar {
+.wheelInner {
+  --card-width: min(15rem, 18vw);
+  --card-height: 21.5rem;
+  --translate-z: clamp(8.75rem, 10vw, 10rem);
+  --rotate-x: -5deg;
+  --perspective: 2200px;
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 3px;
-  opacity: 0.85;
-}
-
-/* ─── Header ──────────────────────────────────────────────────── */
-.cardHeader {
+  width: var(--card-width);
+  height: var(--card-height);
+  top: 50%;
+  left: calc(50% - (var(--card-width) / 2));
+  margin-top: calc(var(--card-height) / -2);
   display: flex;
-  align-items: flex-start;
-  gap: 1rem;
-  padding: 1.6rem 1.6rem 0.6rem;
-}
-
-.cardIndex {
-  font-family: var(--font-mono);
-  font-size: 0.65rem;
-  letter-spacing: 0.2em;
-  color: var(--color-primary);
-  flex-shrink: 0;
-  margin-top: 4px;
-}
-
-.cardTitle {
-  font-family: var(--font-display);
-  font-size: clamp(1.15rem, 2vw, 1.5rem);
-  font-weight: 400;
-  color: var(--color-text);
-  margin: 0 0 0.2rem;
-  line-height: 1.1;
-  letter-spacing: 0.01em;
-}
-
-.cardSubtitle {
-  font-family: var(--font-mono);
-  font-size: 0.62rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--color-primary);
-  display: block;
-}
-
-/* ─── Descrizione ─────────────────────────────────────────────── */
-.cardDesc {
-  font-family: var(--font-body);
-  font-size: 0.9rem;
-  line-height: 1.72;
-  color: var(--color-text);
-  padding: 0.6rem 1.6rem 0;
-  margin: 0;
-  flex: 1;
-}
-
-/* ─── Tags ────────────────────────────────────────────────────── */
-.cardTags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  list-style: none;
-  margin: 0;
-  padding: 1.2rem 1.6rem 0;
-}
-
-.cardTag {
-  font-family: var(--font-mono);
-  font-size: 0.6rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  border: 1px solid;
-  padding: 0.28rem 0.7rem;
-  border-radius: 999px;
-  opacity: 0.75;
-  transition: opacity 0.2s;
-}
-
-.cardTag:hover { opacity: 1; }
-
-/* ─── CTA ─────────────────────────────────────────────────────── */
-.cardCta {
-  display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--color-primary);
-  background: none;
-  border: none;
-  border-bottom: 1px solid transparent;
-  padding: 1.4rem 1.6rem 1.6rem;
-  cursor: pointer;
-  width: fit-content;
-  transition: border-color 0.2s, gap 0.2s, letter-spacing 0.2s;
-}
-
-.cardCta:hover {
-  border-color: var(--color-primary);
-  gap: 0.9rem;
-  letter-spacing: 0.2em;
-}
-
-/* ─── Griglia verticale con sovraimpressione ─────────────────── */
-.cardsGridVertical {
-  display:         grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap:             2.5rem;
-  perspective:     1200px;
-  position:        relative;
-  padding:         3rem 0;
-}
-
-.cardWrapperVertical {
-  position:        relative;
+  justify-content: center;
   transform-style: preserve-3d;
-  animation:       cardFloat 4s ease-in-out infinite;
-  animation-delay: calc(var(--card-index) * 0.3s);
+  transform: perspective(var(--perspective)) rotateX(var(--rotate-x));
+  animation: rotatingWheel 10s linear infinite;
 }
 
-@keyframes cardFloat {
-  0%, 100% {
-    transform: translateY(0) rotateZ(0deg);
+.wheelWrapper:hover .wheelInner {
+  animation-play-state: paused;
+}
+
+.wheelCard {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform:
+    rotateY(calc((360deg / var(--quantity)) * var(--index)))
+    translateZ(var(--translate-z));
+}
+
+.wheelCard > * {
+  width: 100%;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform: translateZ(0);
+}
+
+.cardsGridMobile {
+  display: none;
+}
+
+.cardFallback {
+  display: flex;
+  justify-content: center;
+}
+
+@keyframes rotatingWheel {
+  from {
+    transform: perspective(var(--perspective)) rotateX(var(--rotate-x)) rotateY(0turn);
   }
-  50% {
-    transform: translateY(-18px) rotateZ(0.3deg);
+
+  to {
+    transform: perspective(var(--perspective)) rotateX(var(--rotate-x)) rotateY(1turn);
   }
 }
 
-.cardWrapperVertical:nth-child(odd) {
-  transform: perspective(800px) rotateY(6deg) rotateX(-8deg);
-}
-
-.cardWrapperVertical:nth-child(even) {
-  transform: perspective(800px) rotateY(-6deg) rotateX(-8deg);
-  z-index: 20;
-  margin-top: -2.5rem;
-}
-
-.cardWrapperVertical:nth-child(even) .card {
-  box-shadow:
-    0 10px 40px rgba(0,0,0,0.15),
-    0 25px 60px rgba(0,0,0,0.12),
-    0 0 0 1px rgba(0,0,0,0.08);
-}
-
-/* ─── Divisore tra categorie ──────────────────────────────────── */
 .divider {
   display: flex;
   align-items: center;
@@ -308,7 +188,7 @@
 .dividerLine {
   flex: 1;
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(0,0,0,0.12), transparent);
+  background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.12), transparent);
 }
 
 .dividerDot {
@@ -320,27 +200,23 @@
   flex-shrink: 0;
 }
 
-/* ─── Responsive ───────────────────────────────────────────────── */
 @media (max-width: 768px) {
-  .sectionHeader { padding: 6rem 1.5rem 4rem; }
-  .categorySection { padding: 3.5rem 1.2rem 4rem; }
-  .cardsGrid { grid-template-columns: 1fr; gap: 1.4rem; }
-  .cardsGridVertical { 
-    grid-template-columns: 1fr; 
+  .sectionHeader {
+    padding: 6rem 1.5rem 4rem;
+  }
+
+  .categorySection {
+    padding: 3.5rem 1.2rem 4rem;
+  }
+
+  .wheelWrapper {
+    display: none;
+  }
+
+  .cardsGridMobile {
+    display: grid;
+    grid-template-columns: 1fr;
     gap: 1.5rem;
     padding: 1.5rem 0;
   }
-  .cardWrapperVertical:nth-child(even) {
-    margin-top: 0;
-    transform: perspective(800px) rotateY(-6deg) rotateX(-8deg);
-  }
-  .card { border-radius: 12px; }
-}
-
-@media (min-width: 1024px) {
-  .cardsGrid { grid-template-columns: repeat(2, 1fr); }
-}
-
-@media (min-width: 1280px) {
-  .cardsGrid { grid-template-columns: repeat(3, 1fr); }
 }

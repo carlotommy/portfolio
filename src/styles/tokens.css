@@ -74,8 +74,16 @@
   --text-white:     var(--text-primary);
   --text-gray:      var(--text-secondary);
 
-  /* Viewport */
-  --vh-100: 100vh;
-  --svh-100: 100svh;
-  --chapter-min-height: 100svh;
+  /* Viewport system */
+  --viewport-width: 100vw;
+  --viewport-height: 100dvh;
+  --viewport-header-offset: clamp(84px, 8vh, 112px);
+  --viewport-section-pad: clamp(3.5rem, 7vw, 7rem);
+  --viewport-focus-ratio: 0.58;
+  --viewport-focus-y: calc(var(--viewport-height) * var(--viewport-focus-ratio));
+  --viewport-sticky-top: max(0px, calc(var(--viewport-header-offset) - 0.75rem));
+  --vh-100: var(--viewport-height);
+  --svh-100: var(--viewport-height);
+  --chapter-min-height: var(--viewport-height);
+  --chapter-content-min-height: calc(var(--viewport-height) - var(--viewport-header-offset));
 }
