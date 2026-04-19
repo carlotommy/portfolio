@@ -88,14 +88,13 @@ export default function About() {
       <div className="container">
         <section
           className={styles.chapterSection}
-          data-center="our-vision"
         >
           <div className={styles.eyebrow} ref={reveal(0)}>
             <span className={styles.eyebrowLine} />
             <span className={styles.eyebrowText}>Our Vision</span>
           </div>
 
-          <div className={styles.heroGrid} data-center-target="true" data-center-offset="-10">
+          <div className={styles.heroGrid}>
             <div className={styles.heroCopy} ref={reveal(1)}>
               <p className={styles.kicker}>ASSE ZERO / Creative direction in motion</p>
               <SimpleBlurText
@@ -137,9 +136,8 @@ export default function About() {
 
         <section
           className={styles.chapterSection}
-          data-center="our-story"
         >
-          <div className={styles.sectionShell} data-center-target="true" ref={reveal(3)}>
+          <div className={styles.sectionShell} ref={reveal(3)}>
             <div className={styles.sectionIntro}>
               <span className={styles.sectionLabel}>Our Story</span>
               <h2 className={styles.sectionTitle}>Un percorso costruito attorno alle immagini.</h2>
@@ -173,9 +171,8 @@ export default function About() {
 
         <section
           className={styles.chapterSection}
-          data-center="our-workspace"
         >
-          <div className={styles.workspaceGrid} data-center-target="true" ref={reveal(4)}>
+          <div className={styles.workspaceGrid} ref={reveal(4)}>
             <div className={styles.workspaceMedia}>
               <div className={styles.workspaceImageWrap}>
                 <div className={styles.workspaceImageInner} ref={imgBRef}>
@@ -219,9 +216,8 @@ export default function About() {
 
         <section
           className={styles.chapterSection}
-          data-center="our-team-cards"
         >
-          <div className={styles.teamSection} data-center-target="true" ref={reveal(5)}>
+          <div className={styles.teamSection} ref={reveal(5)}>
             <div className={styles.sectionIntro}>
               <span className={styles.sectionLabel}>Our Team</span>
               <h2 className={styles.sectionTitle}>Una struttura leggera, una direzione molto chiara.</h2>

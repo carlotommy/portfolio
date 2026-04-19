@@ -145,7 +145,6 @@ export default function Videos() {
       id="videos" 
       className={styles.videosSection} 
       ref={sectionRef}
-      data-no-center="true"
       style={{ height: `calc(var(--viewport-height) + ${N * 60}vh)` }} 
     >
       {/* Invisible Snap Points for Desktop Granular Magnetism */}
@@ -155,7 +154,6 @@ export default function Videos() {
             key={`snap-${i}`} 
             className={styles.snapPoint} 
             style={{ height: '60vh' }}
-            data-center={`video-desktop-${i}`} 
           />
         ))}
       </div>
@@ -163,8 +161,6 @@ export default function Videos() {
       <div className="container">
         <motion.div
           className="section-header"
-          data-center="videos-intro"
-          data-center-target="true"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}

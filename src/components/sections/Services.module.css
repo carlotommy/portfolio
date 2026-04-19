@@ -46,8 +46,7 @@
   margin: 0 auto;
 }
 
-[data-center="services-video"],
-[data-center="services-social"] {
+.centeringBlock {
   min-height: var(--chapter-content-min-height);
   display: flex;
   flex-direction: column;
@@ -114,8 +113,8 @@
 
 .wheelInner {
   --card-width: min(15rem, 18vw);
-  --card-height: 21.5rem;
-  --translate-z: clamp(8.75rem, 10vw, 10rem);
+  --card-height: 23rem;
+  --translate-z: clamp(8.2rem, 9vw, 9.4rem);
   --rotate-x: -5deg;
   --perspective: 2200px;
   position: absolute;

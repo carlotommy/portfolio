@@ -33,8 +33,6 @@ export default function Contact() {
     <section id="contact" className={styles.section}>
       <div
         className={styles.sectionHeader}
-        data-center="contact-intro"
-        data-center-target="true"
       >
         <p className={styles.sectionLabel}>- Parliamoci</p>
         <h2 className={styles.sectionTitle}>
@@ -49,8 +47,6 @@ export default function Contact() {
       <div
         className={styles.cardSection}
         ref={wrapperRef}
-        data-center="contact-form"
-        data-no-center-during-interaction="true"
       >
         <div className={styles.cardTitle}>
           <span className={styles.cardIndex}>-&gt;</span>
@@ -60,7 +56,7 @@ export default function Contact() {
           </h2>
         </div>
 
-        <div className={styles.cardPerspective} data-center-target="true" data-center-offset="120">
+        <div className={styles.cardPerspective}>
           <ContactHoverCard
             scrollTransform={scrollTransform}
             className={styles.card}

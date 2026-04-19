@@ -97,6 +97,7 @@
   max-width: 1200px;
   perspective: 1200px;
   perspective-origin: center 30%;
+  overflow: visible;
 }
 
 .card {
@@ -109,6 +110,7 @@
   display: grid;
   grid-template-columns: 1fr 1.6fr;
   min-height: 520px;
+  overflow: hidden;
 }
 
 .info {
@@ -291,11 +293,11 @@
   .info {
     border-right: none;
     border-bottom: 1px solid rgba(255, 255, 255, 0.14);
-    padding: 2.5rem 2rem;
+    padding: 2rem 1.5rem;
   }
 
   .formCol {
-    padding: 2.5rem 2rem;
+    padding: 2rem 1.5rem;
   }
 
   .row {
@@ -303,8 +305,9 @@
   }
 
   .cardSection {
-    padding: 4rem 1rem 2rem;
-    min-height: 50svh;
+    padding: 3rem 1.5rem 2rem;
+    min-height: unset;
+    overflow: hidden;
   }
 
   .cardTitle {
@@ -312,7 +315,26 @@
     gap: 0.5rem;
   }
 
+  .cardPerspective {
+    perspective: none;
+    overflow: hidden;
+    border-radius: 0;
+  }
+
+  .card {
+    transform: none !important;
+  }
+
   .sectionHeader {
     padding: 6rem 1.5rem 4rem;
+    min-height: unset;
+  }
+
+  .infoLead {
+    font-size: clamp(1.1rem, 4.5vw, 1.5rem);
+  }
+
+  .formCol {
+    padding: 2rem 1.5rem 2.5rem;
   }
 }

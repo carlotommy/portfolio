@@ -2,85 +2,85 @@
    Design tokens - Trap editoriale pulita: avorio, bordeaux ossido, rame, petrolio */
 
 :root {
-  --white:           #ffffff;
-  --color-bg:        #f7f1e8;
-  --color-primary:   #a3382f;
+  --white: #ffffff;
+  --color-bg: #f7f1e8;
+  --color-primary: #a3382f;
   --color-secondary: #b7845d;
-  --color-tertiary:  #d8b694;
-  --color-accent:    #6a7a7f;
-  --color-neutral:   #241816;
-  --color-success:   #9d6c4d;
-  --color-warning:   #bf5b42;
-  --color-error:     #8c2f28;
-  --color-bg-alt:    #efe6da;
-  --color-text:      #241816;
+  --color-tertiary: #d8b694;
+  --color-accent: #5c3d2e;
+  --color-neutral: #241816;
+  --color-success: #9d6c4d;
+  --color-warning: #bf5b42;
+  --color-error: #8c2f28;
+  --color-bordeaux-vibrant: #b21a1f;
+  --color-bg-alt: #efe6da;
+  --color-text: #241816;
 
-  --primary-rgb:   163 56 47;
+  --primary-rgb: 163 56 47;
   --secondary-rgb: 183 132 93;
-  --accent-rgb:    106 122 127;
-  --text-rgb:      74 35 28;
+  --accent-rgb: 92 61 46;
+  --text-rgb: 74 35 28;
 
-  --slate-gray: #726963;
+  --slate-gray: #5c3d2e;
 
   /* Backgrounds */
-  --bg-base:      #f7f1e8;
-  --bg-surface:   #efe6da;
-  --bg-overlay:   #e6dacb;
-  --bg-dark:      #d9c9b8;
+  --bg-base: #f7f1e8;
+  --bg-surface: #efe6da;
+  --bg-overlay: #e6dacb;
+  --bg-dark: #d9c9b8;
 
   /* Text colors */
-  --text-primary:   #4a231c;
-  --text-secondary: #6a7a7f;
-  --text-muted:     #8f7d72;
-  --text-dark:      #351814;
+  --text-primary: #4a231c;
+  --text-secondary: #7a5240;
+  --text-muted: #9a7060;
+  --text-dark: #351814;
 
   /* Accent colors */
-  --accent-red:       #8c2f28;
-  --accent-brown:     #7b4b3a;
-  --accent-teal:      #6a7a7f;
-  --accent-cream:     #e5d7c7;
-  --accent-copper:    #b7845d;
-  --accent-teal-dark: #4d5a5e;
+  --accent-red: #8c2f28;
+  --accent-brown: #7b4b3a;
+  --accent-teal: #5c3d2e;
+  --accent-cream: #e5d7c7;
+  --accent-copper: #b7845d;
+  --accent-teal-dark: #3d2418;
 
   /* Legacy aliases */
-  --color-red:      #8c2f28;
-  --color-black:    #351814;
+  --color-red: #8c2f28;
+  --color-black: #351814;
   --color-dark-red: #4a231c;
 
   /* Accent scale kept for backwards compatibility */
-  --teal-100: #e8eded;
-  --teal-200: #d3dcde;
-  --teal-300: #b6c3c6;
-  --teal-400: #91a0a4;
-  --teal-500: #6a7a7f;
-  --teal-600: #4d5a5e;
+  --teal-100: #ede5de;
+  --teal-200: #d9c5b8;
+  --teal-300: #c0a08a;
+  --teal-400: #9a7060;
+  --teal-500: #7a5240;
+  --teal-600: #5c3d2e;
 
   /* Typography */
   --font-display: 'Roboto Condensed', Arial, sans-serif;
-  --font-body:    'Roboto', Arial, sans-serif;
-  --font-mono:    'Roboto Mono', monospace;
+  --font-body: 'Roboto', Arial, sans-serif;
+  --font-mono: 'Roboto Mono', monospace;
 
   /* Semantic aliases */
-  --primary-white:  var(--white);
-  --light-gray:     var(--bg-surface);
-  --medium-gray:    var(--bg-overlay);
-  --primary-blue:   var(--accent-teal);
+  --primary-white: var(--white);
+  --light-gray: var(--bg-surface);
+  --medium-gray: var(--bg-overlay);
+  --primary-blue: var(--accent-teal);
   --secondary-blue: var(--accent-teal);
-  --light-blue:     var(--accent-teal);
-  --accent-blue:    var(--accent-teal);
-  --dark-blue:      var(--accent-teal);
-  --dark-bg:        var(--bg-dark);
-  --darker-bg:      var(--bg-surface);
-  --text-white:     var(--text-primary);
-  --text-gray:      var(--text-secondary);
+  --light-blue: var(--accent-copper);
+  --accent-blue: var(--accent-teal);
+  --dark-blue: var(--accent-teal-dark);
+  --dark-bg: var(--bg-dark);
+  --darker-bg: var(--bg-surface);
+  --text-white: var(--text-primary);
+  --text-gray: var(--text-secondary);
 
   /* Viewport system */
   --viewport-width: 100vw;
   --viewport-height: 100dvh;
   --viewport-header-offset: clamp(84px, 8vh, 112px);
   --viewport-section-pad: clamp(3.5rem, 7vw, 7rem);
-  --viewport-focus-ratio: 0.58;
-  --viewport-focus-y: calc(var(--viewport-height) * var(--viewport-focus-ratio));
+
   --viewport-sticky-top: max(0px, calc(var(--viewport-header-offset) - 0.75rem));
   --vh-100: var(--viewport-height);
   --svh-100: var(--viewport-height);

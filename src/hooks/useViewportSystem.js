@@ -24,20 +24,21 @@ export default function useViewportSystem() {
     const sync = () => {
       const { width, height } = getViewportSize();
       const isMobile = width < 900;
-      const focusRatio = isMobile ? 0.5 : 0.535;
+      const isDesktopLike = !isMobile;
+      const isReducedMotion = motionQuery.matches;
+      const isCoarsePointer = coarseQuery.matches;
+
+      const stickyTop = Number.parseFloat(getComputedStyle(root).getPropertyValue('--viewport-sticky-top')) || 0;
+      const usableTop = isMobile ? 0 : stickyTop;
+      const usableHeight = Math.max(height - usableTop, height * 0.72);
 
       root.style.setProperty('--viewport-width', `${width}px`);
       root.style.setProperty('--viewport-height', `${height}px`);
-      root.style.setProperty('--viewport-focus-ratio', `${focusRatio}`);
-
-      const stickyTop = getRootPxVar(root, '--viewport-sticky-top', 0);
-      const usableTop = isMobile ? 0 : stickyTop;
-      const usableHeight = Math.max(height - usableTop, height * 0.72);
-      const focusY = Math.round(usableTop + usableHeight * focusRatio);
-
-      root.style.setProperty('--viewport-focus-y', `${focusY}px`);
-      root.dataset.pointer = coarseQuery.matches ? 'coarse' : 'fine';
-      root.dataset.motion = motionQuery.matches ? 'reduce' : 'full';
+      root.style.setProperty('--viewport-sticky-top-resolved', `${Math.round(usableTop)}px`);
+      root.style.setProperty('--viewport-usable-height', `${Math.round(usableHeight)}px`);
+      root.dataset.pointer = isCoarsePointer ? 'coarse' : 'fine';
+      root.dataset.motion = isReducedMotion ? 'reduce' : 'full';
+      root.dataset.viewport = isDesktopLike ? 'desktop' : 'mobile';
     };
 
     const scheduleSync = () => {

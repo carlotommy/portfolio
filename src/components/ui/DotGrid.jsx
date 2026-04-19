@@ -27,8 +27,8 @@ const DOT_GRID_CONFIG = {
   cursorRadius:  100,
   cursorForce:   0.08,
   waveAmplitude: 3,
-  gradientFrom:  'var(--color-accent)',   // Soft Cyan - Pastel Trap
-  gradientTo:    'var(--color-accent)',   // Soft Cyan - unified color
+  gradientFrom:  'var(--color-bordeaux-vibrant)', 
+  gradientTo:    'var(--color-bordeaux-vibrant)',
 };
 
 const DotField = memo(({
