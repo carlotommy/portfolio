@@ -18,7 +18,6 @@ export default function Diptych({ onNavigate }) {
     <section
       className={styles.diptych}
       aria-label="Dichiarazione"
-      data-center="diptych"
     >
       <motion.div
         className={styles.diptychPhoto}

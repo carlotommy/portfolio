@@ -15,7 +15,7 @@ function PhotoSlide({ photo, index }) {
   const scale = useTransform(scrollYProgress, [0, 0.5, 1], [1.1, 1, 1.1]);
 
   return (
-    <section ref={ref} className={styles.slide} data-center={`photo-mobile-${index}`}>
+    <section ref={ref} className={styles.slide}>
       <div className={styles.imageWrapper}>
         <motion.img 
           src={photo.src} 
@@ -28,7 +28,7 @@ function PhotoSlide({ photo, index }) {
       
       <motion.div 
         className={styles.infoWrapper}
-        data-center-target="true"
+        
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-10% 0px" }}
@@ -54,11 +54,9 @@ export default function PhotosMobile() {
   const headerY = useTransform(scrollYProgress, [0, 0.5], [0, -40]);
 
   return (
-    <div ref={containerRef} className={styles.mobileContainer} data-no-center="true">
+    <div ref={containerRef} className={styles.mobileContainer}>
       <motion.div 
         className={styles.header}
-        data-center="photos-mobile-intro"
-        data-center-target="true"
         style={{ opacity: headerOpacity, y: headerY }}
       >
         <h2 className="section-title">PORTFOLIO FOTOGRAFICO</h2>

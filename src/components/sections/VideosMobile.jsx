@@ -155,7 +155,6 @@ export default function VideosMobile() {
     <section 
       ref={sectionRef} 
       className={styles.mobileSection}
-      data-no-center="true"
       style={{ height: `calc(var(--viewport-height) + ${N * 60}vh)` }} 
     >
       <div className={styles.snapStrip}>
@@ -163,7 +162,6 @@ export default function VideosMobile() {
           <div 
             key={`snap-${i}`} 
             className={styles.snapPoint} 
-            data-center={`video-mobile-${i}`} 
           />
         ))}
       </div>
@@ -171,8 +169,6 @@ export default function VideosMobile() {
       <div className={styles.stickyWrapper}>
         <motion.div 
           className={styles.header}
-          data-center="videos-mobile-intro"
-          data-center-target="true"
           style={{ 
             opacity: useTransform(scrollPos, s => Math.max(0, 1 - s * 8)), 
             y: useTransform(scrollPos, s => s * -40),

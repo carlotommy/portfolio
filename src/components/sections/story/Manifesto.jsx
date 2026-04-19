@@ -32,7 +32,6 @@ export default function Manifesto() {
     <section
       className={styles.manifestoWrap}
       aria-label="Manifesto"
-      data-center="manifesto"
     >
       <motion.div
         className={styles.manifestoInner}

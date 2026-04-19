@@ -55,13 +55,7 @@ section {
   z-index:    1;
 }
 
-[data-center] {
-  scroll-margin-top: var(--viewport-header-offset);
-}
 
-[data-center-target="true"] {
-  scroll-margin-top: var(--viewport-header-offset);
-}
 
 /* ── Section header ────────────────────────────────────────────────────── */
 .section-header {

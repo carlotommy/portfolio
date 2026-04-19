@@ -9,7 +9,7 @@ import ClickSpark       from '@ui/ClickSpark';
 import ScrollProgress   from '@ui/ScrollProgress';
 import DotGrid          from '@ui/DotGrid';
 import useViewportSystem from '@hooks/useViewportSystem';
-import useAccentramento from '@hooks/useAccentramento';
+
 
 const Home    = lazy(() => import('./pages/Home'));
 const Work    = lazy(() => import('./pages/Work'));
@@ -69,8 +69,7 @@ export default function App() {
 
   useViewportSystem();
 
-  // Simple viewport-centering — runs globally
-  useAccentramento();
+
 
   return (
     <TransitionProvider>

@@ -11,7 +11,7 @@ function CategorySection({ label, title, intro, services, onContact }) {
         <h2 className={styles.categoryTitle}>{title}</h2>
         <p className={styles.categoryIntro}>{intro}</p>
       </div>
-      <div className={styles.wheelWrapper} data-center-target="true" data-center-offset="140">
+      <div className={styles.wheelWrapper}>
         <div className={styles.wheelInner} style={{ '--quantity': services.length }}>
           {services.map((service, idx) => (
             <div key={service.id} className={styles.wheelCard} style={{ '--index': idx }}>
@@ -39,9 +39,7 @@ export default function Services() {
   return (
     <section className={styles.servicesSection}>
       <div
-        className={styles.sectionHeader}
-        data-center="services-intro"
-        data-center-target="true"
+      className={styles.sectionHeader}
       >
         <p className={styles.sectionLabel}>- Cosa facciamo</p>
         <h1 className={styles.sectionTitle}>
@@ -53,7 +51,7 @@ export default function Services() {
         </p>
       </div>
 
-      <div data-center="services-video">
+      <div className={styles.centeringBlock}>
         <CategorySection
           label="- 01 / Produzione"
           title="Produzione Video"
@@ -69,7 +67,7 @@ export default function Services() {
         <span className={styles.dividerLine} />
       </div>
 
-      <div data-center="services-social">
+      <div className={styles.centeringBlock}>
         <CategorySection
           label="- 02 / Digital"
           title="Social Media Management"

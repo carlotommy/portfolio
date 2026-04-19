@@ -20,13 +20,13 @@
   --accent-rgb:    0 0 0;
   --text-rgb:      247 62 37;
 
-  --slate-gray: #726963;
+  --slate-gray: #5c3d2e;
 
   /* Backgrounds */
-  --bg-base:      #f7f1e8;
-  --bg-surface:   #efe6da;
-  --bg-overlay:   #e6dacb;
-  --bg-dark:      #d9c9b8;
+  --bg-base: #f7f1e8;
+  --bg-surface: #efe6da;
+  --bg-overlay: #e6dacb;
+  --bg-dark: #d9c9b8;
 
   /* Text colors */
   --text-primary:   #f73e25;
@@ -61,26 +61,25 @@
   --font-mono:    'Roboto Mono', monospace;
 
   /* Semantic aliases */
-  --primary-white:  var(--white);
-  --light-gray:     var(--bg-surface);
-  --medium-gray:    var(--bg-overlay);
-  --primary-blue:   var(--accent-teal);
+  --primary-white: var(--white);
+  --light-gray: var(--bg-surface);
+  --medium-gray: var(--bg-overlay);
+  --primary-blue: var(--accent-teal);
   --secondary-blue: var(--accent-teal);
-  --light-blue:     var(--accent-teal);
-  --accent-blue:    var(--accent-teal);
-  --dark-blue:      var(--accent-teal);
-  --dark-bg:        var(--bg-dark);
-  --darker-bg:      var(--bg-surface);
-  --text-white:     var(--text-primary);
-  --text-gray:      var(--text-secondary);
+  --light-blue: var(--accent-copper);
+  --accent-blue: var(--accent-teal);
+  --dark-blue: var(--accent-teal-dark);
+  --dark-bg: var(--bg-dark);
+  --darker-bg: var(--bg-surface);
+  --text-white: var(--text-primary);
+  --text-gray: var(--text-secondary);
 
   /* Viewport system */
   --viewport-width: 100vw;
   --viewport-height: 100dvh;
   --viewport-header-offset: clamp(84px, 8vh, 112px);
   --viewport-section-pad: clamp(3.5rem, 7vw, 7rem);
-  --viewport-focus-ratio: 0.58;
-  --viewport-focus-y: calc(var(--viewport-height) * var(--viewport-focus-ratio));
+
   --viewport-sticky-top: max(0px, calc(var(--viewport-header-offset) - 0.75rem));
   --vh-100: var(--viewport-height);
   --svh-100: var(--viewport-height);

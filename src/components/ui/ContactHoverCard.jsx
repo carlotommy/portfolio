@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useMediaQuery } from '@hooks/useMediaQuery';
 import styles from './ContactHoverCard.module.css';
 
 const TRACKERS = Array.from({ length: 25 }, (_, index) => index + 1);
@@ -16,7 +17,11 @@ export default function ContactHoverCard({
 }) {
   const [hoverTilt, setHoverTilt] = useState({ rotateX: 0, rotateY: 0, active: false });
 
-  const transform = `
+  const isMobile = useMediaQuery('(max-width: 900px)');
+
+  const transform = isMobile
+    ? 'none'
+    : `
     perspective(1000px)
     rotateX(${scrollTransform.rotateX}deg)
     scale(${scrollTransform.scale})
