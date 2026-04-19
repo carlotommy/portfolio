@@ -11,7 +11,7 @@ html {
 }
 
 body {
-  font-family: 'Roboto', Arial, sans-serif;
+  font-family: 'Anton SC', Arial, sans-serif;
   background:  var(--bg-base);
   color:       var(--text-primary);
   overflow-x:  hidden;

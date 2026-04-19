@@ -21,7 +21,9 @@ export default function Hero() {
         <span className={styles.topYear}>Roma · MMXXVI</span>
       </div>
 
-      <div className={styles.titleBlock} aria-label="Asse Zero" />
+      <div className={styles.titleBlock}>
+        <h1 className={styles.titleMain} aria-label="Asse Zero">ASSE ZERO</h1>
+      </div>
 
       <div className={styles.bottomRow}>
         <p className={styles.disciplines}>

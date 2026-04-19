@@ -4,21 +4,21 @@
 :root {
   --white:           #ffffff;
   --color-bg:        #f7f1e8;
-  --color-primary:   #a3382f;
+  --color-primary:   #f73e25;
   --color-secondary: #b7845d;
   --color-tertiary:  #d8b694;
-  --color-accent:    #6a7a7f;
-  --color-neutral:   #241816;
+  --color-accent:    #000000;
+  --color-neutral:   #f73e25;
   --color-success:   #9d6c4d;
-  --color-warning:   #bf5b42;
-  --color-error:     #8c2f28;
+  --color-warning:   #f73e25;
+  --color-error:     #f73e25;
   --color-bg-alt:    #efe6da;
-  --color-text:      #241816;
+  --color-text:      #f73e25;
 
-  --primary-rgb:   163 56 47;
+  --primary-rgb:   247 62 37;
   --secondary-rgb: 183 132 93;
-  --accent-rgb:    106 122 127;
-  --text-rgb:      74 35 28;
+  --accent-rgb:    0 0 0;
+  --text-rgb:      247 62 37;
 
   --slate-gray: #726963;
 
@@ -29,35 +29,35 @@
   --bg-dark:      #d9c9b8;
 
   /* Text colors */
-  --text-primary:   #4a231c;
-  --text-secondary: #6a7a7f;
+  --text-primary:   #f73e25;
+  --text-secondary: #000000;
   --text-muted:     #8f7d72;
-  --text-dark:      #351814;
+  --text-dark:      #f73e25;
 
   /* Accent colors */
-  --accent-red:       #8c2f28;
-  --accent-brown:     #7b4b3a;
-  --accent-teal:      #6a7a7f;
+  --accent-red:       #f73e25;
+  --accent-brown:     #f73e25;
+  --accent-teal:      #000000;
   --accent-cream:     #e5d7c7;
   --accent-copper:    #b7845d;
-  --accent-teal-dark: #4d5a5e;
+  --accent-teal-dark: #000000;
 
   /* Legacy aliases */
-  --color-red:      #8c2f28;
-  --color-black:    #351814;
-  --color-dark-red: #4a231c;
+  --color-red:      #f73e25;
+  --color-black:    #f73e25;
+  --color-dark-red: #f73e25;
 
   /* Accent scale kept for backwards compatibility */
-  --teal-100: #e8eded;
-  --teal-200: #d3dcde;
-  --teal-300: #b6c3c6;
-  --teal-400: #91a0a4;
-  --teal-500: #6a7a7f;
-  --teal-600: #4d5a5e;
+  --teal-100: #e8e8e8;
+  --teal-200: #c8c8c8;
+  --teal-300: #a0a0a0;
+  --teal-400: #666666;
+  --teal-500: #333333;
+  --teal-600: #111111;
 
   /* Typography */
-  --font-display: 'Roboto Condensed', Arial, sans-serif;
-  --font-body:    'Roboto', Arial, sans-serif;
+  --font-display: 'Anton SC', Arial, sans-serif;
+  --font-body:    'Anton SC', Arial, sans-serif;
   --font-mono:    'Roboto Mono', monospace;
 
   /* Semantic aliases */

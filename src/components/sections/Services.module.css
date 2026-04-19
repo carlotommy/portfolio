@@ -99,62 +99,29 @@
 }
 
 .wheelWrapper {
-  position: relative;
   width: 100%;
-  min-height: 22rem;
-  max-width: 900px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: visible;
-  perspective: 2200px;
-  padding: 0 0 3rem;
+  max-width: 1200px;
   margin: 0 auto;
+  padding: 0 0 3rem;
 }
 
 .wheelInner {
-  --card-width: min(15rem, 18vw);
-  --card-height: 21.5rem;
-  --translate-z: clamp(8.75rem, 10vw, 10rem);
-  --rotate-x: -5deg;
-  --perspective: 2200px;
-  position: absolute;
-  width: var(--card-width);
-  height: var(--card-height);
-  top: 50%;
-  left: calc(50% - (var(--card-width) / 2));
-  margin-top: calc(var(--card-height) / -2);
   display: flex;
-  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.5rem;
   justify-content: center;
-  transform-style: preserve-3d;
-  transform: perspective(var(--perspective)) rotateX(var(--rotate-x));
-  animation: rotatingWheel 10s linear infinite;
-}
-
-.wheelWrapper:hover .wheelInner {
-  animation-play-state: paused;
+  align-items: stretch;
 }
 
 .wheelCard {
-  position: absolute;
-  inset: 0;
+  flex: 0 0 auto;
+  width: min(15rem, 46vw);
   display: flex;
-  align-items: center;
-  justify-content: center;
-  transform-style: preserve-3d;
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-  transform:
-    rotateY(calc((360deg / var(--quantity)) * var(--index)))
-    translateZ(var(--translate-z));
+  align-items: stretch;
 }
 
 .wheelCard > * {
   width: 100%;
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-  transform: translateZ(0);
 }
 
 .cardsGridMobile {
@@ -164,16 +131,6 @@
 .cardFallback {
   display: flex;
   justify-content: center;
-}
-
-@keyframes rotatingWheel {
-  from {
-    transform: perspective(var(--perspective)) rotateX(var(--rotate-x)) rotateY(0turn);
-  }
-
-  to {
-    transform: perspective(var(--perspective)) rotateX(var(--rotate-x)) rotateY(1turn);
-  }
 }
 
 .divider {
@@ -209,14 +166,7 @@
     padding: 3.5rem 1.2rem 4rem;
   }
 
-  .wheelWrapper {
-    display: none;
-  }
-
-  .cardsGridMobile {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-    padding: 1.5rem 0;
+  .wheelCard {
+    width: 100%;
   }
 }
