@@ -23,6 +23,7 @@ export default defineConfig({
       '@sections':   path.resolve(__dirname, './src/components/sections'),
       '@layout':     path.resolve(__dirname, './src/components/layout'),
       '@context':    path.resolve(__dirname, './src/context'),
+      '@config':     path.resolve(__dirname, './src/config'),
       '@data':       path.resolve(__dirname, './src/data'),
       '@styles':     path.resolve(__dirname, './src/styles'),
       '@hooks':      path.resolve(__dirname, './src/hooks'),

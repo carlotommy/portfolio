@@ -99,6 +99,13 @@ export const SERVICES_SOCIAL = [
     tags: ['Engagement', 'Moderazione', 'Analytics', 'Growth Hacking'],
     accent: 'var(--color-accent)', bg: 'var(--color-bg)', textColor: 'var(--color-text)', graphic: 'community',
   },
+  {
+    id: 'performance', index: '08',
+    title: 'Digital Campaigns', subtitle: 'Performance & Meta Ads',
+    description: 'Pianifichiamo e ottimizziamo campagne sponsorizzate su Meta e TikTok. Creatività mirata, A/B testing continuo e massimizzazione del budget per abbattere i costi di conversione.',
+    tags: ['Meta Ads', 'TikTok Ads', 'A/B Testing', 'ROI & ROAS'],
+    accent: 'var(--color-success)', bg: 'var(--color-bg)', textColor: 'var(--color-text)', graphic: 'ads',
+  },
 ];
 
 export const PHOTOS = [

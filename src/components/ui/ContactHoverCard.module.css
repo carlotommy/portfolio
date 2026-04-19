@@ -35,8 +35,6 @@
   position: absolute;
   inset: 0;
   z-index: 1;
-  display: grid;
-  grid-template-columns: 1fr 1.6fr;
   border-radius: 24px;
   overflow: hidden;
   transition: transform 240ms ease, filter 240ms ease, box-shadow 320ms ease;
@@ -153,11 +151,12 @@
 @media (max-width: 900px) {
   .canvas {
     min-height: unset;
+    display: block;
   }
 
   .card {
     position: relative;
-    grid-template-columns: 1fr;
+    width: 100%;
   }
 
   .tracker {

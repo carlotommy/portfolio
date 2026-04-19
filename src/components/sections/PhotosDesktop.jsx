@@ -173,7 +173,6 @@ export default function Photos() {
       id="photos" 
       className={styles.section} 
       ref={sectionRef}
-      data-no-center="true"
       style={{ height: `calc(var(--viewport-height) + ${N * 50}vh)` }}
     >
       {/* Invisible Snap Points for Desktop Granular Magnetism */}
@@ -183,17 +182,14 @@ export default function Photos() {
             key={`snap-${i}`} 
             className={styles.snapPoint} 
             style={{ height: '50vh' }}
-            data-center={`photo-desktop-${i}`} 
           >
-            <span className={styles.snapTarget} data-center-target="true" aria-hidden="true" />
+            <span className={styles.snapTarget} aria-hidden="true" />
           </div>
         ))}
       </div>
       <div className="container">
         <motion.div
           className="section-header"
-          data-center="photos-intro"
-          data-center-target="true"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
